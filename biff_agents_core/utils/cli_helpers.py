@@ -93,19 +93,31 @@ def print_header(text: str):
 
 def print_success(message: str):
     """Print success message"""
-    print(f"✓ {message}")
+    try:
+        print(f"✓ {message}")
+    except UnicodeEncodeError:
+        print(f"[OK] {message}")
 
 
 def print_error(message: str):
     """Print error message"""
-    print(f"✗ {message}")
+    try:
+        print(f"✗ {message}")
+    except UnicodeEncodeError:
+        print(f"[ERROR] {message}")
 
 
 def print_warning(message: str):
     """Print warning message"""
-    print(f"⚠ {message}")
+    try:
+        print(f"⚠ {message}")
+    except UnicodeEncodeError:
+        print(f"[WARNING] {message}")
 
 
 def print_info(message: str):
     """Print info message"""
-    print(f"ℹ {message}")
+    try:
+        print(f"ℹ {message}")
+    except UnicodeEncodeError:
+        print(f"[INFO] {message}")

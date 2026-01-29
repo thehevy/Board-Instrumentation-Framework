@@ -5,8 +5,15 @@ Command-line interface for BIFF AI agents.
 """
 
 import sys
+import os
 import argparse
 from pathlib import Path
+
+# Force UTF-8 encoding on Windows
+if sys.platform == 'win32':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, errors='replace')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, errors='replace')
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
