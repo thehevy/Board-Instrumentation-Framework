@@ -275,7 +275,14 @@ def handle_quickstart(args):
             print(f"  - {marvin_files['tab']}")
             print(f"  - {marvin_files['grid']}")
             print()
-            print_info("Next steps:")
+            print_info("Quick Start - Use launcher script:")
+            import platform
+            if platform.system() == "Windows":
+                print_info("  cd scripts && start_all.bat")
+            else:
+                print_info("  cd scripts && ./start_all.sh")
+            print()
+            print_info("Or start components manually:")
             print_info("  1. Start Oscar:")
             if config.get("use_existing") and config.get("biff_root"):
                 print_info(f"     cd {Path(config['biff_root']) / 'Oscar'}")

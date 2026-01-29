@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<MarvinExternalFile>
+  <Tab>
+    <Title>QuickStart Dashboard</Title>
+    <Grid row="1" column="1" File="Grid.QuickStart.xml"/>
+  </Tab>
+</MarvinExternalFile>
