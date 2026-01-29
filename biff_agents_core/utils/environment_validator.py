@@ -20,18 +20,28 @@ class EnvironmentValidator:
         self.warnings = []
         self.info = []
     
-    def validate_all(self) -> Dict[str, any]:
-        """Run all validation checks"""
+    def validate_all(self, check_network: bool = False, biff_root: Optional[Path] = None) -> Dict[str, any]:
+        """Run all validation checks
+        
+        Args:
+            check_network: If True, perform network connectivity checks
+            biff_root: Optional path to BIFF installation root for path detection
+        """
         results = {
             "java": self.check_java_version(),
             "python": self.check_python_version(),
             "ports": self.check_ports_available([1100, 52001]),
             "system": self.check_system_resources(),
+            "biff_paths": self.detect_biff_installation(biff_root) if biff_root else None,
             "issues": self.issues,
             "warnings": self.warnings,
             "info": self.info,
             "ready": len(self.issues) == 0
         }
+        
+        if check_network:
+            results["network"] = self.check_network_connectivity()
+        
         return results
     
     def check_java_version(self) -> Dict[str, any]:
@@ -65,14 +75,14 @@ class EnvironmentValidator:
                         self.info.append(f"✓ Java {major} detected (minimum: 10)")
                         return {"installed": True, "version": version_str, "sufficient": True}
                     else:
-                        self.issues.append(f"✗ Java {major} detected, but Marvin requires Java 10+ (recommended: Java 11)")
+                        self.warnings.append(f"⚠ Java {major} detected, but Marvin requires Java 10+ (recommended: Java 11)")
                         return {"installed": True, "version": version_str, "sufficient": False}
             
             self.warnings.append("⚠ Java installed but version could not be determined")
             return {"installed": True, "version": "unknown", "sufficient": False}
             
         except FileNotFoundError:
-            self.issues.append("✗ Java not found in PATH. Marvin requires Java 10+")
+            self.warnings.append("⚠ Java not found in PATH. Required only if running Marvin GUI")
             return {"installed": False, "version": None, "sufficient": False}
         except subprocess.TimeoutExpired:
             self.warnings.append("⚠ Java check timed out")
@@ -194,6 +204,134 @@ class EnvironmentValidator:
         
         self.warnings.append("⚠ Gradle not found - Marvin builds may require manual setup")
         return {"installed": False}
+    
+    def detect_biff_installation(self, search_root: Optional[Path] = None) -> Dict[str, any]:
+        """Detect existing BIFF installation
+        
+        Args:
+            search_root: Directory to search from (defaults to current directory)
+        
+        Returns:
+            Dict with found component paths and versions
+        """
+        if search_root is None:
+            search_root = Path.cwd()
+        
+        results = {
+            "found": False,
+            "root": None,
+            "components": {},
+            "versions": {}
+        }
+        
+        # Check if we're in BIFF root (has all three components)
+        marvin_path = search_root / "Marvin"
+        minion_path = search_root / "Minion"
+        oscar_path = search_root / "Oscar"
+        
+        if marvin_path.exists() and minion_path.exists() and oscar_path.exists():
+            results["found"] = True
+            results["root"] = str(search_root)
+            results["components"]["marvin"] = str(marvin_path)
+            results["components"]["minion"] = str(minion_path)
+            results["components"]["oscar"] = str(oscar_path)
+            
+            # Try to detect versions
+            # Marvin version from build.gradle
+            gradle_file = marvin_path / "build.gradle"
+            if gradle_file.exists():
+                try:
+                    with open(gradle_file, 'r') as f:
+                        content = f.read()
+                        import re
+                        version_match = re.search(r"version\s*=\s*['\"]([^'\"]+)['\"]", content)
+                        if version_match:
+                            results["versions"]["marvin"] = version_match.group(1)
+                except:
+                    pass
+            
+            # Minion version from _Version.py
+            version_file = minion_path / "Helpers" / "_Version.py"
+            if version_file.exists():
+                try:
+                    with open(version_file, 'r') as f:
+                        content = f.read()
+                        import re
+                        version_match = re.search(r"__version__\s*=\s*['\"]([^'\"]+)['\"]", content)
+                        if version_match:
+                            results["versions"]["minion"] = version_match.group(1)
+                except:
+                    pass
+            
+            self.info.append(f"✓ BIFF installation found at {search_root}")
+            for component, path in results["components"].items():
+                version = results["versions"].get(component, "unknown")
+                self.info.append(f"  - {component.capitalize()}: {version}")
+        else:
+            # Check parent directories (up to 3 levels)
+            current = search_root
+            for _ in range(3):
+                parent = current.parent
+                if parent == current:  # Reached root
+                    break
+                
+                if (parent / "Marvin").exists() and (parent / "Minion").exists():
+                    results["found"] = True
+                    results["root"] = str(parent)
+                    self.info.append(f"✓ BIFF installation found at {parent}")
+                    break
+                
+                current = parent
+        
+        if not results["found"]:
+            self.info.append("ℹ No existing BIFF installation detected - will create new setup")
+        
+        return results
+    
+    def check_network_connectivity(self, test_host: str = "8.8.8.8") -> Dict[str, any]:
+        """Check network connectivity
+        
+        Args:
+            test_host: Host to ping for connectivity test (default: Google DNS)
+        
+        Returns:
+            Dict with connectivity status
+        """
+        results = {
+            "internet": False,
+            "firewall_detected": False
+        }
+        
+        # Test basic internet connectivity
+        try:
+            # Try to create a socket connection to test connectivity
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(3)
+            sock.connect((test_host, 53))  # DNS port
+            sock.close()
+            results["internet"] = True
+            self.info.append("✓ Internet connectivity confirmed")
+        except (socket.timeout, socket.error):
+            results["internet"] = False
+            self.warnings.append("⚠ Limited network connectivity detected")
+        
+        # Check for common firewall indicators (Windows only)
+        if platform.system() == "Windows":
+            try:
+                # Check if Windows Firewall service is running
+                result = subprocess.run(
+                    ["sc", "query", "MpsSvc"],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                if "RUNNING" in result.stdout:
+                    results["firewall_detected"] = True
+                    self.info.append("ℹ Windows Firewall is active - may need UDP port rules")
+            except:
+                pass
+        
+        return results
     
     def suggest_fixes(self) -> List[str]:
         """Generate fix suggestions for detected issues"""

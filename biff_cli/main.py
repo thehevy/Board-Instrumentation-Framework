@@ -16,6 +16,8 @@ from biff_agents_core.utils.cli_helpers import (
     print_header, print_success, print_error, print_info, print_warning
 )
 from biff_agents_core.utils.environment_validator import EnvironmentValidator
+from biff_agents_core.utils.setup_wizard import SetupWizard
+from pathlib import Path
 
 
 def create_parser():
@@ -179,7 +181,13 @@ def handle_quickstart(args):
     
     # Step 1: Validate environment
     validator = EnvironmentValidator()
-    results = validator.validate_all()
+    
+    # Check for BIFF installation
+    biff_root = Path.cwd()
+    results = validator.validate_all(
+        check_network=False,  # Network check optional for now
+        biff_root=biff_root
+    )
     
     # Print validation summary
     for info_msg in validator.info:
@@ -209,12 +217,37 @@ def handle_quickstart(args):
     print_success("✓ Environment validation passed!")
     print()
     
-    # Step 2: Quick start setup wizard (coming next)
-    print_info("Setup wizard coming soon...")
-    print_info(f"  Output directory: {args.directory}")
-    print_info(f"  Preset: {args.preset}")
+    # Step 2: Run interactive setup wizard
+    wizard = SetupWizard(results)
     
-    return 0
+    try:
+        config = wizard.run()
+        
+        if config is None:
+            print_warning("Setup cancelled")
+            return 0
+        
+        # Step 3: Generate configurations (coming next)
+        print()
+        print_success("Configuration complete!")
+        print()
+        print_info("Next steps:")
+        print_info("  - Generating Minion configuration...")
+        print_info("  - Generating Oscar configuration...")
+        print_info("  - Generating Marvin application...")
+        print()
+        print_warning("Config generation coming in next phase")
+        
+        return 0
+        
+    except KeyboardInterrupt:
+        print()
+        print_warning("\nSetup interrupted by user")
+        return 0
+    except Exception as e:
+        print()
+        print_error(f"Setup failed: {str(e)}")
+        return 1
 
 
 def handle_collector(args):

@@ -44,7 +44,8 @@ class TestEnvironmentValidator(unittest.TestCase):
         
         self.assertFalse(result["sufficient"])
         self.assertFalse(result["installed"])
-        self.assertTrue(any('Java not found' in msg for msg in self.validator.issues))
+        # Changed to warning since Java only needed for Marvin
+        self.assertTrue(any('Java not found' in msg for msg in self.validator.warnings))
     
     @patch('subprocess.run')
     def test_check_java_version_old(self, mock_run):
@@ -58,7 +59,8 @@ class TestEnvironmentValidator(unittest.TestCase):
         
         self.assertFalse(result["sufficient"])
         self.assertTrue(result["installed"])
-        self.assertTrue(any('Java 8' in msg for msg in self.validator.issues))
+        # Changed to warning since Java only needed for Marvin
+        self.assertTrue(any('Java 8' in msg for msg in self.validator.warnings))
     
     def test_check_python_version_success(self):
         """Test Python version check (should pass on current Python)"""
