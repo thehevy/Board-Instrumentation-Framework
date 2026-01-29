@@ -22,6 +22,7 @@ This project uses markdownlint to maintain consistent Markdown formatting. The `
 ### Issue: MD040 - Fenced code blocks should have a language
 
 **Before:**
+
 ````markdown
 ```
 code here
@@ -29,6 +30,7 @@ code here
 ````
 
 **Fix Option 1** - Add language identifier:
+
 ````markdown
 ```text
 diagram or plain text
@@ -40,19 +42,24 @@ diagram or plain text
 ### Issue: MD036 - Emphasis used instead of heading
 
 **Before:**
+
 ```markdown
 ```
+
 **File Name**
+
 ```
 ```
 
 **Fix Option 1** - Use proper heading:
+
 ```markdown
 #### File Name
 
 ```text
 content
 ```
+
 ```
 
 **Fix Option 2** - Disable rule (already done in our config)
@@ -68,6 +75,7 @@ Next paragraph
 ```
 
 **Fix:**
+
 ```markdown
 Some text here
 
@@ -80,12 +88,14 @@ Next paragraph
 ### Issue: MD022 - Headings should be surrounded by blank lines
 
 **Before:**
+
 ```markdown
 ### Heading
 Text immediately after
 ```
 
 **Fix:**
+
 ```markdown
 ### Heading
 
@@ -95,6 +105,7 @@ Text with blank line
 ### Issue: MD001 - Heading levels increment by one
 
 **Before:**
+
 ```markdown
 ## Section
 
@@ -102,6 +113,7 @@ Text with blank line
 ```
 
 **Fix:**
+
 ```markdown
 ## Section
 
@@ -164,12 +176,14 @@ For GitHub Actions:
 When documenting code blocks with headers, use proper headings instead of emphasis:
 
 **Preferred:**
+
 ```markdown
 #### Example: Shell Command
 
 ```bash
 command here
 ```
+
 ```
 
 **Acceptable (if needed for layout):**
@@ -178,6 +192,7 @@ command here
 **Example: Shell Command**
 command here
 ```
+
 ```
 
 ### Diagrams and ASCII Art
@@ -188,6 +203,7 @@ Use `text` language for plain diagrams:
 ```text
 Minion → Oscar → Marvin
 ```
+
 ````
 
 ### Long Lines
