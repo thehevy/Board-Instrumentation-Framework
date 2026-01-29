@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from biff_agents_core.validators.config_validator import ConfigValidator
 from biff_agents_core.generators.minion_generator import MinionConfigGenerator
 from biff_agents_core.generators.oscar_generator import OscarConfigGenerator
+from biff_agents_core.generators.marvin_generator import MarvinApplicationGenerator
 from biff_agents_core.utils.cli_helpers import (
     print_header, print_success, print_error, print_info, print_warning
 )
@@ -249,9 +250,13 @@ def handle_quickstart(args):
             oscar_file = oscar_gen.generate_file(config, output_dir)
             print_success(f"  ✓ Created: {oscar_file}")
             
-            # TODO: Generate Marvin config (Day 4)
+            # Generate Marvin config
             print_info("Generating Marvin application...")
-            print_warning("  ⚠ Marvin config generation coming in next phase")
+            marvin_gen = MarvinApplicationGenerator()
+            marvin_files = marvin_gen.generate_all(config, output_dir)
+            print_success(f"  ✓ Created: {marvin_files['application']}")
+            print_success(f"  ✓ Created: {marvin_files['tab']}")
+            print_success(f"  ✓ Created: {marvin_files['grid']}")
             
             print()
             print_success("✓ Configuration files generated successfully!")
@@ -259,13 +264,34 @@ def handle_quickstart(args):
             print_info("Generated files:")
             print(f"  - {minion_file}")
             print(f"  - {oscar_file}")
+            print(f"  - {marvin_files['application']}")
+            print(f"  - {marvin_files['tab']}")
+            print(f"  - {marvin_files['grid']}")
             print()
             print_info("Next steps:")
-            print_info("  1. Review the generated configuration files")
-            print_info("  2. Start Oscar: cd Oscar && python Oscar.py -c ../path/to/OscarConfig.xml")
-            print_info("  3. Start Minion: cd Minion && python Minion.py -c ../path/to/MinionConfig.xml")
-            print_info("  4. Build and start Marvin (requires Java):")
-            print_info("     cd Marvin && gradlew build && java -jar build/libs/BIFF.Marvin.jar")
+            print_info("  1. Start Oscar:")
+            if config.get("use_existing") and config.get("biff_root"):
+                print_info(f"     cd {Path(config['biff_root']) / 'Oscar'}")
+                print_info(f"     python Oscar.py -c {oscar_file}")
+            else:
+                print_info(f"     cd Oscar && python Oscar.py -c {oscar_file}")
+            print()
+            print_info("  2. Start Minion:")
+            if config.get("use_existing") and config.get("biff_root"):
+                print_info(f"     cd {Path(config['biff_root']) / 'Minion'}")
+                print_info(f"     python Minion.py -c {minion_file}")
+            else:
+                print_info(f"     cd Minion && python Minion.py -c {minion_file}")
+            print()
+            print_info("  3. Build and start Marvin (requires Java):")
+            if config.get("use_existing") and config.get("biff_root"):
+                print_info(f"     cd {Path(config['biff_root']) / 'Marvin'}")
+                print_info(f"     gradlew build")
+                print_info(f"     java -jar build/libs/BIFF.Marvin.jar -a {marvin_files['application']}")
+            else:
+                print_info(f"     cd Marvin")
+                print_info(f"     gradlew build")
+                print_info(f"     java -jar build/libs/BIFF.Marvin.jar -a {marvin_files['application']}")
             
             return 0
             
