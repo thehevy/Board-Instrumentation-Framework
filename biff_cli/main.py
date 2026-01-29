@@ -13,8 +13,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from biff_agents_core.validators.config_validator import ConfigValidator
 from biff_agents_core.utils.cli_helpers import (
-    print_header, print_success, print_error, print_info
+    print_header, print_success, print_error, print_info, print_warning
 )
+from biff_agents_core.utils.environment_validator import EnvironmentValidator
 
 
 def create_parser():
@@ -171,10 +172,48 @@ def handle_validate(args):
 
 def handle_quickstart(args):
     """Handle quickstart command"""
-    print_header("Quick Start Orchestrator")
-    print_info("This feature is under development")
-    print_info(f"Output directory: {args.directory}")
-    print_info(f"Preset: {args.preset}")
+    print_header("BIFF Quick Start Orchestrator")
+    print()
+    print_info("Checking your environment for BIFF prerequisites...")
+    print()
+    
+    # Step 1: Validate environment
+    validator = EnvironmentValidator()
+    results = validator.validate_all()
+    
+    # Print validation summary
+    for info_msg in validator.info:
+        print_info(info_msg)
+    
+    if validator.warnings:
+        print()
+        for warning in validator.warnings:
+            print_warning(warning)
+    
+    if validator.issues:
+        print()
+        for issue in validator.issues:
+            print_error(issue)
+        
+        print()
+        print_error("Environment validation failed!")
+        print()
+        print_info("Suggested fixes:")
+        fixes = validator.suggest_fixes()
+        for fix in fixes:
+            print(f"  {fix}")
+        
+        return 1
+    
+    print()
+    print_success("✓ Environment validation passed!")
+    print()
+    
+    # Step 2: Quick start setup wizard (coming next)
+    print_info("Setup wizard coming soon...")
+    print_info(f"  Output directory: {args.directory}")
+    print_info(f"  Preset: {args.preset}")
+    
     return 0
 
 
