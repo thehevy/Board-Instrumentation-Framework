@@ -1,0 +1,16 @@
+{
+  "default": true,
+  "MD001": true,
+  "MD022": {
+    "lines_above": 1,
+    "lines_below": 1
+  },
+  "MD031": {
+    "list_items": false
+  },
+  "MD032": true,
+  "MD036": false,
+  "MD040": false,
+  "line-length": false,
+  "no-inline-html": false
+}
