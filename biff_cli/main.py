@@ -12,6 +12,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from biff_agents_core.validators.config_validator import ConfigValidator
+from biff_agents_core.generators.minion_generator import MinionConfigGenerator
+from biff_agents_core.generators.oscar_generator import OscarConfigGenerator
 from biff_agents_core.utils.cli_helpers import (
     print_header, print_success, print_error, print_info, print_warning
 )
@@ -227,18 +229,52 @@ def handle_quickstart(args):
             print_warning("Setup cancelled")
             return 0
         
-        # Step 3: Generate configurations (coming next)
+        # Step 3: Generate configurations
         print()
-        print_success("Configuration complete!")
+        print_header("Generating BIFF Configurations")
         print()
-        print_info("Next steps:")
-        print_info("  - Generating Minion configuration...")
-        print_info("  - Generating Oscar configuration...")
-        print_info("  - Generating Marvin application...")
-        print()
-        print_warning("Config generation coming in next phase")
         
-        return 0
+        output_dir = config["output_dir"]
+        
+        try:
+            # Generate Minion config
+            print_info("Generating Minion configuration...")
+            minion_gen = MinionConfigGenerator()
+            minion_file = minion_gen.generate_file(config, output_dir)
+            print_success(f"  ✓ Created: {minion_file}")
+            
+            # Generate Oscar config
+            print_info("Generating Oscar configuration...")
+            oscar_gen = OscarConfigGenerator()
+            oscar_file = oscar_gen.generate_file(config, output_dir)
+            print_success(f"  ✓ Created: {oscar_file}")
+            
+            # TODO: Generate Marvin config (Day 4)
+            print_info("Generating Marvin application...")
+            print_warning("  ⚠ Marvin config generation coming in next phase")
+            
+            print()
+            print_success("✓ Configuration files generated successfully!")
+            print()
+            print_info("Generated files:")
+            print(f"  - {minion_file}")
+            print(f"  - {oscar_file}")
+            print()
+            print_info("Next steps:")
+            print_info("  1. Review the generated configuration files")
+            print_info("  2. Start Oscar: cd Oscar && python Oscar.py -c ../path/to/OscarConfig.xml")
+            print_info("  3. Start Minion: cd Minion && python Minion.py -c ../path/to/MinionConfig.xml")
+            print_info("  4. Build and start Marvin (requires Java):")
+            print_info("     cd Marvin && gradlew build && java -jar build/libs/BIFF.Marvin.jar")
+            
+            return 0
+            
+        except Exception as e:
+            print()
+            print_error(f"Config generation failed: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return 1
         
     except KeyboardInterrupt:
         print()
