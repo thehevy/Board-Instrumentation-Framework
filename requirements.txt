@@ -1,0 +1,6 @@
+# Development dependencies (not required for runtime)
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Note: Core library uses only Python stdlib
+# No runtime dependencies required
