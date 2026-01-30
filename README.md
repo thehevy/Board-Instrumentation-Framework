@@ -8,44 +8,67 @@ Intelligent command-line agents for the Board Instrumentation Framework (BIFF).
 
 > **Note**: This is an AI agent toolkit for [BIFF](https://github.com/intel/Board-Instrumentation-Framework). It requires the parent BIFF framework to be useful.
 
+## ⚡ Quick Start
+
+**Get a complete BIFF setup running in < 5 minutes!**
+
+```bash
+cd biff-agents
+
+# Step 1: Generate configs (interactive wizard)
+python -m biff_cli quickstart
+
+# Step 2: Launch everything
+cd scripts
+start_all.bat  # Windows
+./start_all.sh # Linux/Mac
+```
+
+→ **[Full Quick Start Guide](QUICKSTART.md)** - Detailed walkthrough with screenshots and troubleshooting
+
 ## Features
 
-- **Quick Start Orchestrator**: Generate complete BIFF deployments
-- **Minion Collector Builder**: Create and manage collector configurations
-- **Marvin GUI Composer**: Design widget-based dashboards
-- **Oscar Routing Configurator**: Set up data routing and connections
-- **BIFF Debugging Agent**: Diagnose runtime issues
+- **Quick Start Orchestrator**: Generate complete BIFF deployments ✅ **Phase 1 Complete**
+- **Minion Collector Builder**: Create and manage collector configurations (Coming soon)
+- **Marvin GUI Composer**: Design widget-based dashboards (Coming soon)
+- **Oscar Routing Configurator**: Set up data routing and connections (Coming soon)
+- **BIFF Debugging Agent**: Diagnose runtime issues (Coming soon)
+
+## What You Get
+
+The Quick Start Orchestrator creates:
+
+- **MinionConfig.xml** - Data collector configuration with 4-6 built-in collectors
+- **OscarConfig.xml** - Data routing broker setup
+- **Application.xml** - Marvin GUI entry point
+- **Tab.QuickStart.xml** - Dashboard tab definition
+- **Grid.QuickStart.xml** - Widget grid with gauges and text displays
+
+**Result**: Live dashboard showing CPU, memory, random values, timers, and more!
 
 ## Installation
 
-```powershell
+```bash
 # From source
 cd biff-agents
 pip install -e .
 ```
 
-## Quick Start
+## CLI Commands
 
-```powershell
-# Validate a configuration
-biff validate MinionConfig.xml
+### quickstart
+Interactive wizard to create a complete BIFF deployment.
 
-# Generate a quick start project
-biff quickstart --preset monitoring
-
-# Add collectors interactively
-biff collector MinionConfig.xml --interactive
-
-# Debug connection issues
-biff debug --check network
+```bash
+python -m biff_cli quickstart
 ```
 
-## Commands
+Generates 5 XML files ready to run. Includes launcher scripts for one-command startup.
 
 ### validate
 Validate BIFF configuration files for syntax and common errors.
 
-```powershell
+```bash
 biff validate <config_file> [-t minion|oscar|marvin|auto]
 ```
 
