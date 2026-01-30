@@ -27,6 +27,7 @@ from biff_agents_core.utils.cli_helpers import (
 )
 from biff_agents_core.utils.environment_validator import EnvironmentValidator
 from biff_agents_core.utils.setup_wizard import SetupWizard
+from biff_agents_core.utils.collector_discovery import CollectorDiscovery
 from pathlib import Path
 
 
@@ -78,17 +79,44 @@ def create_parser():
     # Collector command
     collector_parser = subparsers.add_parser(
         'collector',
-        help='Minion Collector Builder - Generate collector configurations'
+        help='Minion Collector Builder - Discover and manage collectors'
     )
-    collector_parser.add_argument(
-        'config_file',
+    collector_subparsers = collector_parser.add_subparsers(dest='collector_action', help='Collector actions')
+    
+    # collector list
+    list_parser = collector_subparsers.add_parser('list', help='List available collectors')
+    list_parser.add_argument(
+        '-c', '--category',
+        help='Filter by category (system, containers, monitoring, testing, etc.)'
+    )
+    list_parser.add_argument(
+        '--biff-root',
         type=Path,
-        help='Path to MinionConfig.xml'
+        help='Path to BIFF installation (default: auto-detect)'
     )
-    collector_parser.add_argument(
-        '--interactive',
-        action='store_true',
-        help='Interactive mode with guided prompts'
+    
+    # collector info
+    info_parser = collector_subparsers.add_parser('info', help='Show detailed collector information')
+    info_parser.add_argument(
+        'name',
+        help='Collector name (e.g., CPU, RandomVal, Docker_Stats)'
+    )
+    info_parser.add_argument(
+        '--biff-root',
+        type=Path,
+        help='Path to BIFF installation (default: auto-detect)'
+    )
+    
+    # collector search
+    search_parser = collector_subparsers.add_parser('search', help='Search collectors by keyword')
+    search_parser.add_argument(
+        'query',
+        help='Search query (searches names, descriptions, functions)'
+    )
+    search_parser.add_argument(
+        '--biff-root',
+        type=Path,
+        help='Path to BIFF installation (default: auto-detect)'
     )
     
     # GUI command
@@ -329,8 +357,191 @@ def handle_quickstart(args):
 def handle_collector(args):
     """Handle collector command"""
     print_header("Minion Collector Builder")
-    print_info("This feature is under development")
-    print_info(f"Config file: {args.config_file}")
+    
+    # Auto-detect or use provided BIFF root
+    biff_root = getattr(args, 'biff_root', None)
+    if not biff_root:
+        # Try to find BIFF installation
+        current = Path.cwd()
+        while current != current.parent:
+            if (current / 'Minion' / 'Collectors').exists():
+                biff_root = current
+                break
+            current = current.parent
+        
+        if not biff_root:
+            print_error("Could not find BIFF installation")
+            print_info("Please specify --biff-root or run from within BIFF directory")
+            return 1
+    
+    # Initialize collector discovery
+    try:
+        discovery = CollectorDiscovery(biff_root)
+    except Exception as e:
+        print_error(f"Failed to initialize collector discovery: {e}")
+        return 1
+    
+    # Route to subcommands
+    action = getattr(args, 'collector_action', None)
+    
+    if not action:
+        print_error("No action specified")
+        print_info("Usage: biff collector {list|info|search}")
+        return 1
+    
+    if action == 'list':
+        return handle_collector_list(args, discovery)
+    elif action == 'info':
+        return handle_collector_info(args, discovery)
+    elif action == 'search':
+        return handle_collector_search(args, discovery)
+    else:
+        print_error(f"Unknown action: {action}")
+        return 1
+
+
+def handle_collector_list(args, discovery):
+    """Handle collector list subcommand"""
+    category = getattr(args, 'category', None)
+    
+    if category:
+        print_header(f"Collectors in category: {category}")
+        collectors = discovery.get_by_category(category)
+    else:
+        print_header("Available Collectors")
+        collectors = discovery.list_collectors()
+    
+    if not collectors:
+        if category:
+            print_warning(f"No collectors found in category '{category}'")
+            print_info(f"Available categories: {', '.join(discovery.get_categories())}")
+        else:
+            print_warning("No collectors found")
+        return 0
+    
+    # Group by category
+    by_category = {}
+    for collector in collectors:
+        if collector.category not in by_category:
+            by_category[collector.category] = []
+        by_category[collector.category].append(collector)
+    
+    # Print by category
+    for cat in sorted(by_category.keys()):
+        print()
+        print_info(f"━━━ {cat.upper()} ━━━")
+        for collector in sorted(by_category[cat], key=lambda c: c.name):
+            funcs = len(collector.functions)
+            func_text = f"{funcs} function{'s' if funcs != 1 else ''}"
+            desc = collector.description[:60] + "..." if len(collector.description) > 60 else collector.description
+            print(f"  • {collector.name:25} ({func_text:12}) - {desc}")
+    
+    print()
+    print_success(f"Found {len(collectors)} collector{'s' if len(collectors) != 1 else ''}")
+    if not category:
+        print_info(f"Categories: {', '.join(sorted(discovery.get_categories()))}")
+        print_info("Use 'biff collector list -c <category>' to filter by category")
+    
+    return 0
+
+
+def handle_collector_info(args, discovery):
+    """Handle collector info subcommand"""
+    name = args.name
+    
+    print_header(f"Collector: {name}")
+    
+    collector = discovery.get_collector(name)
+    if not collector:
+        print_error(f"Collector '{name}' not found")
+        print_info("Use 'biff collector list' to see available collectors")
+        return 1
+    
+    # Basic info
+    print()
+    print_info(f"Category:    {collector.category}")
+    print_info(f"File:        {collector.file_path.name}")
+    print_info(f"Functions:   {len(collector.functions)}")
+    if collector.dependencies:
+        print_info(f"Imports:     {', '.join(sorted(collector.dependencies))}")
+    
+    # Description
+    if collector.description:
+        print()
+        print_info("Description:")
+        print(f"  {collector.description}")
+    
+    # Functions
+    if collector.functions:
+        print()
+        print_info(f"Available Functions ({len(collector.functions)}):")
+        for func in collector.functions:
+            print(f"\n  • {func.name}()")
+            if func.description:
+                desc_lines = func.description.split('\n')
+                for line in desc_lines[:3]:  # Show first 3 lines
+                    print(f"    {line.strip()}")
+                if len(desc_lines) > 3:
+                    print(f"    ...")
+            
+            if func.parameters:
+                print(f"    Parameters:")
+                for param in func.parameters:
+                    param_str = f"      - {param.name}"
+                    if param.type_hint:
+                        param_str += f": {param.type_hint}"
+                    if param.default:
+                        param_str += f" = {param.default}"
+                    print(param_str)
+                    if param.description:
+                        print(f"        {param.description}")
+    
+    # Usage example
+    print()
+    print_info("Usage Example:")
+    print(f"""  <Collector ID="my_{name.lower()}_collector">
+    <Executable>Collectors/{collector.file_path.name}</Executable>""")
+    if collector.functions:
+        func = collector.functions[0]
+        print(f"    <Param>{func.name}</Param>")
+        if func.parameters:
+            for param in func.parameters[:2]:  # Show first 2 params
+                default = param.default or "value"
+                print(f"    <Param>{default}</Param>")
+    print(f"  </Collector>")
+    
+    print()
+    return 0
+
+
+def handle_collector_search(args, discovery):
+    """Handle collector search subcommand"""
+    query = args.query
+    
+    print_header(f"Searching for: {query}")
+    
+    results = discovery.search(query)
+    
+    if not results:
+        print_warning(f"No collectors found matching '{query}'")
+        print_info("Try searching for keywords like: cpu, docker, network, random, timer")
+        return 0
+    
+    print()
+    print_success(f"Found {len(results)} matching collector{'s' if len(results) != 1 else ''}")
+    print()
+    
+    for collector in results:
+        funcs = len(collector.functions)
+        func_text = f"{funcs} function{'s' if funcs != 1 else ''}"
+        print(f"  • {collector.name:25} [{collector.category:12}] ({func_text:12})")
+        desc = collector.description[:70] + "..." if len(collector.description) > 70 else collector.description
+        if desc:
+            print(f"    {desc}")
+        print()
+    
+    print_info(f"Use 'biff collector info <name>' for detailed information")
+    
     return 0
 
 
