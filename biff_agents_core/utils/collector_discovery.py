@@ -585,6 +585,229 @@ class CollectorDiscovery:
             return doctest_match.group(1).strip()
         
         return None
+    
+    def search_collectors(
+        self,
+        by_category: Optional[str] = None,
+        by_dependency: Optional[str] = None,
+        has_function: Optional[str] = None,
+        min_functions: Optional[int] = None
+    ) -> List[CollectorInfo]:
+        """Advanced search with multiple filters
+        
+        Args:
+            by_category: Filter by category (e.g., 'system', 'docker', 'monitoring')
+            by_dependency: Filter by required dependency (e.g., 'psutil', 'docker')
+            has_function: Filter collectors that have a function matching this name (partial match)
+            min_functions: Filter collectors with at least this many functions
+            
+        Returns:
+            List of collectors matching all specified filters
+            
+        Example:
+            # Find system collectors with at least 2 functions
+            results = discovery.search_collectors(by_category='system', min_functions=2)
+            
+            # Find collectors using psutil
+            results = discovery.search_collectors(by_dependency='psutil')
+        """
+        collectors = self.list_collectors()
+        results = []
+        
+        for collector in collectors:
+            # Apply category filter
+            if by_category and collector.category != by_category:
+                continue
+            
+            # Apply dependency filter
+            if by_dependency:
+                if by_dependency not in collector.dependencies:
+                    continue
+            
+            # Apply function name filter (partial match, case-insensitive)
+            if has_function:
+                has_func_lower = has_function.lower()
+                if not any(has_func_lower in func.name.lower() for func in collector.functions):
+                    continue
+            
+            # Apply minimum functions filter
+            if min_functions and len(collector.functions) < min_functions:
+                continue
+            
+            results.append(collector)
+        
+        return results
+    
+    def full_text_search(self, query: str, max_results: int = 10) -> List[tuple[CollectorInfo, float]]:
+        """Full-text search with relevance scoring
+        
+        Searches in:
+        - Collector name (highest weight)
+        - Collector description
+        - Function names
+        - Function descriptions
+        - Parameter descriptions
+        - Examples
+        
+        Args:
+            query: Search query (space-separated keywords)
+            max_results: Maximum number of results to return
+            
+        Returns:
+            List of (collector, score) tuples sorted by relevance score (highest first)
+            
+        Example:
+            results = discovery.full_text_search("cpu usage monitoring")
+            for collector, score in results:
+                print(f"{collector.name}: {score:.2f}")
+        """
+        collectors = self.list_collectors()
+        keywords = query.lower().split()
+        scored_results = []
+        
+        for collector in collectors:
+            score = 0.0
+            
+            # Score collector name (weight: 5.0)
+            for keyword in keywords:
+                if keyword in collector.name.lower():
+                    score += 5.0
+            
+            # Score collector description (weight: 2.0)
+            for keyword in keywords:
+                if keyword in collector.description.lower():
+                    score += 2.0
+            
+            # Score category (weight: 1.5)
+            for keyword in keywords:
+                if keyword in collector.category.lower():
+                    score += 1.5
+            
+            # Score function names (weight: 3.0)
+            for func in collector.functions:
+                for keyword in keywords:
+                    if keyword in func.name.lower():
+                        score += 3.0
+            
+            # Score function descriptions (weight: 1.0)
+            for func in collector.functions:
+                if func.description:
+                    for keyword in keywords:
+                        if keyword in func.description.lower():
+                            score += 1.0
+            
+            # Score parameter descriptions (weight: 0.5)
+            for func in collector.functions:
+                for param in func.parameters:
+                    if param.description:
+                        for keyword in keywords:
+                            if keyword in param.description.lower():
+                                score += 0.5
+            
+            # Score examples (weight: 0.8)
+            for example in collector.examples:
+                for keyword in keywords:
+                    if keyword in example.lower():
+                        score += 0.8
+            
+            if score > 0:
+                scored_results.append((collector, score))
+        
+        # Sort by score (highest first) and limit results
+        scored_results.sort(key=lambda x: x[1], reverse=True)
+        return scored_results[:max_results]
+    
+    def search_by_function(self, function_name: str, exact: bool = False) -> List[CollectorInfo]:
+        """Search collectors by function name
+        
+        Args:
+            function_name: Function name to search for
+            exact: If True, require exact match; if False, partial match (default)
+            
+        Returns:
+            List of collectors containing matching functions
+            
+        Example:
+            # Find collectors with "GetUsage" function
+            results = discovery.search_by_function("GetUsage", exact=True)
+            
+            # Find collectors with any function containing "cpu"
+            results = discovery.search_by_function("cpu", exact=False)
+        """
+        collectors = self.list_collectors()
+        results = []
+        
+        func_lower = function_name.lower()
+        
+        for collector in collectors:
+            for func in collector.functions:
+                if exact:
+                    if func.name == function_name:
+                        results.append(collector)
+                        break
+                else:
+                    if func_lower in func.name.lower():
+                        results.append(collector)
+                        break
+        
+        return results
+    
+    def regex_search(
+        self,
+        pattern: str,
+        search_in: str = 'all'
+    ) -> List[CollectorInfo]:
+        """Regular expression search
+        
+        Args:
+            pattern: Regular expression pattern
+            search_in: Where to search - 'name', 'description', 'functions', or 'all'
+            
+        Returns:
+            List of collectors matching the pattern
+            
+        Raises:
+            re.error: If pattern is invalid
+            
+        Example:
+            # Find collectors starting with "Docker"
+            results = discovery.regex_search(r'^Docker', search_in='name')
+            
+            # Find collectors with functions matching pattern
+            results = discovery.regex_search(r'Get\\w+Usage', search_in='functions')
+        """
+        try:
+            compiled_pattern = re.compile(pattern, re.IGNORECASE)
+        except re.error as e:
+            raise ValueError(f"Invalid regex pattern: {e}")
+        
+        collectors = self.list_collectors()
+        results = []
+        
+        for collector in collectors:
+            match_found = False
+            
+            # Search in name
+            if search_in in ('name', 'all'):
+                if compiled_pattern.search(collector.name):
+                    match_found = True
+            
+            # Search in description
+            if not match_found and search_in in ('description', 'all'):
+                if compiled_pattern.search(collector.description):
+                    match_found = True
+            
+            # Search in function names
+            if not match_found and search_in in ('functions', 'all'):
+                for func in collector.functions:
+                    if compiled_pattern.search(func.name):
+                        match_found = True
+                        break
+            
+            if match_found:
+                results.append(collector)
+        
+        return results
 
 
 def main():

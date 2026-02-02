@@ -111,7 +111,46 @@ def create_parser():
     search_parser = collector_subparsers.add_parser('search', help='Search collectors by keyword')
     search_parser.add_argument(
         'query',
+        nargs='?',
         help='Search query (searches names, descriptions, functions)'
+    )
+    search_parser.add_argument(
+        '--category',
+        help='Filter by category (e.g., system, containers, monitoring)'
+    )
+    search_parser.add_argument(
+        '--dependency',
+        help='Filter by required dependency (e.g., psutil, docker)'
+    )
+    search_parser.add_argument(
+        '--function',
+        help='Filter collectors with function name (partial match)'
+    )
+    search_parser.add_argument(
+        '--min-functions',
+        type=int,
+        help='Filter collectors with at least N functions'
+    )
+    search_parser.add_argument(
+        '--regex',
+        help='Search using regular expression pattern'
+    )
+    search_parser.add_argument(
+        '--search-in',
+        choices=['name', 'description', 'functions', 'all'],
+        default='all',
+        help='Where to search with --regex (default: all)'
+    )
+    search_parser.add_argument(
+        '--max-results',
+        type=int,
+        default=10,
+        help='Maximum number of results for full-text search (default: 10)'
+    )
+    search_parser.add_argument(
+        '--exact',
+        action='store_true',
+        help='Require exact function name match with --function'
     )
     search_parser.add_argument(
         '--biff-root',
@@ -563,18 +602,111 @@ def handle_collector_info(args, discovery):
 
 def handle_collector_search(args, discovery):
     """Handle collector search subcommand"""
-    query = args.query
     
-    print_header(f"Searching for: {query}")
+    # Determine search mode
+    if args.regex:
+        # Regex search
+        print_header(f"Regex Search: {args.regex}")
+        print_info(f"Searching in: {args.search_in}")
+        print()
+        
+        try:
+            results = discovery.regex_search(args.regex, search_in=args.search_in)
+        except ValueError as e:
+            print_error(str(e))
+            return 1
+            
+    elif args.category or args.dependency or args.function or args.min_functions:
+        # Advanced filter search
+        filters = []
+        if args.category:
+            filters.append(f"category={args.category}")
+        if args.dependency:
+            filters.append(f"dependency={args.dependency}")
+        if args.function:
+            filters.append(f"function={args.function}")
+        if args.min_functions:
+            filters.append(f"min_functions={args.min_functions}")
+        
+        print_header(f"Advanced Search")
+        print_info(f"Filters: {', '.join(filters)}")
+        print()
+        
+        results = discovery.search_collectors(
+            by_category=args.category,
+            by_dependency=args.dependency,
+            has_function=args.function,
+            min_functions=args.min_functions
+        )
+        
+    elif args.function:
+        # Function name search
+        print_header(f"Function Search: {args.function}")
+        print_info(f"Match type: {'exact' if args.exact else 'partial'}")
+        print()
+        
+        results = discovery.search_by_function(args.function, exact=args.exact)
+        
+    elif args.query:
+        # Full-text search
+        print_header(f"Searching for: {args.query}")
+        print()
+        
+        scored_results = discovery.full_text_search(args.query, max_results=args.max_results)
+        
+        if not scored_results:
+            print_warning(f"No collectors found matching '{args.query}'")
+            print_info("Try searching for keywords like: cpu, docker, network, random, timer")
+            return 0
+        
+        print_success(f"Found {len(scored_results)} matching collector{'s' if len(scored_results) != 1 else ''}")
+        print()
+        
+        for collector, score in scored_results:
+            funcs = len(collector.functions)
+            func_text = f"{funcs} function{'s' if funcs != 1 else ''}"
+            
+            # Show relevance score
+            score_bar = "█" * int(score / 2) + "░" * (10 - int(score / 2))
+            print(f"  [{score_bar}] {score:5.1f}  {collector.name:20} [{collector.category:12}] ({func_text})")
+            
+            desc = collector.description[:70] + "..." if len(collector.description) > 70 else collector.description
+            if desc:
+                print(f"         {desc}")
+            
+            # Highlight matching functions
+            matching_funcs = []
+            for func in collector.functions:
+                for keyword in args.query.lower().split():
+                    if keyword in func.name.lower():
+                        matching_funcs.append(func.name)
+                        break
+            
+            if matching_funcs:
+                print(f"         Functions: {', '.join(matching_funcs[:3])}")
+                if len(matching_funcs) > 3:
+                    print(f"                    ... and {len(matching_funcs) - 3} more")
+            
+            print()
+        
+        print_info(f"Use 'biff collector info <name>' for detailed information")
+        return 0
+    else:
+        print_error("No search criteria specified")
+        print_info("Use --help to see available search options")
+        print_info("Examples:")
+        print_info("  biff collector search 'cpu usage'")
+        print_info("  biff collector search --category system")
+        print_info("  biff collector search --function GetUsage")
+        print_info("  biff collector search --regex '^Docker.*'")
+        return 1
     
-    results = discovery.search(query)
-    
+    # Handle results for non-full-text searches
     if not results:
-        print_warning(f"No collectors found matching '{query}'")
-        print_info("Try searching for keywords like: cpu, docker, network, random, timer")
+        print_warning("No collectors found matching criteria")
+        print_info("Try different filters or use 'biff collector list' to see all collectors")
         return 0
     
-    print()
     print_success(f"Found {len(results)} matching collector{'s' if len(results) != 1 else ''}")
     print()
     
@@ -585,6 +717,13 @@ def handle_collector_search(args, discovery):
         desc = collector.description[:70] + "..." if len(collector.description) > 70 else collector.description
         if desc:
             print(f"    {desc}")
+        
+        # Show matching functions if function filter was used
+        if args.function:
+            matching_funcs = [f.name for f in collector.functions if args.function.lower() in f.name.lower()]
+            if matching_funcs:
+                print(f"    Matching functions: {', '.join(matching_funcs[:5])}")
+        
         print()
     
     print_info(f"Use 'biff collector info <name>' for detailed information")
