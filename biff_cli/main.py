@@ -180,6 +180,88 @@ def create_parser():
         help='Path to BIFF installation (default: auto-detect)'
     )
     
+    # collector template
+    template_parser = collector_subparsers.add_parser('template', help='Generate XML configuration templates')
+    template_parser.add_argument(
+        'name',
+        help='Collector name (e.g., RandomVal, CPU)'
+    )
+    template_parser.add_argument(
+        'function',
+        nargs='?',
+        help='Function name (default: first function)'
+    )
+    template_parser.add_argument(
+        '--id',
+        dest='collector_id',
+        help='Custom collector ID (default: name.function)'
+    )
+    template_parser.add_argument(
+        '--frequency',
+        type=int,
+        default=1000,
+        help='Collection frequency in milliseconds (default: 1000)'
+    )
+    template_parser.add_argument(
+        '--all-params',
+        action='store_true',
+        help='Include all parameters with defaults'
+    )
+    template_parser.add_argument(
+        '--validate',
+        action='store_true',
+        help='Validate the generated template'
+    )
+    template_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output file path (default: stdout)'
+    )
+    template_parser.add_argument(
+        '--biff-root',
+        type=Path,
+        help='Path to BIFF installation (default: auto-detect)'
+    )
+    
+    # collector namespace
+    namespace_parser = collector_subparsers.add_parser('namespace', help='Generate complete namespace configuration')
+    namespace_parser.add_argument(
+        'name',
+        help='Namespace name'
+    )
+    namespace_parser.add_argument(
+        '--collectors',
+        nargs='+',
+        help='Collectors in format "CollectorName:FunctionName" (e.g., CPU:GetCPU_Percentage)'
+    )
+    namespace_parser.add_argument(
+        '--ip',
+        default='localhost',
+        help='Target connection IP (default: localhost)'
+    )
+    namespace_parser.add_argument(
+        '--port',
+        type=int,
+        default=5100,
+        help='Target connection port (default: 5100)'
+    )
+    namespace_parser.add_argument(
+        '--frequency',
+        type=int,
+        default=1000,
+        help='Default frequency in milliseconds (default: 1000)'
+    )
+    namespace_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output file path (default: stdout)'
+    )
+    namespace_parser.add_argument(
+        '--biff-root',
+        type=Path,
+        help='Path to BIFF installation (default: auto-detect)'
+    )
+    
     # GUI command
     gui_parser = subparsers.add_parser(
         'gui',
@@ -458,6 +540,10 @@ def handle_collector(args):
         return handle_collector_search(args, discovery)
     elif action == 'test':
         return handle_collector_test(args, discovery)
+    elif action == 'template':
+        return handle_collector_template(args, discovery)
+    elif action == 'namespace':
+        return handle_collector_namespace(args, discovery)
     else:
         print_error(f"Unknown action: {action}")
         return 1
@@ -796,6 +882,146 @@ def handle_collector_test(args, discovery):
                 print(f"  {line}")
     
     print()
+    return 0
+
+
+def handle_collector_template(args, discovery):
+    """Handle collector template generation subcommand"""
+    name = args.name
+    function = getattr(args, 'function', None)
+    collector_id = getattr(args, 'collector_id', None)
+    frequency = args.frequency
+    all_params = args.all_params
+    validate = args.validate
+    output_file = getattr(args, 'output', None)
+    
+    print_header(f"Generating Template: {name}")
+    
+    # Generate XML template
+    try:
+        xml = discovery.generate_collector_xml(
+            name,
+            function_name=function,
+            collector_id=collector_id,
+            frequency=frequency,
+            include_all_params=all_params
+        )
+    except ValueError as e:
+        print_error(str(e))
+        return 1
+    
+    print()
+    print_success("Template generated successfully")
+    print()
+    
+    # Validate if requested
+    if validate:
+        valid, errors = discovery.validate_collector_config(f'<root>{xml}</root>')
+        if valid:
+            print_success("✓ Template validation passed")
+        else:
+            print_error("✗ Template validation failed:")
+            for error in errors:
+                print(f"  - {error}")
+        print()
+    
+    # Output to file or stdout
+    if output_file:
+        try:
+            output_file.write_text(xml, encoding='utf-8')
+            print_success(f"Template written to: {output_file}")
+        except Exception as e:
+            print_error(f"Failed to write template: {e}")
+            return 1
+    else:
+        print_info("Generated XML:")
+        print()
+        for line in xml.split('\n'):
+            print(f"  {line}")
+    
+    print()
+    print_info("Usage tips:")
+    print("  - Copy this XML into a <Namespace> section of your Minion config")
+    print("  - Replace <!-- comments --> with actual parameter values")
+    print("  - Adjust Frequency as needed for your use case")
+    
+    return 0
+
+
+def handle_collector_namespace(args, discovery):
+    """Handle namespace configuration generation subcommand"""
+    name = args.name
+    collectors_arg = getattr(args, 'collectors', [])
+    target_ip = args.ip
+    target_port = args.port
+    frequency = args.frequency
+    output_file = getattr(args, 'output', None)
+    
+    print_header(f"Generating Namespace: {name}")
+    
+    if not collectors_arg:
+        print_error("No collectors specified")
+        print_info("Use --collectors to specify collectors in format CollectorName:FunctionName")
+        print_info("Example: --collectors CPU:GetCPU_Percentage Memory:GetMemory")
+        return 1
+    
+    # Parse collectors
+    collectors = []
+    for spec in collectors_arg:
+        if ':' not in spec:
+            print_error(f"Invalid collector spec: {spec}")
+            print_info("Format should be: CollectorName:FunctionName")
+            return 1
+        
+        parts = spec.split(':', 1)
+        collectors.append((parts[0], parts[1]))
+    
+    print()
+    print_info(f"Target: {target_ip}:{target_port}")
+    print_info(f"Default frequency: {frequency}ms")
+    print_info(f"Collectors: {len(collectors)}")
+    for coll_name, func_name in collectors:
+        print(f"  - {coll_name}.{func_name}")
+    print()
+    
+    # Generate namespace config
+    try:
+        xml = discovery.generate_namespace_config(
+            name,
+            collectors,
+            target_ip=target_ip,
+            target_port=target_port,
+            default_frequency=frequency
+        )
+    except Exception as e:
+        print_error(f"Failed to generate namespace: {e}")
+        return 1
+    
+    print_success("Namespace configuration generated successfully")
+    print()
+    
+    # Output to file or stdout
+    if output_file:
+        try:
+            output_file.write_text(xml, encoding='utf-8')
+            print_success(f"Configuration written to: {output_file}")
+        except Exception as e:
+            print_error(f"Failed to write configuration: {e}")
+            return 1
+    else:
+        print_info("Generated XML:")
+        print()
+        for line in xml.split('\n'):
+            print(f"  {line}")
+    
+    print()
+    print_info("Next steps:")
+    print("  1. Copy this XML into your Minion configuration file")
+    print("  2. Replace parameter comments with actual values")
+    print("  3. Test with: biff collector test <name> <function>")
+    print("  4. Run Minion: python Minion.py -c YourConfig.xml")
+    
+    return 0
     return 0 if result['success'] else 1
 
 

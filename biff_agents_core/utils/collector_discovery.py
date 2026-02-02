@@ -808,6 +808,254 @@ class CollectorDiscovery:
                 results.append(collector)
         
         return results
+    
+    def generate_collector_xml(
+        self,
+        collector_name: str,
+        function_name: Optional[str] = None,
+        collector_id: Optional[str] = None,
+        frequency: int = 1000,
+        include_all_params: bool = False
+    ) -> str:
+        """Generate XML configuration snippet for a collector
+        
+        Args:
+            collector_name: Name of the collector
+            function_name: Specific function to use (default: first function)
+            collector_id: Custom ID for the collector (default: collector_name.function_name)
+            frequency: Collection frequency in milliseconds (default: 1000)
+            include_all_params: Include optional parameters with defaults (default: False)
+            
+        Returns:
+            XML configuration string
+            
+        Raises:
+            ValueError: If collector or function not found
+            
+        Example:
+            xml = discovery.generate_collector_xml('RandomVal', 'GetBoundedRandomValue')
+            # Returns:
+            # <Collector ID="RandomVal.GetBoundedRandomValue" Frequency="1000">
+            #   <Executable>Collectors\\RandomVal.py</Executable>
+            #   <Param>GetBoundedRandomValue</Param>
+            #   <Param>0</Param>
+            #   <Param>100</Param>
+            # </Collector>
+        """
+        # Get collector info
+        collector = self.get_collector(collector_name)
+        if not collector:
+            raise ValueError(f"Collector '{collector_name}' not found")
+        
+        # Find function
+        if function_name:
+            func = next((f for f in collector.functions if f.name == function_name), None)
+            if not func:
+                raise ValueError(f"Function '{function_name}' not found in collector '{collector_name}'")
+        else:
+            if not collector.functions:
+                raise ValueError(f"Collector '{collector_name}' has no functions")
+            func = collector.functions[0]
+        
+        # Generate ID
+        if not collector_id:
+            collector_id = f"{collector_name}.{func.name}"
+        
+        # Build XML
+        xml_lines = []
+        xml_lines.append(f'  <Collector ID="{collector_id}" Frequency="{frequency}">')
+        
+        # Executable path (relative to Minion directory)
+        relative_path = collector.file_path.relative_to(self.biff_root / "Minion")
+        xml_lines.append(f'    <Executable>{relative_path}</Executable>')
+        
+        # Function name as first param
+        xml_lines.append(f'    <Param>{func.name}</Param>')
+        
+        # Add required parameters
+        for param in func.parameters:
+            if param.default is None:  # Required parameter
+                xml_lines.append(f'    <Param><!-- {param.name}: {param.description or "value"} --></Param>')
+            elif include_all_params:  # Optional parameter with default
+                default_val = param.default.strip("'\"")  # Remove quotes
+                xml_lines.append(f'    <Param>{default_val}</Param>  <!-- {param.name} (optional) -->')
+        
+        xml_lines.append('  </Collector>')
+        
+        return '\n'.join(xml_lines)
+    
+    def validate_collector_config(self, xml_string: str) -> tuple[bool, List[str]]:
+        """Validate collector XML configuration
+        
+        Args:
+            xml_string: XML configuration to validate
+            
+        Returns:
+            Tuple of (is_valid, error_messages)
+            
+        Example:
+            valid, errors = discovery.validate_collector_config(xml_str)
+            if not valid:
+                for error in errors:
+                    print(f"Error: {error}")
+        """
+        import xml.dom.minidom as minidom
+        
+        errors = []
+        
+        try:
+            doc = minidom.parseString(xml_string)
+        except Exception as e:
+            errors.append(f"Invalid XML: {e}")
+            return False, errors
+        
+        # Check for Collector element
+        collectors = doc.getElementsByTagName('Collector')
+        if not collectors:
+            errors.append("No <Collector> element found")
+            return False, errors
+        
+        for collector in collectors:
+            # Check required attributes
+            if not collector.hasAttribute('ID'):
+                errors.append("Collector missing 'ID' attribute")
+            
+            if not collector.hasAttribute('Frequency'):
+                errors.append("Collector missing 'Frequency' attribute")
+            else:
+                try:
+                    freq = int(collector.getAttribute('Frequency'))
+                    if freq <= 0:
+                        errors.append(f"Frequency must be positive, got {freq}")
+                except ValueError:
+                    errors.append(f"Frequency must be a number")
+            
+            # Check for Executable element
+            executables = collector.getElementsByTagName('Executable')
+            if not executables:
+                errors.append("Collector missing <Executable> element")
+            
+            # Check for at least one Param (function name)
+            params = collector.getElementsByTagName('Param')
+            if not params:
+                errors.append("Collector missing <Param> elements (at least function name required)")
+        
+        return len(errors) == 0, errors
+    
+    def customize_template(
+        self,
+        xml_string: str,
+        new_id: Optional[str] = None,
+        new_frequency: Optional[int] = None,
+        param_values: Optional[Dict[int, str]] = None
+    ) -> str:
+        """Customize an XML collector template
+        
+        Args:
+            xml_string: Original XML template
+            new_id: New collector ID (optional)
+            new_frequency: New frequency in ms (optional)
+            param_values: Dict of {param_index: value} to replace (0-based, excluding function name)
+            
+        Returns:
+            Customized XML string
+            
+        Example:
+            xml = discovery.generate_collector_xml('RandomVal', 'GetBoundedRandomValue')
+            custom = discovery.customize_template(
+                xml,
+                new_id='cpu.usage',
+                new_frequency=500,
+                param_values={0: '0', 1: '1000'}  # min=0, max=1000
+            )
+        """
+        import xml.dom.minidom as minidom
+        
+        try:
+            doc = minidom.parseString(xml_string)
+        except Exception as e:
+            raise ValueError(f"Invalid XML: {e}")
+        
+        collectors = doc.getElementsByTagName('Collector')
+        if not collectors:
+            raise ValueError("No <Collector> element found")
+        
+        collector = collectors[0]
+        
+        # Update ID
+        if new_id:
+            collector.setAttribute('ID', new_id)
+        
+        # Update Frequency
+        if new_frequency:
+            collector.setAttribute('Frequency', str(new_frequency))
+        
+        # Update parameter values
+        if param_values:
+            params = collector.getElementsByTagName('Param')
+            # Skip first param (function name)
+            for idx, value in param_values.items():
+                param_idx = idx + 1  # +1 to skip function name
+                if param_idx < len(params):
+                    # Clear existing content
+                    while params[param_idx].firstChild:
+                        params[param_idx].removeChild(params[param_idx].firstChild)
+                    # Add new text node
+                    params[param_idx].appendChild(doc.createTextNode(value))
+        
+        return doc.toxml()
+    
+    def generate_namespace_config(
+        self,
+        namespace_name: str,
+        collectors: List[tuple[str, str]],
+        target_ip: str = "localhost",
+        target_port: int = 5100,
+        default_frequency: int = 1000
+    ) -> str:
+        """Generate complete namespace configuration with multiple collectors
+        
+        Args:
+            namespace_name: Name of the namespace
+            collectors: List of (collector_name, function_name) tuples
+            target_ip: Target connection IP (default: localhost)
+            target_port: Target connection port (default: 5100)
+            default_frequency: Default frequency for collectors (default: 1000)
+            
+        Returns:
+            Complete namespace XML configuration
+            
+        Example:
+            config = discovery.generate_namespace_config(
+                'System',
+                [('CPU', 'GetCPU_Percentage'), ('Memory', 'GetMemory')],
+                target_ip='192.168.1.100',
+                target_port=5100
+            )
+        """
+        xml_lines = []
+        xml_lines.append(f'<Namespace>')
+        xml_lines.append(f'  <Name>{namespace_name}</Name>')
+        xml_lines.append(f'  <DefaultFrequency>{default_frequency}</DefaultFrequency>')
+        xml_lines.append(f'  <TargetConnection IP="{target_ip}" PORT="{target_port}"/>')
+        xml_lines.append('')
+        
+        for collector_name, function_name in collectors:
+            try:
+                collector_xml = self.generate_collector_xml(
+                    collector_name,
+                    function_name,
+                    frequency=default_frequency
+                )
+                xml_lines.append(collector_xml)
+                xml_lines.append('')
+            except ValueError as e:
+                xml_lines.append(f'  <!-- Error: {e} -->')
+                xml_lines.append('')
+        
+        xml_lines.append('</Namespace>')
+        
+        return '\n'.join(xml_lines)
 
 
 def main():
