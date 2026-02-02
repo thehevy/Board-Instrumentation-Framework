@@ -8,6 +8,8 @@ parse their metadata, and provide search/filter capabilities.
 import ast
 import inspect
 import re
+import sys
+import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional, Dict, Callable
@@ -268,23 +270,43 @@ class CollectorDiscovery:
                 # Extract function docstring
                 docstring = ast.get_docstring(node) or ""
                 
-                # Extract parameters
+                # Parse parameter descriptions from docstring
+                param_descriptions = self._parse_param_descriptions(docstring)
+                
+                # Extract parameters with defaults
                 parameters = []
-                for arg in node.args.args:
+                defaults = node.args.defaults
+                num_defaults = len(defaults)
+                num_args = len(node.args.args)
+                
+                for i, arg in enumerate(node.args.args):
                     if arg.arg == 'self':
                         continue
                     
+                    # Check if this parameter has a default value
+                    default_value = None
+                    if num_args - i <= num_defaults:
+                        default_idx = num_defaults - (num_args - i)
+                        default_node = defaults[default_idx]
+                        default_value = self._ast_to_string(default_node)
+                    
                     param = FunctionParameter(
                         name=arg.arg,
-                        type_hint=self._get_type_hint(arg.annotation) if arg.annotation else None
+                        type_hint=self._get_type_hint(arg.annotation) if arg.annotation else None,
+                        default=default_value,
+                        description=param_descriptions.get(arg.arg)
                     )
                     parameters.append(param)
+                
+                # Extract example from docstring
+                example = self._extract_example_from_docstring(docstring)
                 
                 functions.append(FunctionInfo(
                     name=node.name,
                     description=docstring.split('\n')[0] if docstring else "",
                     parameters=parameters,
-                    return_type=self._get_type_hint(node.returns) if node.returns else None
+                    return_type=self._get_type_hint(node.returns) if node.returns else None,
+                    example=example
                 ))
         
         return functions
@@ -305,12 +327,149 @@ class CollectorDiscovery:
         
         return list(set(dependencies))  # Deduplicate
     
+    def check_dependencies(self, collector_name: str) -> Dict[str, bool]:
+        """Check if collector dependencies are installed
+        
+        Args:
+            collector_name: Name of collector to check
+            
+        Returns:
+            Dict mapping dependency name to installed status
+        """
+        collector = self.get_collector(collector_name)
+        if not collector:
+            return {}
+        
+        status = {}
+        for dep in collector.dependencies:
+            try:
+                __import__(dep)
+                status[dep] = True
+            except ImportError:
+                status[dep] = False
+        
+        return status
+    
+    def get_missing_dependencies(self, collector_name: str) -> List[str]:
+        """Get list of missing dependencies for collector
+        
+        Args:
+            collector_name: Name of collector to check
+            
+        Returns:
+            List of missing dependency names
+        """
+        dep_status = self.check_dependencies(collector_name)
+        return [dep for dep, installed in dep_status.items() if not installed]
+    
+    def suggest_install_command(self, dependencies: List[str]) -> str:
+        """Generate pip install command for missing dependencies
+        
+        Args:
+            dependencies: List of dependency names
+            
+        Returns:
+            pip install command string
+        """
+        if not dependencies:
+            return ""
+        
+        return f"pip install {' '.join(dependencies)}"
+    
     def _get_type_hint(self, annotation) -> Optional[str]:
         """Convert AST type annotation to string"""
         if isinstance(annotation, ast.Name):
             return annotation.id
         elif isinstance(annotation, ast.Constant):
             return str(annotation.value)
+        return None
+    
+    def _ast_to_string(self, node) -> str:
+        """Convert AST node to string representation"""
+        if isinstance(node, ast.Constant):
+            return repr(node.value)
+        elif isinstance(node, ast.Name):
+            return node.id
+        elif isinstance(node, ast.Num):
+            return str(node.n)
+        elif isinstance(node, ast.Str):
+            return repr(node.s)
+        elif isinstance(node, ast.NameConstant):
+            return str(node.value)
+        elif isinstance(node, ast.List):
+            return '[' + ', '.join(self._ast_to_string(e) for e in node.elts) + ']'
+        elif isinstance(node, ast.Dict):
+            items = [f'{self._ast_to_string(k)}: {self._ast_to_string(v)}' 
+                    for k, v in zip(node.keys, node.values)]
+            return '{' + ', '.join(items) + '}'
+        else:
+            return 'None'
+    
+    def _parse_param_descriptions(self, docstring: str) -> Dict[str, str]:
+        """Parse parameter descriptions from docstring
+        
+        Supports multiple formats:
+        - Args: / Parameters: section with param: description
+        - @param param_name description
+        - :param param_name: description
+        """
+        descriptions = {}
+        if not docstring:
+            return descriptions
+        
+        # Try Args:/Parameters: section
+        args_match = re.search(r'(?:Args:|Parameters:)\s*\n((?:\s+\w+.*\n?)+)', docstring, re.MULTILINE)
+        if args_match:
+            args_section = args_match.group(1)
+            # Parse lines like "    param_name: description" or "    param_name - description"
+            for line in args_section.split('\n'):
+                match = re.match(r'\s+(\w+)[:\-]\s*(.+)', line)
+                if match:
+                    param_name, desc = match.groups()
+                    descriptions[param_name] = desc.strip()
+        
+        # Try @param format
+        for match in re.finditer(r'@param\s+(\w+)\s+(.+)', docstring):
+            param_name, desc = match.groups()
+            descriptions[param_name] = desc.strip()
+        
+        # Try :param format
+        for match in re.finditer(r':param\s+(\w+):\s*(.+)', docstring):
+            param_name, desc = match.groups()
+            descriptions[param_name] = desc.strip()
+        
+        return descriptions
+    
+    def _extract_example_from_docstring(self, docstring: str) -> Optional[str]:
+        """Extract example code from docstring
+        
+        Looks for:
+        - Example: section
+        - Examples: section
+        - Code blocks in docstring
+        """
+        if not docstring:
+            return None
+        
+        # Try Example:/Examples: section
+        example_match = re.search(r'(?:Example|Examples):\s*\n((?:\s+.+\n?)+)', docstring, re.MULTILINE | re.IGNORECASE)
+        if example_match:
+            example = example_match.group(1).strip()
+            # Remove leading whitespace but preserve relative indentation
+            lines = example.split('\n')
+            min_indent = min(len(line) - len(line.lstrip()) for line in lines if line.strip())
+            return '\n'.join(line[min_indent:] for line in lines)
+        
+        # Try code blocks (``` or >>>)
+        code_block_match = re.search(r'```(?:python)?\s*\n(.+?)\n```', docstring, re.DOTALL)
+        if code_block_match:
+            return code_block_match.group(1).strip()
+        
+        # Try >>> prompts
+        doctest_match = re.search(r'((?:^\s*>>>.*\n?)+)', docstring, re.MULTILINE)
+        if doctest_match:
+            return doctest_match.group(1).strip()
+        
         return None
 
 

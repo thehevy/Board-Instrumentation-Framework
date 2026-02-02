@@ -462,8 +462,23 @@ def handle_collector_info(args, discovery):
     print_info(f"Category:    {collector.category}")
     print_info(f"File:        {collector.file_path.name}")
     print_info(f"Functions:   {len(collector.functions)}")
+    
+    # Dependencies with installation status
     if collector.dependencies:
-        print_info(f"Imports:     {', '.join(sorted(collector.dependencies))}")
+        dep_status = discovery.check_dependencies(name)
+        deps_str = []
+        for dep in sorted(collector.dependencies):
+            status = dep_status.get(dep, False)
+            symbol = "✓" if status else "✗"
+            deps_str.append(f"{dep} {symbol}")
+        print_info(f"Dependencies: {', '.join(deps_str)}")
+        
+        # Show install command if missing dependencies
+        missing = discovery.get_missing_dependencies(name)
+        if missing:
+            print()
+            print_warning(f"Missing dependencies: {', '.join(missing)}")
+            print_info(f"Install: {discovery.suggest_install_command(missing)}")
     
     # Description
     if collector.description:
@@ -495,6 +510,14 @@ def handle_collector_info(args, discovery):
                     print(param_str)
                     if param.description:
                         print(f"        {param.description}")
+            
+            # Show example if available
+            if func.example:
+                print(f"    Example:")
+                for line in func.example.split('\n')[:5]:  # Show first 5 lines
+                    print(f"      {line}")
+                if len(func.example.split('\n')) > 5:
+                    print(f"      ...")
     
     # Usage example
     print()
