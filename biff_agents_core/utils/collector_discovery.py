@@ -1003,7 +1003,8 @@ class CollectorDiscovery:
                     # Add new text node
                     params[param_idx].appendChild(doc.createTextNode(value))
         
-        return doc.toxml()
+        # Return just the Collector element XML (without <?xml...?> header)
+        return collector.toxml()
     
     def generate_namespace_config(
         self,
