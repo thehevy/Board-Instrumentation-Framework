@@ -119,6 +119,28 @@ def create_parser():
         help='Path to BIFF installation (default: auto-detect)'
     )
     
+    # collector test
+    test_parser = collector_subparsers.add_parser('test', help='Test a collector with sample parameters')
+    test_parser.add_argument(
+        'name',
+        help='Collector name (e.g., RandomVal, Timer)'
+    )
+    test_parser.add_argument(
+        'function',
+        nargs='?',
+        help='Function to test (default: first function)'
+    )
+    test_parser.add_argument(
+        'params',
+        nargs='*',
+        help='Parameters to pass to function'
+    )
+    test_parser.add_argument(
+        '--biff-root',
+        type=Path,
+        help='Path to BIFF installation (default: auto-detect)'
+    )
+    
     # GUI command
     gui_parser = subparsers.add_parser(
         'gui',
@@ -395,6 +417,8 @@ def handle_collector(args):
         return handle_collector_info(args, discovery)
     elif action == 'search':
         return handle_collector_search(args, discovery)
+    elif action == 'test':
+        return handle_collector_test(args, discovery)
     else:
         print_error(f"Unknown action: {action}")
         return 1
@@ -566,6 +590,74 @@ def handle_collector_search(args, discovery):
     print_info(f"Use 'biff collector info <name>' for detailed information")
     
     return 0
+
+
+def handle_collector_test(args, discovery):
+    """Handle collector test subcommand"""
+    name = args.name
+    function = getattr(args, 'function', None)
+    params = getattr(args, 'params', [])
+    
+    print_header(f"Testing Collector: {name}")
+    
+    # Get collector info
+    collector = discovery.get_collector(name)
+    if not collector:
+        print_error(f"Collector '{name}' not found")
+        print_info("Use 'biff collector list' to see available collectors")
+        return 1
+    
+    # Show what we're testing
+    print()
+    if function:
+        print_info(f"Function: {function}")
+    else:
+        print_info(f"Function: {collector.functions[0].name if collector.functions else 'N/A'} (default)")
+    
+    if params:
+        print_info(f"Parameters: {' '.join(params)}")
+    else:
+        print_info("Parameters: (none)")
+    
+    # Check dependencies first
+    missing = discovery.get_missing_dependencies(name)
+    if missing:
+        print()
+        print_error(f"Missing dependencies: {', '.join(missing)}")
+        print_info(f"Install: {discovery.suggest_install_command(missing)}")
+        return 1
+    
+    # Run test
+    print()
+    print_info("Running collector...")
+    print()
+    
+    result = discovery.test_collector(name, function, params)
+    
+    if result['success']:
+        print_success("✓ Collector executed successfully")
+        print()
+        if result['output']:
+            print_info("Output:")
+            for line in result['output'].strip().split('\n'):
+                print(f"  {line}")
+    else:
+        print_error(f"✗ Collector failed (exit code: {result['exit_code']})")
+        print()
+        if result['error']:
+            print_info("Error:")
+            for line in result['error'].strip().split('\n')[:10]:  # Show first 10 lines
+                print(f"  {line}")
+            if len(result['error'].strip().split('\n')) > 10:
+                print(f"  ... ({len(result['error'].strip().split('\n')) - 10} more lines)")
+        if result['output']:
+            print()
+            print_info("Output:")
+            for line in result['output'].strip().split('\n')[:10]:
+                print(f"  {line}")
+    
+    print()
+    return 0 if result['success'] else 1
 
 
 def handle_gui(args):

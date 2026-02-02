@@ -376,6 +376,120 @@ class CollectorDiscovery:
         
         return f"pip install {' '.join(dependencies)}"
     
+    def test_collector(self, collector_name: str, function_name: Optional[str] = None, 
+                      params: Optional[List[str]] = None) -> Dict[str, any]:
+        """Test a collector by importing and calling it with sample parameters
+        
+        Args:
+            collector_name: Name of collector to test
+            function_name: Function to call (default: first function)
+            params: List of parameters to pass
+            
+        Returns:
+            Dict with keys: success (bool), output (str), error (str), exit_code (int)
+        """
+        collector = self.get_collector(collector_name)
+        if not collector:
+            return {
+                'success': False,
+                'output': '',
+                'error': f"Collector '{collector_name}' not found",
+                'exit_code': 1
+            }
+        
+        # Check dependencies
+        missing_deps = self.get_missing_dependencies(collector_name)
+        if missing_deps:
+            return {
+                'success': False,
+                'output': '',
+                'error': f"Missing dependencies: {', '.join(missing_deps)}. Install with: {self.suggest_install_command(missing_deps)}",
+                'exit_code': 1
+            }
+        
+        # Select function
+        if function_name:
+            func = next((f for f in collector.functions if f.name == function_name), None)
+            if not func:
+                available = [f.name for f in collector.functions]
+                return {
+                    'success': False,
+                    'output': '',
+                    'error': f"Function '{function_name}' not found. Available: {', '.join(available)}",
+                    'exit_code': 1
+                }
+        else:
+            if not collector.functions:
+                return {
+                    'success': False,
+                    'output': '',
+                    'error': "No functions found in collector",
+                    'exit_code': 1
+                }
+            func = collector.functions[0]
+            function_name = func.name
+        
+        # Import collector module dynamically
+        try:
+            spec = importlib.util.spec_from_file_location(collector_name, collector.file_path)
+            if not spec or not spec.loader:
+                return {
+                    'success': False,
+                    'output': '',
+                    'error': f'Failed to load collector module',
+                    'exit_code': 1
+                }
+            
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[collector_name] = module
+            spec.loader.exec_module(module)
+            
+            # Get the function
+            if not hasattr(module, function_name):
+                return {
+                    'success': False,
+                    'output': '',
+                    'error': f"Function '{function_name}' not found in module",
+                    'exit_code': 1
+                }
+            
+            func_obj = getattr(module, function_name)
+            
+            # Call the function with parameters
+            if params:
+                result_value = func_obj(*params)
+            else:
+                result_value = func_obj()
+            
+            # Convert result to string
+            output = str(result_value) if result_value is not None else "(no output)"
+            
+            return {
+                'success': True,
+                'output': output,
+                'error': '',
+                'exit_code': 0
+            }
+            
+        except TypeError as e:
+            # Wrong number of parameters
+            param_count = len(params) if params else 0
+            expected = len(func.parameters)
+            return {
+                'success': False,
+                'output': '',
+                'error': f"TypeError: Expected {expected} parameters, got {param_count}. {str(e)}",
+                'exit_code': 1
+            }
+        except Exception as e:
+            import traceback
+            return {
+                'success': False,
+                'output': '',
+                'error': f'Error calling collector: {str(e)}\n{traceback.format_exc()}',
+                'exit_code': 1
+            }
+    
     def _get_type_hint(self, annotation) -> Optional[str]:
         """Convert AST type annotation to string"""
         if isinstance(annotation, ast.Name):
