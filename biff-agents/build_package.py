@@ -359,7 +359,7 @@ param(
     [switch]$Help
 )
 
-if ($Help) {
+if ($Help) {{
     Write-Host @"
 ============================================================
   Start All BIFF Components
@@ -379,7 +379,7 @@ EXAMPLE:
 
 "@
     exit 0
-}
+}}
 
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
