@@ -210,10 +210,17 @@ class PackageBuilder:
         shutil.copytree(marvin_src / "Widget", marvin_dst / "Widget", dirs_exist_ok=True)
         
         # Copy startup scripts
-        for script in ["start_marvin.ps1", "start_marvin.bat"]:
+        for script in ["start_marvin.ps1", "start_marvin.bat", "start_marvin.sh"]:
             src = marvin_src / script
             if src.exists():
-                shutil.copy2(src, marvin_dst)
+                script_dst = marvin_dst / script
+                shutil.copy2(src, script_dst)
+                # Make shell script executable on Unix systems
+                if script.endswith('.sh'):
+                    try:
+                        script_dst.chmod(0o755)
+                    except:
+                        pass  # On Windows, chmod may not work
         
         return True
     
@@ -234,10 +241,18 @@ class PackageBuilder:
                 shutil.copytree(src_dir, oscar_dst / dir_name, dirs_exist_ok=True)
         
         # Copy scripts
-        for script in ["start_oscar.ps1", "start_oscar.bat", "status_oscar.ps1", "stop_oscar.ps1"]:
+        for script in ["start_oscar.ps1", "start_oscar.bat", "status_oscar.ps1", "stop_oscar.ps1",
+                       "start_oscar.sh", "stop_oscar.sh", "status_oscar.sh"]:
             src = oscar_src / script
             if src.exists():
-                shutil.copy2(src, oscar_dst)
+                script_dst = oscar_dst / script
+                shutil.copy2(src, script_dst)
+                # Make shell script executable on Unix systems
+                if script.endswith('.sh'):
+                    try:
+                        script_dst.chmod(0o755)
+                    except:
+                        pass  # On Windows, chmod may not work
         
         return True
     
