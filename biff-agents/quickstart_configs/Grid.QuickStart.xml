@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <MarvinExternalFile>
   <Grid Align="N" hgap="10" vgap="10">
     <Widget row="1" column="1" Height="300" Width="400" File="Gauge/GaugeSimple.xml">
