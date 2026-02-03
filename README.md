@@ -44,6 +44,21 @@ java -jar build\libs\BIFF.Marvin.jar
 
 **Note:** If you encounter "JAVA_HOME is not set" error, use the setup scripts above.
 
+## Deployment & Packaging
+
+Create standalone deployment packages with all components:
+
+```powershell
+# Build complete package with configurations
+python biff-agents\build_package.py --config-source biff-agents\biff-quickstart-test
+
+# Or use wrapper scripts
+.\build_package.bat
+.\build_package.ps1
+```
+
+Generates `BIFF-Package-<version>-<date>/` with Marvin, Oscar, Minion, configs, startup scripts, and documentation. See [PACKAGING.md](PACKAGING.md) for details.
+
 ---
 
 
