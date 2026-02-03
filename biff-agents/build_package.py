@@ -53,6 +53,59 @@ class PackageBuilder:
         }
         print(f"{colors.get(status_type, '')}{[status_type]} {message}{colors['RESET']}")
     
+    def check_prerequisites(self):
+        """Check build prerequisites and environment."""
+        self.print_status("Checking prerequisites...", "INFO")
+        
+        issues = []
+        
+        # Check Java
+        try:
+            result = subprocess.run(["java", "-version"], capture_output=True, check=True, text=True)
+            self.print_status("[OK] Java found in PATH", "SUCCESS")
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            issues.append("Java not in PATH")
+            self.print_status("[X] Java not found", "ERROR")
+        
+        # Check JAVA_HOME
+        if not os.environ.get("JAVA_HOME"):
+            issues.append("JAVA_HOME not set")
+            self.print_status("[!] JAVA_HOME not set", "WARNING")
+        else:
+            self.print_status(f"[OK] JAVA_HOME = {os.environ.get('JAVA_HOME')}", "SUCCESS")
+        
+        # Check GRADLE_OPTS (warn only)
+        if not os.environ.get("GRADLE_OPTS"):
+            self.print_status("[!] GRADLE_OPTS not set (may fail behind proxy)", "WARNING")
+        else:
+            self.print_status("[OK] GRADLE_OPTS configured", "SUCCESS")
+        
+        # Check Python
+        self.print_status(f"[OK] Python {sys.version.split()[0]}", "SUCCESS")
+        
+        if issues and not self.args.skip_build:
+            print("\n" + "="*60)
+            print("PREREQUISITE ISSUES FOUND:")
+            print("="*60)
+            for issue in issues:
+                print(f"  • {issue}")
+            print("\nFIXES:")
+            print("  1. Configure Java environment:")
+            print("     PowerShell: .\\setup_java.ps1")
+            print("     Batch:      setup_java.bat")
+            print("\n  2. If behind corporate proxy, set GRADLE_OPTS:")
+            print('     $env:GRADLE_OPTS="-Dhttp.proxyHost=proxy-dmz.intel.com -Dhttp.proxyPort=912 -Dhttps.proxyHost=proxy-dmz.intel.com -Dhttps.proxyPort=912"')
+            print("\n  3. Or skip build and use existing JAR:")
+            print("     python biff-agents\\build_package.py --skip-build")
+            print("="*60)
+            print()
+            
+            response = input("Continue anyway? (y/N): ")
+            if response.lower() != 'y':
+                return False
+        
+        return True
+    
     def build_marvin(self):
         """Build Marvin JAR with Gradle."""
         if self.args.skip_build:
@@ -63,34 +116,53 @@ class PackageBuilder:
         
         # Check for Java
         try:
-            subprocess.run(["java", "-version"], capture_output=True, check=True)
+            result = subprocess.run(["java", "-version"], capture_output=True, check=True, text=True)
         except (subprocess.CalledProcessError, FileNotFoundError):
-            self.print_status("Java not in PATH. Run setup_java.ps1 first", "ERROR")
+            self.print_status("Java not in PATH. Run setup_java.ps1 or setup_java.bat first", "ERROR")
+            print("\nTo configure Java:")
+            print("  PowerShell: .\\setup_java.ps1")
+            print("  Batch:      setup_java.bat")
             return False
+        
+        # Check for GRADLE_OPTS if behind proxy
+        if not os.environ.get("GRADLE_OPTS"):
+            self.print_status("GRADLE_OPTS not set - may fail behind corporate proxy", "WARNING")
+            print("\nIf behind proxy, set before running:")
+            print('  $env:GRADLE_OPTS="-Dhttp.proxyHost=proxy.example.com -Dhttp.proxyPort=8080"')
         
         # Build Enzo
         self.print_status("Building Enzo dependency...", "INFO")
         enzo_dir = self.repo_root / "Marvin" / "Dependencies" / "Enzo"
         gradlew = self.repo_root / "Marvin" / "gradlew.bat" if sys.platform == "win32" else self.repo_root / "Marvin" / "gradlew"
         
-        result = subprocess.run([str(gradlew), "build"], cwd=enzo_dir, capture_output=True)
+        result = subprocess.run([str(gradlew), "build"], cwd=enzo_dir, capture_output=True, text=True)
         if result.returncode != 0:
             self.print_status("Enzo build failed", "ERROR")
+            print("\nGradle Error Output:")
+            print(result.stderr if result.stderr else result.stdout)
+            print("\nCommon fixes:")
+            print("  1. Set JAVA_HOME: Run setup_java.ps1")
+            print("  2. Configure proxy: Set GRADLE_OPTS (see above)")
+            print("  3. Clean build: cd Marvin\\Dependencies\\Enzo && ..\\..\\gradlew clean build")
             return False
         
         # Copy Enzo JAR
         self.print_status("Copying Enzo JAR...", "INFO")
         marvin_dir = self.repo_root / "Marvin"
-        result = subprocess.run([str(gradlew), "copyEnzoJar"], cwd=marvin_dir, capture_output=True)
+        result = subprocess.run([str(gradlew), "copyEnzoJar"], cwd=marvin_dir, capture_output=True, text=True)
         if result.returncode != 0:
             self.print_status("Copy Enzo JAR failed", "ERROR")
+            print("\nError Output:")
+            print(result.stderr if result.stderr else result.stdout)
             return False
         
         # Build Marvin
         self.print_status("Building Marvin...", "INFO")
-        result = subprocess.run([str(gradlew), "build"], cwd=marvin_dir, capture_output=True)
+        result = subprocess.run([str(gradlew), "build"], cwd=marvin_dir, capture_output=True, text=True)
         if result.returncode != 0:
             self.print_status("Marvin build failed", "ERROR")
+            print("\nError Output:")
+            print(result.stderr if result.stderr else result.stdout)
             return False
         
         self.print_status("Build completed successfully", "SUCCESS")
@@ -500,6 +572,13 @@ Built with BIFF Package Builder
         print()
         print(f"Package: {self.package_name}")
         print(f"Version: {self.version}")
+        print()
+        
+        # Check prerequisites first
+        if not self.check_prerequisites():
+            self.print_status("Prerequisite check failed. Aborting.", "ERROR")
+            return False
+        
         print()
         
         steps = [
