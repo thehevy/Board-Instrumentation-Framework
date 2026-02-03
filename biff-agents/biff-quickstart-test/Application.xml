@@ -9,9 +9,11 @@
     <Heartbeat Rate="10"/>
     <Tasks Enabled="True"/>
     <MainMenu Show="True"/>
-    <ExternalFile File="Configs/Tab.QuickStart.xml"/>
     <Tabs>
       <Tab ID="Tab.QuickStart"/>
     </Tabs>
   </Application>
+
+  <Tab ID="Tab.QuickStart" Align="NW" TabTitle="QuickStart Dashboard" File="../Configs/Tab.QuickStart.xml"/>
+
 </Marvin>
