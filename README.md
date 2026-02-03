@@ -8,6 +8,33 @@ https://www.youtube.com/watch?v=NYI8BDv17Lw
 
 Marvin is now a Java 10+ application.  If you need Java 8, checkout the JAVA_8 branch.
 
+## Quick Start - Windows
+
+### Oscar (Data Broker)
+```powershell
+cd Oscar
+.\start_oscar.bat         # Start in background
+.\status_oscar.bat        # Check status
+.\stop_oscar.bat          # Stop gracefully
+```
+
+See [Oscar/SCRIPTS_README.md](Oscar/SCRIPTS_README.md) for advanced usage.
+
+### Minion (Data Collector)
+```powershell
+cd Minion
+python Minion.py -c MinionConfig.xml
+```
+
+### Marvin (GUI)
+```powershell
+cd Marvin
+.\gradlew build
+java -jar build\libs\BIFF.Marvin.jar
+```
+
+---
+
 
 
 

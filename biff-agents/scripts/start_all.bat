@@ -72,7 +72,11 @@ REM Start Oscar (data broker)
 echo [1/3] Starting Oscar (data broker)...
 cd /d "%BIFF_ROOT%\Oscar"
 set "OSCAR_ABS_CONFIG=%CD%\..\biff-agents\%OSCAR_CONFIG%"
-start "BIFF Oscar" cmd /k "python Oscar.py -c "%OSCAR_ABS_CONFIG%" || pause"
+if exist "start_oscar.bat" (
+    start "BIFF Oscar" cmd /c "start_oscar.bat -ConfigFile "%OSCAR_ABS_CONFIG%""
+) else (
+    start "BIFF Oscar" cmd /k "python Oscar.py -i "%OSCAR_ABS_CONFIG%" || pause"
+)
 cd /d "%~dp0\.."
 echo       [OK] Oscar started in new window
 timeout /t 3 /nobreak >nul

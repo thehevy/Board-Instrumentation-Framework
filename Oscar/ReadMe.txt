@@ -23,3 +23,23 @@ Oscar is the middle layer in the BIFF project.
 
 It receives data from one or more Marvin's and passes it off to one or more GUI's.  It is capable of saving the data for replay later.
 Oscar will also pass Tasks from Marvin to the minions.
+
+WINDOWS MANAGEMENT SCRIPTS
+---------------------------
+
+For Windows users, automated management scripts are available:
+
+  start_oscar.bat   - Start Oscar in background
+  stop_oscar.bat    - Stop running Oscar
+  status_oscar.bat  - Check Oscar status
+
+These scripts provide:
+- Automatic Python detection
+- Background process management
+- Status monitoring and diagnostics
+- PID tracking for reliable management
+
+See SCRIPTS_README.md for complete documentation.
+
+Traditional Usage (still supported):
+  python Oscar.py -i OscarConfig.xml

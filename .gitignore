@@ -20,3 +20,8 @@ bin/
 .gradle
 .idea
 out
+
+# Oscar runtime files
+Oscar/.oscar.pid
+Oscar/OscarLog.txt
+Oscar/OscarLog_*.txt

@@ -39,8 +39,18 @@ python Minion\Minion.py -c <config.xml>
 
 ### Oscar (Python)
 ```powershell
-python Oscar\Oscar.py -c OscarConfig.xml
+# Windows - Recommended (background mode)
+cd Oscar
+.\start_oscar.bat
+
+# Windows - Direct execution
+python Oscar.py -i OscarConfig.xml
+
+# Linux/Mac
+python Oscar/Oscar.py -i OscarConfig.xml
 ```
+
+**Windows Management Scripts**: `start_oscar.bat`, `stop_oscar.bat`, `status_oscar.bat` provide automated background execution and process management. See `Oscar/SCRIPTS_README.md`.
 
 **No automated tests exist** - testing relies on demonstration configs in `*/Demonstration/` directories.
 
