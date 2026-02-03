@@ -23,7 +23,8 @@ from biff_agents_core.generators.minion_generator import MinionConfigGenerator
 from biff_agents_core.generators.oscar_generator import OscarConfigGenerator
 from biff_agents_core.generators.marvin_generator import MarvinApplicationGenerator
 from biff_agents_core.utils.cli_helpers import (
-    print_header, print_success, print_error, print_info, print_warning
+    print_header, print_success, print_error, print_info, print_warning,
+    confirm_action
 )
 from biff_agents_core.utils.environment_validator import EnvironmentValidator
 from biff_agents_core.utils.setup_wizard import SetupWizard
@@ -463,6 +464,37 @@ def handle_quickstart(args):
         print()
         for warning in validator.warnings:
             print_warning(warning)
+    
+    # Check for missing Python packages and offer to install
+    if results.get("python_packages") and results["python_packages"]["missing"]:
+        print()
+        missing = results["python_packages"]["missing"]
+        print_warning(f"{len(missing)} optional Python package(s) not installed:")
+        for pkg in missing:
+            print(f"  • {pkg['name']}: {pkg['purpose']}")
+        print()
+        
+        if confirm_action("Install missing packages now?", default=True):
+            package_names = " ".join(pkg["name"] for pkg in missing)
+            print_info(f"Installing: {package_names}")
+            try:
+                import subprocess
+                result = subprocess.run(
+                    [sys.executable, "-m", "pip", "install"] + [pkg["name"] for pkg in missing],
+                    capture_output=True,
+                    text=True
+                )
+                if result.returncode == 0:
+                    print_success("✓ Packages installed successfully")
+                else:
+                    print_warning("⚠ Some packages may have failed to install")
+                    print_info(f"You can install them manually: pip install {package_names}")
+            except Exception as e:
+                print_error(f"✗ Installation failed: {e}")
+                print_info(f"Install manually: pip install {package_names}")
+        else:
+            print_info("Skipping package installation. Some collectors may not work.")
+        print()
     
     if validator.issues:
         print()

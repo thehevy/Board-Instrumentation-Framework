@@ -30,6 +30,7 @@ class EnvironmentValidator:
         results = {
             "java": self.check_java_version(),
             "python": self.check_python_version(),
+            "python_packages": self.check_python_packages(),
             "ports": self.check_ports_available([1100, 52001]),
             "system": self.check_system_resources(),
             "biff_paths": self.detect_biff_installation(biff_root) if biff_root else None,
@@ -176,6 +177,47 @@ class EnvironmentValidator:
         except ImportError:
             self.info.append("ℹ psutil not installed - skipping detailed resource checks")
             return {"available": False}
+    
+    def check_python_packages(self) -> Dict[str, any]:
+        """Check for optional Python packages used by collectors
+        
+        Returns dict with package availability and missing packages list
+        """
+        packages = [
+            ("psutil", "System monitoring (CPU, Memory, Network collectors)"),
+            ("docker", "Docker container monitoring"),
+            ("requests", "HTTP-based collectors (Prometheus, InfluxDB)"),
+            ("prometheus_client", "Prometheus collector"),
+        ]
+        
+        installed = []
+        missing = []
+        
+        for package_name, purpose in packages:
+            try:
+                __import__(package_name)
+                installed.append({"name": package_name, "purpose": purpose})
+            except ImportError:
+                missing.append({"name": package_name, "purpose": purpose})
+        
+        if missing:
+            self.warnings.append(
+                f"⚠ {len(missing)} optional Python package(s) not installed. "
+                "Some collectors may not work."
+            )
+            for pkg in missing:
+                self.info.append(f"  ℹ {pkg['name']}: {pkg['purpose']}")
+        
+        result = {
+            "installed": installed,
+            "missing": missing,
+            "all_installed": len(missing) == 0
+        }
+        
+        # Store for suggest_fixes
+        self._python_packages_result = result
+        
+        return result
     
     def check_gradle(self) -> Dict[str, any]:
         """Check if Gradle is available (for Marvin builds)"""
@@ -336,6 +378,15 @@ class EnvironmentValidator:
     def suggest_fixes(self) -> List[str]:
         """Generate fix suggestions for detected issues"""
         fixes = []
+        
+        # Check for missing Python packages
+        if hasattr(self, '_python_packages_result'):
+            missing = self._python_packages_result.get("missing", [])
+            if missing:
+                package_names = " ".join(pkg["name"] for pkg in missing)
+                fixes.append(f"Install optional Python packages: pip install {package_names}")
+                for pkg in missing:
+                    fixes.append(f"  - {pkg['name']}: {pkg['purpose']}")
         
         if any("Java not found" in issue for issue in self.issues):
             if platform.system() == "Windows":

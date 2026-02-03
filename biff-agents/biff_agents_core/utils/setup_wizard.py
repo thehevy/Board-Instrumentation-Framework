@@ -188,15 +188,16 @@ class SetupWizard:
         print()
         
         # Pre-defined collector presets
+        # Note: Timer removed from defaults due to complex state management requirements
         if deployment_type == "local":
             presets = {
-                "demo": ["RandomVal", "Timer", "CPU"],
+                "demo": ["RandomVal", "CPU"],
                 "monitoring": ["CPU", "Memory", "Network", "Storage"],
                 "minimal": ["RandomVal"]
             }
         else:
             presets = {
-                "demo": ["RandomVal", "Timer"],
+                "demo": ["RandomVal"],
                 "monitoring": ["CPU", "Memory", "Network"],
                 "minimal": ["RandomVal"]
             }
