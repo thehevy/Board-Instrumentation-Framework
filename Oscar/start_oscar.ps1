@@ -116,27 +116,32 @@ if (-not (Test-Path $ConfigFile)) {
 $ConfigFile = Resolve-Path $ConfigFile
 Write-ColorOutput "[INFO] Configuration: $ConfigFile" "Green"
 
-# Check for existing Oscar instance
-$PidFile = Join-Path $PSScriptRoot ".oscar.pid"
-$ExistingOscar = $null
+# Check for existing Oscar instance with same config
+Write-ColorOutput "[INFO] Checking for existing Oscar instances with same config..." "Yellow"
 
+$existingProcesses = Get-WmiObject Win32_Process -Filter "name='python.exe'" | Where-Object {
+    $_.CommandLine -like "*Oscar.py*" -and $_.CommandLine -like "*$ConfigFile*"
+}
+
+if ($existingProcesses) {
+    foreach ($proc in $existingProcesses) {
+        Write-ColorOutput "[WARNING] Found existing Oscar instance with same config (PID: $($proc.ProcessId))" "Yellow"
+        Write-ColorOutput "[INFO] Stopping existing instance..." "Yellow"
+        Stop-Process -Id $proc.ProcessId -Force
+    }
+    Start-Sleep -Seconds 2
+    Write-ColorOutput "[INFO] Existing instance(s) stopped" "Green"
+}
+
+# Check for old PID file and clean up
+$PidFile = Join-Path $PSScriptRoot ".oscar.pid"
 if (Test-Path $PidFile) {
     $SavedPID = Get-Content $PidFile -ErrorAction SilentlyContinue
     if ($SavedPID) {
         try {
-            $ExistingOscar = Get-Process -Id $SavedPID -ErrorAction Stop
-            Write-ColorOutput "[WARNING] Oscar may already be running (PID: $SavedPID)" "Yellow"
-            Write-Host ""
-            $response = Read-Host "Stop existing instance and restart? (y/n)"
-            if ($response -eq "y" -or $response -eq "Y") {
-                Stop-Process -Id $SavedPID -Force
-                Start-Sleep -Seconds 2
-                Remove-Item $PidFile -Force -ErrorAction SilentlyContinue
-                Write-ColorOutput "[INFO] Existing instance stopped" "Green"
-            } else {
-                Write-ColorOutput "[INFO] Startup cancelled" "Yellow"
-                exit 0
-            }
+            $stillRunning = Get-Process -Id $SavedPID -ErrorAction Stop
+            # If we get here, there's a process but it wasn't caught above (different config)
+            Write-ColorOutput "[INFO] Oscar with different config is running (PID: $SavedPID)" "Cyan"
         } catch {
             # PID file exists but process is dead - clean up
             Write-ColorOutput "[INFO] Cleaning up stale PID file" "Yellow"
