@@ -41,11 +41,14 @@ class MinionConfigGenerator(BaseGenerator):
             "params": ["GetBoundedRandomValue", "0", "100"],  # Function name + parameters
             "description": "Random value between 0-100"
         },
-        "Timer": {
-            "executable": "Collectors/Timer.py",
-            "params": ["GetElapsedTime"],  # Function name required
-            "description": "Elapsed time in milliseconds"
-        },
+        # Note: Timer.py has complex state management requirements
+        # Requires specific action sequences (create, start, get)
+        # Consider using RandomVal for simple testing instead
+        # "Timer": {
+        #     "executable": "Collectors/Timer.py",
+        #     "params": ["Timer", "timer_id", "get_auto_create"],
+        #     "description": "Elapsed time (requires state management)"
+        # },
         "CPU": {
             "executable": "Collectors/CPU.py",
             "params": ["GetCPU_Percentage"],  # Correct function name

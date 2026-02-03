@@ -55,13 +55,58 @@
 
 ## Testing Checklist
 
-- [ ] Minion starts on Python 3.12+
-- [ ] RandomVal collector works
-- [ ] CPU collector works
-- [ ] Timer collector works
-- [ ] Generated configs use correct function names
+- [x] Minion starts on Python 3.12+
+- [x] RandomVal collector works
+- [x] CPU collector works
+- [x] Timer collector - **⚠️ HAS STATE MANAGEMENT ISSUES** (see below)
+- [x] Generated configs use correct function names
 - [ ] No UTF-8 BOM in Python files (run: `file Minion/Collectors/*.py`)
 - [ ] Execute permissions set (run: `chmod +x Minion/Collectors/*.py`)
+
+## Known Issues
+
+### Timer.py State Management Problem
+**Severity**: MEDIUM  
+**Status**: ⚠️ DOCUMENTED
+
+**Issue**: Timer collector requires complex state initialization that fails with simple configuration.
+
+**Error**:
+```
+Timer {default} does not exist
+```
+
+**Root Cause**: Timer.py uses class-based state management (`TimerInfo` class with internal dictionary). The `Timer()` function expects timers to be pre-created through specific action sequences.
+
+**Workaround**: Use simpler collectors (RandomVal, CPU) for basic testing. Timer requires production-level configuration understanding.
+
+**Recommendation**: 
+- Document Timer.py usage patterns with examples
+- Consider creating a simpler counter/sequence collector
+- Improve Timer error messages to guide proper action sequences
+
+## Production Testing Results
+
+✅ **Verified Working Configuration**:
+```xml
+<Collector ID="randomval.value" Frequency="1000">
+  <Executable>Minion/Collectors/RandomVal.py</Executable>
+  <Param>GetBoundedRandomValue</Param>
+  <Param>0</Param>
+  <Param>100</Param>
+</Collector>
+
+<Collector ID="cpu.usage" Frequency="2000">
+  <Executable>Minion/Collectors/CPU.py</Executable>
+  <Param>GetCPU_Percentage</Param>
+</Collector>
+```
+
+✅ **Production Deployment Tested**:
+- Linux Minion (10.166.84.131) → Windows Oscar (port 1100)
+- UDP cross-platform communication working
+- Multiple collector instances working simultaneously
+- Extended runtime (5+ minutes) stable
 
 ## Remaining Manual Tasks
 

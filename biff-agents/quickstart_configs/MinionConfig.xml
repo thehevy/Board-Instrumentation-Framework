@@ -10,10 +10,8 @@
       <Param>0</Param>
       <Param>100</Param>
     </Collector>
-    <Collector ID="timer.value">
-      <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\Timer.py</Executable>
-      <Param>GetElapsedTime</Param>
-    </Collector>
+    <!-- Timer.py removed - requires complex state management (create/start/get sequence)
+         Use RandomVal or CPU for simple testing -->
     <Collector ID="cpu.value">
       <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\CPU.py</Executable>
       <Param>GetCPU_Percentage</Param>
