@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<MarvinExternalFile>
+  <Grid Align="N" hgap="10" vgap="10">
+    <Widget row="1" column="1" Height="300" Width="400" File="Gauge/GaugeSimple.xml">
+      <Title>Random Value</Title>
+      <MinionSrc Namespace="QuickStart" ID="randomval.value"/>
+      <MinValue>0</MinValue>
+      <MaxValue>100</MaxValue>
+      <Decimals>0</Decimals>
+      <UnitText>value</UnitText>
+    </Widget>
+    <Widget row="1" column="2" Height="300" Width="400" File="Gauge/GaugeSimple.xml">
+      <Title>Timer</Title>
+      <MinionSrc Namespace="QuickStart" ID="timer.value"/>
+      <MinValue>0</MinValue>
+      <MaxValue>10000</MaxValue>
+      <Decimals>0</Decimals>
+      <UnitText>ms</UnitText>
+    </Widget>
+    <Widget row="1" column="3" Height="300" Width="400" File="Gauge/GaugeRadial.xml">
+      <Title>CPU Usage</Title>
+      <MinionSrc Namespace="QuickStart" ID="cpu.value"/>
+      <MinValue>0</MinValue>
+      <MaxValue>100</MaxValue>
+      <Decimals>1</Decimals>
+      <UnitText>%</UnitText>
+    </Widget>
+    <Widget row="2" column="1" Height="300" Width="400" File="Text/Text.xml">
+      <Title>Memory</Title>
+      <MinionSrc Namespace="QuickStart" ID="memory.value"/>
+      <InitialValue>Waiting for data...</InitialValue>
+    </Widget>
+  </Grid>
+</MarvinExternalFile>

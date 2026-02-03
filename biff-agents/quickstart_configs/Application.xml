@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<Marvin>
+  <Application Scale="auto">
+    <CreationSize Width="1920" Height="1050"/>
+    <Network Port="52001"/>
+    <Title>BIFF Quick Start - QuickStart</Title>
+    <Padding top="5" bottom="5" right="5" left="5"/>
+    <StyleSheet>Widget/Modena-BIFF.css</StyleSheet>
+    <Heartbeat Rate="10"/>
+    <Tasks Enabled="True"/>
+    <MainMenu Show="True"/>
+    <Tabs>
+      <Tab ID="Tab.QuickStart"/>
+    </Tabs>
+  </Application>
+</Marvin>

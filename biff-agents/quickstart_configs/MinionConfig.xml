@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<Minion SingleThreading="false">
+  <Namespace>
+    <Name>QuickStart</Name>
+    <DefaultFrequency>1000</DefaultFrequency>
+    <TargetConnection IP="localhost" PORT="1100"/>
+    <Collector ID="randomval.value">
+      <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\RandomVal.py</Executable>
+      <Param>0</Param>
+      <Param>100</Param>
+    </Collector>
+    <Collector ID="timer.value">
+      <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\Timer.py</Executable>
+    </Collector>
+    <Collector ID="cpu.value">
+      <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\CPU.py</Executable>
+      <Param>GetUsage</Param>
+    </Collector>
+    <Collector ID="memory.value">
+      <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\CPU.py</Executable>
+      <Param>GetMemory</Param>
+    </Collector>
+  </Namespace>
+</Minion>
