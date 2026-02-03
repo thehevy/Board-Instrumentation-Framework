@@ -258,10 +258,17 @@ class PackageBuilder:
                 shutil.copytree(src_dir, minion_dst / dir_name, dirs_exist_ok=True)
         
         # Copy scripts
-        for script in ["start_minion.ps1", "start_minion.bat"]:
+        for script in ["start_minion.ps1", "start_minion.bat", "start_minion.sh"]:
             src = minion_src / script
             if src.exists():
-                shutil.copy2(src, minion_dst)
+                script_dst = minion_dst / script
+                shutil.copy2(src, script_dst)
+                # Make shell script executable on Unix systems
+                if script.endswith('.sh'):
+                    try:
+                        script_dst.chmod(0o755)
+                    except:
+                        pass  # On Windows, chmod may not work
         
         return True
     
