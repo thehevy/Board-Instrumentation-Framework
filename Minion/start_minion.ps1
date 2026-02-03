@@ -67,5 +67,5 @@ Write-Host "Additional args: $Args" -ForegroundColor Cyan
 Write-Host ""
 
 # Launch Minion
-$allArgs = @("-c", $configPath) + $Args
+$allArgs = @("-i", $configPath) + $Args
 & python Minion.py $allArgs

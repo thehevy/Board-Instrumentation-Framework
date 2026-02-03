@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<Oscar ID="QuickStart">
+  <IncomingMinionConnection PORT="1100"/>
+  <TargetConnection IP="localhost" PORT="52001"/>
+</Oscar>

@@ -266,28 +266,39 @@ class PackageBuilder:
         return True
     
     def copy_configs(self):
-        """Copy configuration files."""
+        """Copy configuration files to component folders."""
         self.print_status("Packaging configurations...", "INFO")
-        
-        configs_dst = self.package_path / "Configs"
         
         if self.args.config_source:
             config_src = Path(self.args.config_source)
             if config_src.exists():
                 self.print_status(f"Copying configs from: {config_src}", "INFO")
+                
+                # Distribute configs to component folders
+                config_mapping = {
+                    "Application.xml": self.package_path / "Marvin",
+                    "OscarConfig.xml": self.package_path / "Oscar",
+                    "MinionConfig.xml": self.package_path / "Minion"
+                }
+                
                 for xml_file in config_src.glob("*.xml"):
-                    shutil.copy2(xml_file, configs_dst)
+                    # Map specific configs to components, others go to Marvin (grids/tabs)
+                    if xml_file.name in config_mapping:
+                        shutil.copy2(xml_file, config_mapping[xml_file.name])
+                    else:
+                        # Supporting files (Grid, Tab) go to Marvin folder
+                        shutil.copy2(xml_file, self.package_path / "Marvin")
             else:
                 self.print_status(f"Config source not found: {config_src}", "WARNING")
         else:
-            # Copy demo configs as templates
+            # Copy demo configs as templates to component folders
             oscar_demo = self.repo_root / "Oscar" / "OscarConfig.xml"
             if oscar_demo.exists():
-                shutil.copy2(oscar_demo, configs_dst)
+                shutil.copy2(oscar_demo, self.package_path / "Oscar")
             
             minion_demo = self.repo_root / "Minion" / "Demonstration" / "DemoConfig.xml"
             if minion_demo.exists():
-                shutil.copy2(minion_demo, configs_dst / "MinionConfig.xml")
+                shutil.copy2(minion_demo, self.package_path / "Minion" / "MinionConfig.xml")
             
             marvin_demo = self.repo_root / "Marvin" / "Starter_Application" / "StarterApplication.xml"
             if marvin_demo.exists():
@@ -334,13 +345,13 @@ class PackageBuilder:
         """Create start_all scripts."""
         self.print_status("Creating unified startup scripts...", "INFO")
         
-        # Detect actual Marvin config filename
-        marvin_config = "MarvinConfig.xml"
-        configs_dir = self.package_path / "Configs"
-        if configs_dir.exists():
+        # Detect actual Marvin config filename in Marvin folder
+        marvin_config = "Application.xml"
+        marvin_dir = self.package_path / "Marvin"
+        if marvin_dir.exists():
             # Look for common Marvin config names
             for config_name in ["Application.xml", "ApplicationConfig.xml", "MarvinConfig.xml", "App.Config.xml"]:
-                if (configs_dir / config_name).exists():
+                if (marvin_dir / config_name).exists():
                     marvin_config = config_name
                     self.print_status(f"Detected Marvin config: {config_name}", "INFO")
                     break
@@ -354,8 +365,9 @@ class PackageBuilder:
 # =============================================================================
 
 param(
-    [string]$MarvinConfig = "Configs\\{marvin_config}",
-    [string]$OscarConfig = "Configs\\OscarConfig.xml",
+    [string]$MarvinConfig = "Marvin\\{marvin_config}",
+    [string]$OscarConfig = "Oscar\\OscarConfig.xml",
+    [string]$MinionConfig = "Minion\\MinionConfig.xml",
     [switch]$Help
 )
 
@@ -366,16 +378,17 @@ if ($Help) {{
 ============================================================
 
 USAGE:
-  .\\start_all.ps1 [-MarvinConfig <path>] [-OscarConfig <path>]
+  .\\start_all.ps1 [-MarvinConfig <path>] [-OscarConfig <path>] [-MinionConfig <path>]
 
 OPTIONS:
-  -MarvinConfig <path>   Marvin configuration file
-  -OscarConfig <path>    Oscar configuration file
+  -MarvinConfig <path>   Marvin configuration file (default: Marvin\\Application.xml)
+  -OscarConfig <path>    Oscar configuration file (default: Oscar\\OscarConfig.xml)
+  -MinionConfig <path>   Minion configuration file (default: Minion\\MinionConfig.xml)
   -Help                  Show this help message
 
 EXAMPLE:
   .\\start_all.ps1
-  .\\start_all.ps1 -MarvinConfig Configs\\MyMarvin.xml
+  .\\start_all.ps1 -MarvinConfig Marvin\\MyConfig.xml
 
 "@
     exit 0
@@ -390,7 +403,7 @@ Write-Host ""
 # Start Oscar in background
 Write-Host "[1/2] Starting Oscar (background)..." -ForegroundColor Yellow
 Push-Location Oscar
-& .\\start_oscar.ps1 -ConfigFile "..\\$OscarConfig" -Background
+& .\\start_oscar.ps1 -ConfigFile "OscarConfig.xml" -Background
 Pop-Location
 
 Start-Sleep -Seconds 3
@@ -401,7 +414,7 @@ Write-Host "[2/2] Starting Marvin (foreground)..." -ForegroundColor Yellow
 Write-Host "      Close Marvin window to stop" -ForegroundColor Cyan
 Write-Host ""
 Push-Location Marvin
-& .\\start_marvin.ps1 -ConfigFile "..\\$MarvinConfig"
+& .\\start_marvin.ps1 -ConfigFile "{marvin_config}"
 Pop-Location
 '''
         

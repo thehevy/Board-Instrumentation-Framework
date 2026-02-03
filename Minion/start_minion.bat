@@ -56,6 +56,6 @@ echo Additional args: %ADDITIONAL_ARGS%
 echo.
 
 REM Launch Minion
-python Minion.py -c "%CONFIG_PATH%" %ADDITIONAL_ARGS%
+python Minion.py -i "%CONFIG_PATH%" %ADDITIONAL_ARGS%
 
 endlocal

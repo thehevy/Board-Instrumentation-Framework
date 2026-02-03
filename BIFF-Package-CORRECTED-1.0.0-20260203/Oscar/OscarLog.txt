@@ -1,0 +1,1 @@
+02-03 10:12 Oscar        ERROR    Invalid Socket IP or Port 0.0.0.0:1100 - [WinError 10048] Only one usage of each socket address (protocol/network address/port) is normally permitted
