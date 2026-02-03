@@ -125,11 +125,36 @@ Generated files:
   - D:\...\biff-agents\quickstart_configs\Tab.QuickStart.xml
   - D:\...\biff-agents\quickstart_configs\Grid.QuickStart.xml
 
-Quick Start - Use launcher script:
-  cd scripts && start_all.bat
+Quick Start launcher scripts created:
+  Windows: quickstart_start_minion.bat, quickstart_start_oscar.bat, quickstart_start_marvin.bat
+  Linux:   quickstart_start_minion.sh, quickstart_start_oscar.sh, quickstart_start_marvin.sh
 ```
 
 ### Step 5: Launch BIFF
+
+You can launch all components at once or individually:
+
+#### Option A: Launch All (Recommended for First Run)
+
+**Windows:**
+```cmd
+quickstart_start_oscar.bat
+quickstart_start_minion.bat
+quickstart_start_marvin.bat
+```
+
+**Linux/Mac:**
+```bash
+# Make executable (first time only)
+chmod +x quickstart_start_*.sh
+
+# Launch components
+./quickstart_start_oscar.sh
+./quickstart_start_minion.sh
+./quickstart_start_marvin.sh
+```
+
+#### Option B: Use Package Start Scripts (After Building Package)
 
 **Windows:**
 ```cmd
