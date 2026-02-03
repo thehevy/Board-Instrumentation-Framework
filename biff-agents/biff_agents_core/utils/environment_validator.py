@@ -20,12 +20,13 @@ class EnvironmentValidator:
         self.warnings = []
         self.info = []
     
-    def validate_all(self, check_network: bool = False, biff_root: Optional[Path] = None) -> Dict[str, any]:
+    def validate_all(self, check_network: bool = False, biff_root: Optional[Path] = None, check_gradle: bool = False) -> Dict[str, any]:
         """Run all validation checks
         
         Args:
             check_network: If True, perform network connectivity checks
             biff_root: Optional path to BIFF installation root for path detection
+            check_gradle: If True, check for Gradle (needed for Marvin builds)
         """
         results = {
             "java": self.check_java_version(),
@@ -39,6 +40,9 @@ class EnvironmentValidator:
             "info": self.info,
             "ready": len(self.issues) == 0
         }
+        
+        if check_gradle:
+            results["gradle"] = self.check_gradle(biff_root)
         
         if check_network:
             results["network"] = self.check_network_connectivity()
@@ -219,14 +223,25 @@ class EnvironmentValidator:
         
         return result
     
-    def check_gradle(self) -> Dict[str, any]:
-        """Check if Gradle is available (for Marvin builds)"""
-        # Check for gradlew first (bundled with Marvin)
-        marvin_gradlew = Path("Marvin/gradlew.bat" if platform.system() == "Windows" else "Marvin/gradlew")
+    def check_gradle(self, biff_root: Optional[Path] = None) -> Dict[str, any]:
+        """Check if Gradle is available (for Marvin builds)
         
-        if marvin_gradlew.exists():
-            self.info.append("✓ Gradle wrapper (gradlew) found in Marvin directory")
-            return {"installed": True, "bundled": True}
+        Args:
+            biff_root: Optional path to BIFF installation root
+        """
+        # Check for gradlew first (bundled with Marvin)
+        search_paths = []
+        if biff_root:
+            search_paths.append(biff_root / "Marvin")
+        search_paths.extend([Path("Marvin"), Path(".")])
+        
+        for base_path in search_paths:
+            gradlew_name = "gradlew.bat" if platform.system() == "Windows" else "gradlew"
+            marvin_gradlew = base_path / gradlew_name
+            
+            if marvin_gradlew.exists():
+                self.info.append("✓ Gradle wrapper (gradlew) found in Marvin directory")
+                return {"installed": True, "bundled": True, "path": str(marvin_gradlew)}
         
         # Check for system Gradle
         if shutil.which("gradle"):

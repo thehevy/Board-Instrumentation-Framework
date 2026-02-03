@@ -22,6 +22,7 @@ from biff_agents_core.validators.config_validator import ConfigValidator
 from biff_agents_core.generators.minion_generator import MinionConfigGenerator
 from biff_agents_core.generators.oscar_generator import OscarConfigGenerator
 from biff_agents_core.generators.marvin_generator import MarvinApplicationGenerator
+from biff_agents_core.utils.build_orchestrator import BuildOrchestrator, MarvinLauncher
 from biff_agents_core.utils.cli_helpers import (
     print_header, print_success, print_error, print_info, print_warning,
     confirm_action
@@ -453,7 +454,8 @@ def handle_quickstart(args):
     biff_root = Path.cwd()
     results = validator.validate_all(
         check_network=False,  # Network check optional for now
-        biff_root=biff_root
+        biff_root=biff_root,
+        check_gradle=True  # Check Gradle for Marvin builds
     )
     
     # Print validation summary
@@ -562,6 +564,97 @@ def handle_quickstart(args):
             print(f"  - {marvin_files['application']}")
             print(f"  - {marvin_files['tab']}")
             print(f"  - {marvin_files['grid']}")
+            print()
+            
+            # Step 4: Offer to build Marvin
+            build_marvin = False
+            if results.get("java") and results["java"]["sufficient"] and results.get("gradle") and results["gradle"]["installed"]:
+                if config.get("use_existing") and config.get("biff_root"):
+                    if confirm_action("Build Marvin now? (This will take 1-3 minutes)", default=True):
+                        build_marvin = True
+                        print()
+                        print_header("Building Marvin")
+                        print()
+                        
+                        orchestrator = BuildOrchestrator(config["biff_root"])
+                        
+                        # Check if build is actually needed
+                        if orchestrator.is_build_needed():
+                            print_info("Building Marvin and dependencies...")
+                            result = orchestrator.execute(verbose=True)
+                            
+                            if result.success:
+                                print()
+                                print_success("✓ Marvin build completed successfully!")
+                                jar_path = orchestrator.get_marvin_jar_path()
+                                print_info(f"JAR location: {jar_path}")
+                            else:
+                                print()
+                                print_error(f"✗ Marvin build failed: {result.message}")
+                                if result.error:
+                                    print_info("Error details:")
+                                    print(result.error[:500])
+                                build_marvin = False
+                        else:
+                            print_info("Marvin JAR already up-to-date - skipping build")
+                            print_success("✓ Marvin ready")
+            
+            # Step 5: Offer to launch components
+            if build_marvin or (config.get("use_existing") and config.get("biff_root")):
+                print()
+                if confirm_action("Start all components now?", default=True):
+                    print()
+                    print_header("Starting BIFF Components")
+                    print()
+                    
+                    # Start Oscar
+                    print_info("[1/3] Starting Oscar (data broker)...")
+                    oscar_path = Path(config["biff_root"]) / "Oscar"
+                    oscar_script = oscar_path / "start_oscar.bat" if platform.system() == "Windows" else oscar_path / "start_oscar.sh"
+                    
+                    try:
+                        import subprocess
+                        if oscar_script.exists():
+                            subprocess.Popen([str(oscar_script), str(oscar_file)], cwd=str(oscar_path))
+                            print_success("  ✓ Oscar started in background")
+                        else:
+                            # Fallback to direct Oscar.py launch
+                            subprocess.Popen([sys.executable, "Oscar.py", "-c", str(oscar_file)], cwd=str(oscar_path))
+                            print_success("  ✓ Oscar started")
+                        
+                        import time
+                        time.sleep(2)
+                    except Exception as e:
+                        print_warning(f"  ⚠ Could not start Oscar: {e}")
+                    
+                    # Start Minion
+                    print_info("[2/3] Starting Minion (data collector)...")
+                    minion_path = Path(config["biff_root"]) / "Minion"
+                    
+                    try:
+                        subprocess.Popen([sys.executable, "Minion.py", "-c", str(minion_file)], cwd=str(minion_path))
+                        print_success("  ✓ Minion started")
+                        time.sleep(2)
+                    except Exception as e:
+                        print_warning(f"  ⚠ Could not start Minion: {e}")
+                    
+                    # Start Marvin
+                    if build_marvin and results["java"]["sufficient"]:
+                        print_info("[3/3] Starting Marvin (GUI)...")
+                        launcher = MarvinLauncher(config["biff_root"])
+                        success, message = launcher.launch(str(marvin_files['application']), background=False)
+                        
+                        if success:
+                            print_success("  ✓ Marvin started")
+                        else:
+                            print_warning(f"  ⚠ Could not start Marvin: {message}")
+                    else:
+                        print_info("[3/3] Skipping Marvin launch (build not completed or Java not available)")
+                    
+                    print()
+                    print_success("✓ Quick start complete!")
+                    return 0
+            
             print()
             print_info("Quick Start - Use launcher script:")
             import platform
