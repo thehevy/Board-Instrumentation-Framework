@@ -14,6 +14,15 @@ Communication uses XML packets over UDP. Minion namespaces organize collectors; 
 ## Build & Run Commands
 
 ### Marvin (Java/Gradle)
+
+**Prerequisites:** Java 10+ required. If JAVA_HOME not set:
+```powershell
+# Configure Java environment (Windows)
+.\setup_java.ps1          # PowerShell
+# OR
+setup_java.bat            # Command Prompt
+```
+
 ```powershell
 # Full build sequence (required for first build)
 cd Marvin\Dependencies\Enzo

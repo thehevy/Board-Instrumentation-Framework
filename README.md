@@ -27,11 +27,22 @@ python Minion.py -c MinionConfig.xml
 ```
 
 ### Marvin (GUI)
+
+**Prerequisites:** Java 10+ must be in PATH
+
 ```powershell
+# If Java not in PATH, configure environment:
+.\setup_java.ps1          # PowerShell
+# OR
+setup_java.bat            # Command Prompt
+
+# Then build and run:
 cd Marvin
 .\gradlew build
 java -jar build\libs\BIFF.Marvin.jar
 ```
+
+**Note:** If you encounter "JAVA_HOME is not set" error, use the setup scripts above.
 
 ---
 
