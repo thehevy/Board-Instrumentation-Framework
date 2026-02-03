@@ -369,5 +369,6 @@ class MinionNamespaceAnalyzer:
             'total_collectors': total_collectors,
             'total_actors': total_actors,
             'high_frequency_collectors': high_freq,
-            'avg_collectors_per_namespace': total_collectors / len(namespaces) if namespaces else 0
+            'avg_collectors_per_namespace': total_collectors / len(namespaces) if namespaces else 0,
+            'avg_actors_per_namespace': total_actors / len(namespaces) if namespaces else 0
         }

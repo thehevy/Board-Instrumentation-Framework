@@ -282,10 +282,95 @@ def create_parser():
         'oscar',
         help='Oscar Routing Configurator - Set up data routing'
     )
-    oscar_parser.add_argument(
-        'config_file',
+    oscar_subparsers = oscar_parser.add_subparsers(dest='oscar_action', help='Oscar actions')
+    
+    # oscar generate
+    oscar_gen_parser = oscar_subparsers.add_parser('generate', help='Generate Oscar config from Minion config')
+    oscar_gen_parser.add_argument(
+        '--from-minion',
         type=Path,
+        required=True,
+        help='Path to MinionConfig.xml'
+    )
+    oscar_gen_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output Oscar config file (default: stdout)'
+    )
+    oscar_gen_parser.add_argument(
+        '--oscar-id',
+        default='Oscar',
+        help='Oscar instance ID (default: Oscar)'
+    )
+    oscar_gen_parser.add_argument(
+        '--marvin-count',
+        type=int,
+        default=1,
+        help='Number of Marvin instances (default: 1)'
+    )
+    oscar_gen_parser.add_argument(
+        '--marvin-ips',
+        nargs='+',
+        help='Marvin IP addresses (default: localhost)'
+    )
+    oscar_gen_parser.add_argument(
+        '--per-namespace',
+        action='store_true',
+        help='Generate separate Oscar config per namespace'
+    )
+    
+    # oscar validate
+    oscar_val_parser = oscar_subparsers.add_parser('validate', help='Validate Minion to Oscar routing')
+    oscar_val_parser.add_argument(
+        '--minion',
+        type=Path,
+        required=True,
+        help='Path to MinionConfig.xml'
+    )
+    oscar_val_parser.add_argument(
+        '--oscar',
+        type=Path,
+        required=True,
         help='Path to OscarConfig.xml'
+    )
+    
+    # oscar analyze
+    oscar_analyze_parser = oscar_subparsers.add_parser('analyze', help='Analyze Minion namespaces')
+    oscar_analyze_parser.add_argument(
+        '--minion',
+        type=Path,
+        required=True,
+        help='Path to MinionConfig.xml'
+    )
+    oscar_analyze_parser.add_argument(
+        '--json',
+        action='store_true',
+        help='Output as JSON'
+    )
+    
+    # oscar deploy-guide
+    oscar_deploy_parser = oscar_subparsers.add_parser('deploy-guide', help='Generate deployment guide')
+    oscar_deploy_parser.add_argument(
+        '--minion',
+        type=Path,
+        required=True,
+        help='Path to MinionConfig.xml'
+    )
+    oscar_deploy_parser.add_argument(
+        '--oscar',
+        type=Path,
+        help='Path to existing OscarConfig.xml (will generate if not provided)'
+    )
+    oscar_deploy_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output markdown file (default: stdout)'
+    )
+    oscar_deploy_parser.add_argument(
+        '--marvin-count',
+        type=int,
+        default=1,
+        help='Number of Marvin instances (default: 1)'
     )
     
     # Debug command
@@ -1035,10 +1120,197 @@ def handle_gui(args):
 
 def handle_oscar(args):
     """Handle oscar command"""
-    print_header("Oscar Routing Configurator")
-    print_info("This feature is under development")
-    print_info(f"Config file: {args.config_file}")
-    return 0
+    if not args.oscar_action:
+        print_error("No Oscar action specified. Use: generate, validate, analyze, or deploy-guide")
+        return 1
+    
+    from biff_agents_core.utils.minion_oscar_integration import (
+        MinionOscarIntegration, MinionNamespaceAnalyzer
+    )
+    import json
+    
+    if args.oscar_action == 'generate':
+        print_header("Oscar Config Generator")
+        
+        if not args.from_minion.exists():
+            print_error(f"Minion config not found: {args.from_minion}")
+            return 1
+        
+        integration = MinionOscarIntegration()
+        
+        try:
+            if args.per_namespace:
+                # Generate separate Oscar per namespace
+                print_info(f"Generating per-namespace Oscar configs from {args.from_minion}")
+                oscar_configs = integration.generate_oscar_from_minion(
+                    args.from_minion,
+                    marvin_ips=args.marvin_ips or ['localhost']
+                )
+                
+                for ns_name, oscar_xml in oscar_configs.items():
+                    if args.output:
+                        output_file = args.output.parent / f"{args.output.stem}_{ns_name}.xml"
+                        output_file.write_text(oscar_xml)
+                        print_success(f"✓ Generated {output_file}")
+                    else:
+                        print(f"\n=== Oscar Config for Namespace: {ns_name} ===")
+                        print(oscar_xml)
+            else:
+                # Generate unified Oscar
+                print_info(f"Generating unified Oscar config from {args.from_minion}")
+                oscar_xml, port_map = integration.generate_unified_oscar(
+                    args.from_minion,
+                    oscar_id=args.oscar_id,
+                    marvin_count=args.marvin_count
+                )
+                
+                if args.output:
+                    args.output.write_text(oscar_xml)
+                    print_success(f"✓ Generated {args.output}")
+                    print()
+                    print_info("Marvin Port Assignments:")
+                    for marvin, config in port_map.items():
+                        print(f"  {marvin}: {config['ip']}:{config['port']}")
+                else:
+                    print(oscar_xml)
+                    print()
+                    print_info("Marvin Port Assignments:")
+                    for marvin, config in port_map.items():
+                        print(f"  {marvin}: {config['ip']}:{config['port']}")
+            
+            return 0
+            
+        except ValueError as e:
+            print_error(f"Configuration error: {e}")
+            return 1
+        except Exception as e:
+            print_error(f"Failed to generate Oscar config: {e}")
+            return 1
+    
+    elif args.oscar_action == 'validate':
+        print_header("Oscar Routing Validator")
+        
+        if not args.minion.exists():
+            print_error(f"Minion config not found: {args.minion}")
+            return 1
+        
+        if not args.oscar.exists():
+            print_error(f"Oscar config not found: {args.oscar}")
+            return 1
+        
+        integration = MinionOscarIntegration()
+        
+        try:
+            print_info(f"Validating {args.minion} → {args.oscar}")
+            errors = integration.validate_minion_oscar_routing(args.minion, args.oscar)
+            
+            if not errors:
+                print()
+                print_success("✓ Routing validation passed!")
+                print_info("  Minion target ports match Oscar incoming ports")
+                print_info("  Oscar has valid target connections")
+                return 0
+            else:
+                print()
+                print_error(f"Found {len(errors)} routing error(s):")
+                for i, error in enumerate(errors, 1):
+                    print(f"  {i}. {error}")
+                return 1
+                
+        except Exception as e:
+            print_error(f"Validation failed: {e}")
+            return 1
+    
+    elif args.oscar_action == 'analyze':
+        print_header("Minion Namespace Analyzer")
+        
+        if not args.minion.exists():
+            print_error(f"Minion config not found: {args.minion}")
+            return 1
+        
+        analyzer = MinionNamespaceAnalyzer()
+        
+        try:
+            analysis = analyzer.analyze_namespaces(args.minion)
+            
+            if args.json:
+                print(json.dumps(analysis, indent=2))
+            else:
+                print()
+                print_info(f"Configuration: {args.minion}")
+                print()
+                print(f"Namespaces: {analysis['namespace_count']}")
+                print(f"Total Collectors: {analysis['total_collectors']}")
+                print(f"Total Actors: {analysis.get('total_actors', 0)}")
+                print(f"Avg Collectors/Namespace: {analysis.get('avg_collectors_per_namespace', 0):.1f}")
+                print(f"Avg Actors/Namespace: {analysis.get('avg_actors_per_namespace', 0):.1f}")
+                print()
+                print_info("Target Connections:")
+                for target in analysis['targets']:
+                    print(f"  • {target}")
+                
+                if analysis['high_frequency_collectors']:
+                    print()
+                    print_warning(f"High-Frequency Collectors (<500ms):")
+                    for hf in analysis['high_frequency_collectors']:
+                        print(f"  • {hf['namespace']}.{hf['collector']}: {hf['frequency']}ms")
+            
+            return 0
+            
+        except Exception as e:
+            print_error(f"Analysis failed: {e}")
+            return 1
+    
+    elif args.oscar_action == 'deploy-guide':
+        print_header("Deployment Guide Generator")
+        
+        if not args.minion.exists():
+            print_error(f"Minion config not found: {args.minion}")
+            return 1
+        
+        integration = MinionOscarIntegration()
+        
+        try:
+            # Generate or use existing Oscar config
+            if args.oscar and args.oscar.exists():
+                print_info(f"Using existing Oscar config: {args.oscar}")
+                oscar_xml = args.oscar.read_text()
+                # Parse to get port map
+                from biff_agents_core.utils.oscar_routing import OscarConfigParser
+                parser = OscarConfigParser()
+                oscar_config = parser.parse(args.oscar)
+                port_map = {}
+                for i, conn in enumerate(oscar_config.target_connections, 1):
+                    port_map[f'Marvin{i}'] = {'ip': conn.ip, 'port': conn.port}
+            else:
+                print_info(f"Generating Oscar config from {args.minion}")
+                oscar_xml, port_map = integration.generate_unified_oscar(
+                    args.minion,
+                    marvin_count=args.marvin_count
+                )
+            
+            guide = integration.generate_deployment_guide(
+                args.minion,
+                oscar_xml,
+                port_map
+            )
+            
+            if args.output:
+                args.output.write_text(guide)
+                print_success(f"✓ Generated deployment guide: {args.output}")
+            else:
+                print()
+                print(guide)
+            
+            return 0
+            
+        except Exception as e:
+            print_error(f"Failed to generate deployment guide: {e}")
+            return 1
+    
+    else:
+        print_error(f"Unknown Oscar action: {args.oscar_action}")
+        return 1
 
 
 def handle_debug(args):
