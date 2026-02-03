@@ -37,11 +37,23 @@ try {
     exit 1
 }
 
-# Check for JAR file
-$jarPath = "build\libs\BIFF.Marvin.jar"
-if (-not (Test-Path $jarPath)) {
-    Write-Host "ERROR: BIFF.Marvin.jar not found in build\libs\" -ForegroundColor Red
-    Write-Host "Run gradlew build first" -ForegroundColor Yellow
+# Check for JAR file - support both development (build\libs\) and package (flat) structures
+$devJarPath = "build\libs\BIFF.Marvin.jar"
+$packageJarPath = "BIFF.Marvin.jar"
+
+if (Test-Path $devJarPath) {
+    $jarPath = $devJarPath
+    $jarDir = "build\libs"
+    $environment = "development"
+} elseif (Test-Path $packageJarPath) {
+    $jarPath = $packageJarPath
+    $jarDir = "."
+    $environment = "package"
+} else {
+    Write-Host "ERROR: BIFF.Marvin.jar not found" -ForegroundColor Red
+    Write-Host "  Development: build\libs\BIFF.Marvin.jar" -ForegroundColor Yellow
+    Write-Host "  Package:     BIFF.Marvin.jar" -ForegroundColor Yellow
+    Write-Host "Run gradlew build first (if in development environment)" -ForegroundColor Yellow
     exit 1
 }
 
@@ -68,11 +80,16 @@ Write-Host "Starting Marvin with config: $configPath" -ForegroundColor Cyan
 Write-Host "Additional args: $JavaArgs" -ForegroundColor Cyan
 Write-Host ""
 
-# Launch Marvin
-Push-Location build\libs
-try {
+# Launch Marvin (navigate to JAR directory if needed)
+if ($jarDir -ne ".") {
+    Push-Location $jarDir
+    try {
+        $allArgs = @("-Xss1G", "-Xms1G", "-jar", "BIFF.Marvin.jar", "-i", $configPath) + $JavaArgs
+        & java $allArgs
+    } finally {
+        Pop-Location
+    }
+} else {
     $allArgs = @("-Xss1G", "-Xms1G", "-jar", "BIFF.Marvin.jar", "-i", $configPath) + $JavaArgs
     & java $allArgs
-} finally {
-    Pop-Location
 }

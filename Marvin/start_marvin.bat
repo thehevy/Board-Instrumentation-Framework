@@ -39,10 +39,20 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Check for JAR file
-if not exist "build\libs\BIFF.Marvin.jar" (
-    echo ERROR: BIFF.Marvin.jar not found in build\libs\
-    echo Run gradlew build first
+REM Check for JAR file - support both development and package structures
+if exist "build\libs\BIFF.Marvin.jar" (
+    set JAR_PATH=build\libs\BIFF.Marvin.jar
+    set JAR_DIR=build\libs
+    set ENVIRONMENT=development
+) else if exist "BIFF.Marvin.jar" (
+    set JAR_PATH=BIFF.Marvin.jar
+    set JAR_DIR=.
+    set ENVIRONMENT=package
+) else (
+    echo ERROR: BIFF.Marvin.jar not found
+    echo   Development: build\libs\BIFF.Marvin.jar
+    echo   Package:     BIFF.Marvin.jar
+    echo Run gradlew build first ^(if in development environment^)
     exit /b 1
 )
 
@@ -56,8 +66,10 @@ echo Starting Marvin with config: %CONFIG_PATH%
 echo Additional args: %ADDITIONAL_ARGS%
 echo.
 
-REM Launch Marvin
-cd build\libs
+REM Launch Marvin (navigate to JAR directory if needed)
+if not "%JAR_DIR%"=="." (
+    cd "%JAR_DIR%"
+)
 java -Xss1G -Xms1G -jar BIFF.Marvin.jar -i "%CONFIG_PATH%" %ADDITIONAL_ARGS%
 
 endlocal
