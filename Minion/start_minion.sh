@@ -14,7 +14,7 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         -v|--verbose)
-            VERBOSE="-v"
+            VERBOSE="-v 3"
             shift
             ;;
         -h|--help)
@@ -22,7 +22,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "Options:"
             echo "  -i, --config FILE   Configuration file (default: MinionConfig.xml)"
-            echo "  -v, --verbose       Enable verbose logging"
+            echo "  -v, --verbose       Enable verbose logging (level 3)"
             echo "  -h, --help          Show this help message"
             exit 0
             ;;
