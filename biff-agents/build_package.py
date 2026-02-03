@@ -428,8 +428,9 @@ REM ============================================================================
 
 setlocal
 
-set MARVIN_CONFIG=Configs\\{marvin_config}
-set OSCAR_CONFIG=Configs\\OscarConfig.xml
+set MARVIN_CONFIG=Marvin\\{marvin_config}
+set OSCAR_CONFIG=Oscar\\OscarConfig.xml
+set MINION_CONFIG=Minion\\MinionConfig.xml
 
 echo.
 echo ============================================================
@@ -440,7 +441,7 @@ echo.
 REM Start Oscar in background
 echo [1/2] Starting Oscar (background)...
 cd Oscar
-start /B "BIFF Oscar" cmd /c "start_oscar.bat ..\\%OSCAR_CONFIG%"
+start /B "BIFF Oscar" cmd /c "start_oscar.bat OscarConfig.xml"
 cd ..
 
 timeout /t 3 /nobreak >nul
@@ -451,7 +452,7 @@ echo [2/2] Starting Marvin (foreground)...
 echo       Close Marvin window to stop
 echo.
 cd Marvin
-call start_marvin.bat ..\\%MARVIN_CONFIG%
+call start_marvin.bat {marvin_config}
 cd ..
 
 endlocal
