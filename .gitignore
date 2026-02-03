@@ -25,3 +25,12 @@ out
 Oscar/.oscar.pid
 Oscar/OscarLog.txt
 Oscar/OscarLog_*.txt
+
+# Test packages and builds (should not be committed)
+BIFF-Package-*/
+BIFF-Complete-*/
+BIFF-Linux-Test/
+BIFF-QuickStart-*/
+*.tar.gz
+test_on_linux.sh
+biff-agents/biff-*-test/
