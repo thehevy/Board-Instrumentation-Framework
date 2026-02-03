@@ -334,8 +334,19 @@ class PackageBuilder:
         """Create start_all scripts."""
         self.print_status("Creating unified startup scripts...", "INFO")
         
+        # Detect actual Marvin config filename
+        marvin_config = "MarvinConfig.xml"
+        configs_dir = self.package_path / "Configs"
+        if configs_dir.exists():
+            # Look for common Marvin config names
+            for config_name in ["Application.xml", "ApplicationConfig.xml", "MarvinConfig.xml", "App.Config.xml"]:
+                if (configs_dir / config_name).exists():
+                    marvin_config = config_name
+                    self.print_status(f"Detected Marvin config: {config_name}", "INFO")
+                    break
+        
         # PowerShell version
-        ps1_content = '''# =============================================================================
+        ps1_content = f'''# =============================================================================
 # Start All BIFF Components
 # =============================================================================
 # Starts Oscar (background) and Marvin (foreground)
@@ -343,7 +354,7 @@ class PackageBuilder:
 # =============================================================================
 
 param(
-    [string]$MarvinConfig = "Configs\\MarvinConfig.xml",
+    [string]$MarvinConfig = "Configs\\{marvin_config}",
     [string]$OscarConfig = "Configs\\OscarConfig.xml",
     [switch]$Help
 )
@@ -397,14 +408,14 @@ Pop-Location
         (self.package_path / "start_all.ps1").write_text(ps1_content, encoding='utf-8')
         
         # Batch version
-        bat_content = '''@echo off
+        bat_content = f'''@echo off
 REM =============================================================================
 REM Start All BIFF Components
 REM =============================================================================
 
 setlocal
 
-set MARVIN_CONFIG=Configs\\MarvinConfig.xml
+set MARVIN_CONFIG=Configs\\{marvin_config}
 set OSCAR_CONFIG=Configs\\OscarConfig.xml
 
 echo.
