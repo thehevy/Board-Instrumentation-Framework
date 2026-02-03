@@ -6,19 +6,18 @@
     <TargetConnection IP="localhost" PORT="1100"/>
     <Collector ID="randomval.value">
       <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\RandomVal.py</Executable>
+      <Param>GetBoundedRandomValue</Param>
       <Param>0</Param>
       <Param>100</Param>
     </Collector>
     <Collector ID="timer.value">
       <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\Timer.py</Executable>
+      <Param>GetElapsedTime</Param>
     </Collector>
     <Collector ID="cpu.value">
       <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\CPU.py</Executable>
-      <Param>GetUsage</Param>
+      <Param>GetCPU_Percentage</Param>
     </Collector>
-    <Collector ID="memory.value">
-      <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\CPU.py</Executable>
-      <Param>GetMemory</Param>
-    </Collector>
+    <!-- Note: Memory functions do not exist in CPU.py - removed invalid collector -->
   </Namespace>
 </Minion>

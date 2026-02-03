@@ -38,34 +38,26 @@ class MinionConfigGenerator(BaseGenerator):
     COLLECTOR_TEMPLATES = {
         "RandomVal": {
             "executable": "Collectors/RandomVal.py",
-            "params": ["0", "100"],
+            "params": ["GetBoundedRandomValue", "0", "100"],  # Function name + parameters
             "description": "Random value between 0-100"
         },
         "Timer": {
             "executable": "Collectors/Timer.py",
-            "params": [],
+            "params": ["GetElapsedTime"],  # Function name required
             "description": "Elapsed time in milliseconds"
         },
         "CPU": {
             "executable": "Collectors/CPU.py",
-            "params": ["GetUsage"],
+            "params": ["GetCPU_Percentage"],  # Correct function name
             "description": "CPU utilization percentage"
-        },
-        "Memory": {
-            "executable": "Collectors/CPU.py",
-            "params": ["GetMemory"],
-            "description": "Memory usage (MB used, MB total)"
         },
         "Network": {
             "executable": "Collectors/Network.py",
             "params": ["GetBytesRecv"],
             "description": "Network bytes received"
-        },
-        "Storage": {
-            "executable": "Collectors/CPU.py",
-            "params": ["GetDiskUsage"],
-            "description": "Disk usage percentage"
         }
+        # Note: Memory and Storage functions do not exist in CPU.py
+        # Remove these templates - they reference non-existent functions
     }
     
     def generate(self, config: Dict) -> str:

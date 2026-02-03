@@ -54,7 +54,7 @@ def signal_handler(signal, frame):
         _ThreadActive = False
 
 def spinning_cursor(which=0):
-    cursors=('/-\|'),('.o0o')
+    cursors=(r'/-\|'),('.o0o')  # Use raw string to avoid escape sequence warning
     cursor = cursors[which]
     i = 0
     global _ThreadActive

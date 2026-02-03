@@ -27,7 +27,8 @@ import platform
 import importlib
 import inspect
 import os
-import imp
+# Note: 'imp' module removed - deprecated in Python 3.4, removed in Python 3.12
+# Was never used in this module
 
 # kind of a cool class I came up with (help via Google) to dynamically load external python scripts!
 class DynamicLoader:
