@@ -1,0 +1,6 @@
+Network Queue Stats
+6
+collect_queue_stats
+2
+queue.0.tx,queue.0.rx,queue.1.tx,queue.1.rx
+1

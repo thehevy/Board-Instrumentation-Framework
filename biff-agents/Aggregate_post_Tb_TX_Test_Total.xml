@@ -1,0 +1,7 @@
+<Collector ID="post.Tb.TX.Test.Total">
+    <Operator>Addition</Operator>
+    <Repeat Count="$(NUM_PORTS)" StartValue="1">
+        <Input DefaultValue="0">post.$(CurrentValueAlias).test_total_tx</Input>
+    </Repeat>
+    <Precision>0</Precision>
+</Collector>

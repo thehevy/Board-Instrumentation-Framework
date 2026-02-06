@@ -30,6 +30,7 @@ from biff_agents_core.utils.cli_helpers import (
 from biff_agents_core.utils.environment_validator import EnvironmentValidator
 from biff_agents_core.utils.setup_wizard import SetupWizard
 from biff_agents_core.utils.collector_discovery import CollectorDiscovery
+from biff_agents_core.builders.collector_builder import CollectorWizard
 from pathlib import Path
 
 
@@ -262,6 +263,48 @@ def create_parser():
         '--biff-root',
         type=Path,
         help='Path to BIFF installation (default: auto-detect)'
+    )
+    
+    # collector create
+    create_parser = collector_subparsers.add_parser('create', help='Create new collector with interactive wizard')
+    create_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output directory for collector file (default: current directory)'
+    )
+    create_parser.add_argument(
+        '--config',
+        type=Path,
+        help='MinionConfig.xml to update (optional)'
+    )
+    create_parser.add_argument(
+        '--no-config-update',
+        action='store_true',
+        help='Do not update MinionConfig.xml'
+    )
+    
+    # modifier create
+    modifier_parser = collector_subparsers.add_parser('modifier', help='Create bulk regex modifier for pattern-based transformations')
+    modifier_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output directory for modifier XML (default: current directory)'
+    )
+    
+    # aggregate create
+    aggregate_parser = collector_subparsers.add_parser('aggregate', help='Create aggregate collector using Repeat operator')
+    aggregate_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output directory for aggregate XML (default: current directory)'
+    )
+    
+    # externalfile create
+    externalfile_parser = collector_subparsers.add_parser('externalfile', help='Create parameterized reusable config with ExternalFile pattern')
+    externalfile_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output directory for generated files (default: current directory)'
     )
     
     # GUI command
@@ -754,6 +797,14 @@ def handle_collector(args):
         return handle_collector_template(args, discovery)
     elif action == 'namespace':
         return handle_collector_namespace(args, discovery)
+    elif action == 'create':
+        return handle_collector_create(args)
+    elif action == 'modifier':
+        return handle_modifier_create(args)
+    elif action == 'aggregate':
+        return handle_aggregate_create(args)
+    elif action == 'externalfile':
+        return handle_externalfile_create(args)
     else:
         print_error(f"Unknown action: {action}")
         return 1
@@ -1232,7 +1283,354 @@ def handle_collector_namespace(args, discovery):
     print("  4. Run Minion: python Minion.py -c YourConfig.xml")
     
     return 0
-    return 0 if result['success'] else 1
+
+
+def handle_modifier_create(args):
+    """Handle modifier create command - generates bulk regex modifier XML"""
+    from biff_agents_core.builders.modifier_builder import ModifierWizard
+    from pathlib import Path
+    
+    print_header("BIFF Bulk Regex Modifier Generator")
+    
+    try:
+        # Run interactive wizard
+        wizard = ModifierWizard()
+        responses = wizard.run_wizard()
+        
+        # Generate modifier XML
+        print("\n" + "="*70)
+        print("  Generating Modifier XML...")
+        print("="*70)
+        
+        xml = wizard.generate_modifier_xml(responses)
+        
+        # Determine output path
+        output_dir = args.output if args.output else Path.cwd()
+        output_dir = Path(output_dir)
+        
+        # Create filename from pattern
+        pattern = responses['pattern']
+        # Sanitize pattern for filename
+        filename = pattern.replace('(_*)', '_wildcard').replace('(*)', '_wildcard')
+        filename = filename.replace('.', '_').replace('/', '_').replace('\\', '_')
+        filename = 'Modifier_' + filename + '.xml'
+        filename = ''.join(c for c in filename if c.isalnum() or c in ('_', '.', '-'))
+        output_file = output_dir / filename
+        
+        # Save modifier
+        wizard.save_modifier(xml, output_file)
+        
+        print()
+        print_success(f"✓ Modifier XML created: {output_file}")
+        
+        # Show summary
+        print()
+        print_info("Modifier Summary:")
+        print(f"  • Pattern: {responses['pattern']}")
+        print(f"  • Operation: {responses['operation']}")
+        if responses['operation'] == 'normalize':
+            print(f"  • Factor: {responses['normalize_factor']}")
+            print(f"  • Description: {responses.get('normalize_description', 'N/A')}")
+        print(f"  • Precision: {responses['precision']}")
+        print(f"  • Send on Change: {'Yes' if responses.get('send_on_change') else 'No'}")
+        print(f"  • Suppress Send: {'Yes' if responses.get('do_not_send') else 'No'}")
+        
+        # Show generated XML
+        print()
+        print_info("Generated XML:")
+        print()
+        for line in xml.split('\n'):
+            print(f"  {line}")
+        
+        # Show usage notes
+        print()
+        print_info(wizard.get_usage_notes(responses))
+        
+        print()
+        print_info("Next Steps:")
+        print("  1. Open your MinionConfig.xml")
+        print("  2. Add this <Modifier> XML inside the <Namespace>")
+        print("  3. Place AFTER the collectors that generate these metrics")
+        print("  4. Restart Minion to apply transformations")
+        
+        return 0
+        
+    except KeyboardInterrupt:
+        print("\n\n❌ Modifier generation cancelled")
+        return 1
+    except Exception as e:
+        print()
+        print_error(f"✗ Failed to create modifier: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
+def handle_aggregate_create(args):
+    """Handle aggregate collector create command"""
+    from biff_agents_core.builders.aggregate_builder import run_wizard
+    
+    try:
+        # Determine output directory
+        output_dir = args.output if hasattr(args, 'output') and args.output else Path.cwd()
+        
+        # Run the wizard
+        result = run_wizard(str(output_dir))
+        return result
+        
+    except KeyboardInterrupt:
+        print("\n\n❌ Aggregate generation cancelled")
+        return 1
+    except Exception as e:
+        print()
+        print_error(f"✗ Failed to create aggregate: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
+def handle_externalfile_create(args):
+    """Handle external file template create command"""
+    from biff_agents_core.builders.externalfile_builder import run_wizard
+    
+    try:
+        # Determine output directory
+        output_dir = args.output if hasattr(args, 'output') and args.output else Path.cwd()
+        
+        # Run the wizard
+        result = run_wizard(str(output_dir))
+        return result
+        
+    except KeyboardInterrupt:
+        print("\n\n❌ ExternalFile generation cancelled")
+        return 1
+    except Exception as e:
+        print()
+        print_error(f"✗ Failed to create ExternalFile: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
+def handle_collector_create(args):
+    """Handle collector create command"""
+    print_header("Minion Collector Builder - Create New Collector")
+    
+    try:
+        # Run interactive wizard
+        wizard = CollectorWizard()
+        responses = wizard.run_wizard()
+        
+        # Check if this is a DynamicCollector (XML-only) or plugin_framework
+        is_dynamic_collector = responses.get('source_type') == 'dynamic_file'
+        is_plugin_framework = responses.get('source_type') == 'plugin_framework'
+        
+        # Generate collector code/config
+        print("\n" + "="*70)
+        if is_dynamic_collector:
+            print("  Generating DynamicCollector XML...")
+        else:
+            print("  Generating Collector Code...")
+        print("="*70)
+        
+        code = wizard.generate_collector(responses)
+        
+        # Determine output path
+        output_dir = args.output if args.output else Path.cwd()
+        output_dir = Path(output_dir)
+        
+        # For DynamicCollector, save as XML snippet
+        if is_dynamic_collector:
+            filename = 'DynamicCollector_' + responses['metric_prefix'].replace('.', '_') + '.xml'
+            output_file = output_dir / filename
+            wizard.save_collector(code, output_file)
+            
+            print()
+            print_success(f"✓ DynamicCollector XML created: {output_file}")
+            
+            # Show summary
+            print()
+            print_info("DynamicCollector Summary:")
+            print(f"  • Metric Prefix: {responses['metric_prefix']}")
+            print(f"  • File Path: {responses['file_path']}")
+            print(f"  • Frequency: {responses['frequency_display']}")
+            print(f"  • Precision: {responses['precision']}")
+            print(f"  • Send on Change: {'Yes' if responses.get('send_on_change') else 'No'}")
+            print()
+            print_info("Usage:")
+            print("  1. Add the XML to your MinionConfig.xml inside <Namespace>")
+            print("  2. Create file with format: metric.name=value")
+            print("  3. Minion will auto-discover and send all metrics")
+            
+            # Show usage notes
+            template = wizard.TEMPLATES['dynamic_file']
+            print()
+            print_info(template.get_usage_notes())
+            
+        elif is_plugin_framework:
+            # Plugin Framework collectors are Python files
+            metric_name = responses['metric_name']
+            filename = metric_name.replace(' ', '_').replace('-', '_') + '.py'
+            filename = ''.join(c for c in filename if c.isalnum() or c in ('_', '.'))
+            output_file = output_dir / filename
+            
+            # Save collector
+            wizard.save_collector(code, output_file)
+            
+            print()
+            print_success(f"✓ Plugin Framework collector created: {output_file}")
+            
+            # Show summary
+            print()
+            print_info("Plugin Framework Collector Summary:")
+            print(f"  • Metric Name: {responses['metric_name']}")
+            print(f"  • Entry Point: {responses.get('function_name', 'collect')}")
+            print(f"  • Discovery Mode: {responses.get('discovery_mode', 'dynamic')}")
+            if responses.get('discovery_mode') == 'static':
+                static_ids = responses.get('static_ids', [])
+                print(f"  • Collector IDs: {', '.join(static_ids[:3])}{'...' if len(static_ids) > 3 else ''} ({len(static_ids)} total)")
+            print(f"  • Frequency: {responses['frequency_display']}")
+            print(f"  • Output File: {output_file}")
+            
+            # Show XML configuration
+            print()
+            print_info("XML Configuration for MinionConfig.xml:")
+            print()
+            print(f'''<Plugin>
+    <PythonFile>Collectors/{filename}</PythonFile>
+    <EntryPoint>{responses.get('function_name', 'collect')}</EntryPoint>
+    <!-- Optional parameters -->
+    <Param>param_name=value</Param>
+</Plugin>''')
+            
+            # Show usage notes
+            template = wizard.TEMPLATES['plugin_framework']
+            print()
+            print_info(template.get_usage_notes())
+            
+        else:
+            # Create filename from metric name for Python collectors
+            metric_name = responses['metric_name']
+            filename = metric_name.replace(' ', '_').replace('-', '_') + '.py'
+            filename = ''.join(c for c in filename if c.isalnum() or c in ('_', '.'))
+            output_file = output_dir / filename
+            
+            # Save collector
+            wizard.save_collector(code, output_file)
+            
+            print()
+            print_success(f"✓ Collector created: {output_file}")
+            
+            # Show summary
+            print()
+            print_info("Collector Summary:")
+            print(f"  • Metric Name: {responses['metric_name']}")
+            print(f"  • Metric ID: {responses.get('metric_id', 'N/A')}")
+            print(f"  • Source Type: {responses['source_type']}")
+            print(f"  • Frequency: {responses['frequency_display']}")
+            print(f"  • Template: {responses['template_key']}")
+            print(f"  • Output File: {output_file}")
+        
+        # Update MinionConfig.xml if requested (only for Python collectors, not for XML-only)
+        if not is_dynamic_collector and not args.no_config_update:
+            config_file = args.config if args.config else None
+            if not config_file:
+                # Try to find MinionConfig.xml in current directory or parent
+                search_paths = [
+                    Path.cwd() / 'MinionConfig.xml',
+                    Path.cwd().parent / 'MinionConfig.xml',
+                    Path.cwd() / 'Minion' / 'MinionConfig.xml'
+                ]
+                for path in search_paths:
+                    if path.exists():
+                        config_file = path
+                        break
+            
+            if config_file:
+                print()
+                if confirm_action(f"Update {config_file} with new collector?"):
+                    try:
+                        # Parse existing config
+                        import xml.etree.ElementTree as ET
+                        tree = ET.parse(config_file)
+                        root = tree.getroot()
+                        
+                        # Find or create Namespace
+                        namespace = root.find('.//Namespace')
+                        if namespace is None:
+                            namespace = ET.SubElement(root, 'Namespace')
+                            name_elem = ET.SubElement(namespace, 'Name')
+                            name_elem.text = 'Default'
+                            freq_elem = ET.SubElement(namespace, 'DefaultFrequency')
+                            freq_elem.text = '1000'
+                            conn_elem = ET.SubElement(namespace, 'TargetConnection')
+                            conn_elem.set('IP', 'localhost')
+                            conn_elem.set('PORT', '5100')
+                        
+                        # Add Collector element
+                        collector_elem = ET.SubElement(namespace, 'Collector')
+                        collector_elem.set('ID', responses['metric_id'])
+                        collector_elem.set('Frequency', str(responses['frequency']))
+                        
+                        executable_elem = ET.SubElement(collector_elem, 'Executable')
+                        executable_elem.text = str(output_file)
+                        
+                        # Write back with proper formatting
+                        from xml.dom import minidom
+                        xml_str = ET.tostring(root, encoding='unicode')
+                        dom = minidom.parseString(xml_str)
+                        pretty_xml = dom.toprettyxml(indent='  ')
+                        
+                        # Remove extra blank lines
+                        lines = [line for line in pretty_xml.split('\n') if line.strip()]
+                        pretty_xml = '\n'.join(lines)
+                        
+                        with open(config_file, 'w', encoding='utf-8') as f:
+                            f.write(pretty_xml)
+                        
+                        print_success(f"✓ Updated {config_file}")
+                        
+                    except Exception as e:
+                        print_warning(f"Failed to update config: {e}")
+                        print_info("You can manually add the collector to your MinionConfig.xml")
+            else:
+                print()
+                print_info("No MinionConfig.xml found. You can manually add this collector:")
+                print()
+                print(f'''  <Collector ID="{responses['metric_id']}" Frequency="{responses['frequency']}">
+    <Executable>{output_file}</Executable>
+  </Collector>''')
+        
+        # Next steps
+        print()
+        print_info("Next Steps:")
+        print("  1. Review the generated collector code")
+        print("  2. Customize parsing logic if needed (look for TODO comments)")
+        print(f"  3. Test the collector: python {output_file}")
+        print("  4. Start Minion to see your metric in action")
+        
+        if responses.get('command'):
+            print()
+            print_warning("Note: Make sure the command is available in your system PATH:")
+            print(f"  {responses['command'].split()[0]}")
+        
+        if responses.get('file_path'):
+            print()
+            print_warning("Note: Make sure the file path is accessible:")
+            print(f"  {responses['file_path']}")
+        
+        return 0
+        
+    except KeyboardInterrupt:
+        print()
+        print_warning("\nCollector creation cancelled by user")
+        return 0
+    except Exception as e:
+        print()
+        print_error(f"Failed to create collector: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
 
 
 def handle_gui(args):
