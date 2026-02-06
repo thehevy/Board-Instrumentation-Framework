@@ -307,6 +307,14 @@ def create_parser():
         help='Output directory for generated files (default: current directory)'
     )
     
+    # networkstats create
+    networkstats_parser = collector_subparsers.add_parser('networkstats', help='Create simplified network monitoring configuration')
+    networkstats_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output directory for network stats XML (default: current directory)'
+    )
+    
     # GUI command
     gui_parser = subparsers.add_parser(
         'gui',
@@ -805,6 +813,8 @@ def handle_collector(args):
         return handle_aggregate_create(args)
     elif action == 'externalfile':
         return handle_externalfile_create(args)
+    elif action == 'networkstats':
+        return handle_networkstats_create(args)
     else:
         print_error(f"Unknown action: {action}")
         return 1
@@ -1410,6 +1420,30 @@ def handle_externalfile_create(args):
         import traceback
         traceback.print_exc()
         return 1
+
+
+def handle_networkstats_create(args):
+    """Handle network stats create command"""
+    from biff_agents_core.builders.networkstats_builder import run_wizard
+    
+    try:
+        # Determine output directory
+        output_dir = args.output if hasattr(args, 'output') and args.output else Path.cwd()
+        
+        # Run the wizard
+        result = run_wizard(str(output_dir))
+        return result
+        
+    except KeyboardInterrupt:
+        print("\n\n❌ Network stats generation cancelled")
+        return 1
+    except Exception as e:
+        print()
+        print_error(f"✗ Failed to create network stats: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
 
 
 def handle_collector_create(args):
