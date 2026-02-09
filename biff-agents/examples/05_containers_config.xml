@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example 5: Container & Microservices Dashboard Configuration -->
+<Minion>
+    <Namespace>
+        <Name>Containers</Name>
+        <DefaultFrequency>2000</DefaultFrequency>
+        
+        <!-- Container CPU -->
+        <Collector ID="container.web.cpu">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>web-service</Param>
+            <Param>cpu_percent</Param>
+        </Collector>
+        
+        <Collector ID="container.api.cpu">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>api-service</Param>
+            <Param>cpu_percent</Param>
+        </Collector>
+        
+        <Collector ID="container.db.cpu">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>postgres-db</Param>
+            <Param>cpu_percent</Param>
+        </Collector>
+        
+        <!-- Container Memory -->
+        <Collector ID="container.web.memory">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>web-service</Param>
+            <Param>memory_percent</Param>
+        </Collector>
+        
+        <Collector ID="container.api.memory">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>api-service</Param>
+            <Param>memory_percent</Param>
+        </Collector>
+        
+        <Collector ID="container.db.memory">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>postgres-db</Param>
+            <Param>memory_percent</Param>
+        </Collector>
+        
+        <!-- Container Network -->
+        <Collector ID="container.web.network_rx">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>web-service</Param>
+            <Param>network_rx</Param>
+        </Collector>
+        
+        <Collector ID="container.web.network_tx">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>web-service</Param>
+            <Param>network_tx</Param>
+        </Collector>
+        
+        <!-- Container Status -->
+        <Collector ID="container.web.status">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>web-service</Param>
+            <Param>status</Param>
+        </Collector>
+        
+        <Collector ID="container.api.status">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>api-service</Param>
+            <Param>status</Param>
+        </Collector>
+        
+        <Collector ID="container.db.status">
+            <Executable>Collectors/Docker_Stats.py</Executable>
+            <Param>postgres-db</Param>
+            <Param>status</Param>
+        </Collector>
+        
+        <!-- Container Control Actors -->
+        <Actor ID="restart_web">
+            <Executable>docker restart web-service</Executable>
+        </Actor>
+        
+        <Actor ID="restart_api">
+            <Executable>docker restart api-service</Executable>
+        </Actor>
+        
+        <Actor ID="scale_web_up">
+            <Executable>docker-compose up -d --scale web-service=3</Executable>
+        </Actor>
+        
+        <Actor ID="scale_web_down">
+            <Executable>docker-compose up -d --scale web-service=1</Executable>
+        </Actor>
+        
+        <TargetConnection IP="localhost" PORT="5100"/>
+    </Namespace>
+</Minion>

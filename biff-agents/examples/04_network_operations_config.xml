@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example 4: Network Operations Dashboard Configuration -->
+<Minion>
+    <Namespace>
+        <Name>NetworkOps</Name>
+        <DefaultFrequency>1000</DefaultFrequency>
+        
+        <!-- Interface Statistics -->
+        <Collector ID="interface.eth0.bandwidth">
+            <Executable>Collectors/LinuxNetwork.py</Executable>
+            <Param>eth0</Param>
+            <Param>bandwidth_utilization</Param>
+        </Collector>
+        
+        <Collector ID="interface.eth0.packets_rx">
+            <Executable>Collectors/LinuxNetwork.py</Executable>
+            <Param>eth0</Param>
+            <Param>packets_received</Param>
+        </Collector>
+        
+        <Collector ID="interface.eth0.packets_tx">
+            <Executable>Collectors/LinuxNetwork.py</Executable>
+            <Param>eth0</Param>
+            <Param>packets_transmitted</Param>
+        </Collector>
+        
+        <Collector ID="interface.eth0.errors">
+            <Executable>Collectors/LinuxNetwork.py</Executable>
+            <Param>eth0</Param>
+            <Param>errors</Param>
+        </Collector>
+        
+        <Collector ID="interface.eth0.drops">
+            <Executable>Collectors/LinuxNetwork.py</Executable>
+            <Param>eth0</Param>
+            <Param>drops</Param>
+        </Collector>
+        
+        <!-- Connection Statistics -->
+        <Collector ID="connections.tcp.established">
+            <Executable>Collectors/Network.py</Executable>
+            <Param>tcp_established</Param>
+        </Collector>
+        
+        <Collector ID="connections.tcp.timewait">
+            <Executable>Collectors/Network.py</Executable>
+            <Param>tcp_timewait</Param>
+        </Collector>
+        
+        <Collector ID="connections.udp.total">
+            <Executable>Collectors/Network.py</Executable>
+            <Param>udp_total</Param>
+        </Collector>
+        
+        <!-- Firewall Statistics -->
+        <Collector ID="firewall.packets.allowed">
+            <Executable>Collectors/IPC_Linux.py</Executable>
+            <Param>iptables_accepted</Param>
+        </Collector>
+        
+        <Collector ID="firewall.packets.dropped">
+            <Executable>Collectors/IPC_Linux.py</Executable>
+            <Param>iptables_dropped</Param>
+        </Collector>
+        
+        <!-- DNS Statistics -->
+        <Collector ID="dns.queries.total">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://dns-server:8080/stats</Param>
+            <Param>queries_total</Param>
+        </Collector>
+        
+        <Collector ID="dns.cache.hitrate">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://dns-server:8080/stats</Param>
+            <Param>cache_hitrate</Param>
+        </Collector>
+        
+        <!-- Ping Statistics -->
+        <Collector ID="ping.gateway.latency">
+            <Executable>Collectors/NetCat.py</Executable>
+            <Param>192.168.1.1</Param>
+            <Param>ping</Param>
+        </Collector>
+        
+        <Collector ID="ping.gateway.loss">
+            <Executable>Collectors/NetCat.py</Executable>
+            <Param>192.168.1.1</Param>
+            <Param>loss</Param>
+        </Collector>
+        
+        <TargetConnection IP="localhost" PORT="5100"/>
+    </Namespace>
+</Minion>

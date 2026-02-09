@@ -162,8 +162,8 @@ class PerformanceDashboardComposer(DashboardComposer):
         max_val = 100
         units = '%'
         
-        if source.suggested_units:
-            units = source.suggested_units
+        if source.suggested_unit:
+            units = source.suggested_unit
         if source.suggested_min_max and source.suggested_min_max[0] is not None:
             min_val, max_val = source.suggested_min_max
         

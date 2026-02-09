@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example 1: Server Monitoring Configuration -->
+<Minion>
+    <Namespace>
+        <Name>ServerMonitoring</Name>
+        <DefaultFrequency>1000</DefaultFrequency>
+        
+        <!-- CPU Metrics -->
+        <Collector ID="cpu.usage" Frequency="500">
+            <Executable>Collectors/CPU.py</Executable>
+            <Param>GetUsage</Param>
+        </Collector>
+        
+        <Collector ID="cpu.load1">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>LoadAverage1</Param>
+        </Collector>
+        
+        <Collector ID="cpu.load5">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>LoadAverage5</Param>
+        </Collector>
+        
+        <!-- Memory Metrics -->
+        <Collector ID="memory.used">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>MemoryUsed</Param>
+        </Collector>
+        
+        <Collector ID="memory.percent">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>MemoryPercent</Param>
+        </Collector>
+        
+        <Collector ID="memory.available">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>MemoryAvailable</Param>
+        </Collector>
+        
+        <!-- Network Metrics -->
+        <Collector ID="network.eth0.rx">
+            <Executable>Collectors/LinuxNetwork.py</Executable>
+            <Param>eth0</Param>
+            <Param>rx_bytes</Param>
+        </Collector>
+        
+        <Collector ID="network.eth0.tx">
+            <Executable>Collectors/LinuxNetwork.py</Executable>
+            <Param>eth0</Param>
+            <Param>tx_bytes</Param>
+        </Collector>
+        
+        <!-- Disk Metrics -->
+        <Collector ID="disk.root.used">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>DiskUsedPercent</Param>
+            <Param>/</Param>
+        </Collector>
+        
+        <Collector ID="disk.home.used">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>DiskUsedPercent</Param>
+            <Param>/home</Param>
+        </Collector>
+        
+        <!-- System Info -->
+        <Collector ID="system.hostname">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>Hostname</Param>
+        </Collector>
+        
+        <Collector ID="system.uptime">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>Uptime</Param>
+        </Collector>
+        
+        <Collector ID="system.temperature">
+            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Param>CPUTemp</Param>
+        </Collector>
+        
+        <!-- Service Control Actors -->
+        <Actor ID="restart_service">
+            <Executable>systemctl restart myapp</Executable>
+        </Actor>
+        
+        <Actor ID="clear_cache">
+            <Executable>rm -rf /var/cache/myapp/*</Executable>
+        </Actor>
+        
+        <TargetConnection IP="localhost" PORT="5100"/>
+    </Namespace>
+</Minion>

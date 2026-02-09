@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example 2: Application Performance Monitoring Configuration -->
+<Minion>
+    <Namespace>
+        <Name>AppPerformance</Name>
+        <DefaultFrequency>1000</DefaultFrequency>
+        
+        <!-- Application Metrics -->
+        <Collector ID="app.requests.total">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>http_requests_total</Param>
+        </Collector>
+        
+        <Collector ID="app.requests.rate">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>http_requests_rate</Param>
+        </Collector>
+        
+        <Collector ID="app.response.p50">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>http_response_time_p50</Param>
+        </Collector>
+        
+        <Collector ID="app.response.p95">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>http_response_time_p95</Param>
+        </Collector>
+        
+        <Collector ID="app.response.p99">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>http_response_time_p99</Param>
+        </Collector>
+        
+        <!-- Error Rates -->
+        <Collector ID="app.errors.4xx">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>http_errors_4xx_rate</Param>
+        </Collector>
+        
+        <Collector ID="app.errors.5xx">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>http_errors_5xx_rate</Param>
+        </Collector>
+        
+        <!-- Database Metrics -->
+        <Collector ID="db.connections.active">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>db_connections_active</Param>
+        </Collector>
+        
+        <Collector ID="db.query.time">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>db_query_duration_avg</Param>
+        </Collector>
+        
+        <!-- Cache Metrics -->
+        <Collector ID="cache.hit.rate">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>cache_hit_rate</Param>
+        </Collector>
+        
+        <Collector ID="cache.memory.used">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>cache_memory_bytes</Param>
+        </Collector>
+        
+        <!-- Queue Metrics -->
+        <Collector ID="queue.length">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>queue_length</Param>
+        </Collector>
+        
+        <Collector ID="queue.processing.rate">
+            <Executable>Collectors/Prometheus.py</Executable>
+            <Param>queue_processing_rate</Param>
+        </Collector>
+        
+        <TargetConnection IP="localhost" PORT="5100"/>
+    </Namespace>
+</Minion>

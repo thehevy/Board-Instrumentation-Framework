@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example 3: IoT Sensor Dashboard Configuration -->
+<Minion>
+    <Namespace>
+        <Name>IoTSensors</Name>
+        <DefaultFrequency>2000</DefaultFrequency>
+        
+        <!-- Temperature Sensors -->
+        <Collector ID="sensor.temp.室内">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/sensors/temp01</Param>
+            <Param>temperature</Param>
+        </Collector>
+        
+        <Collector ID="sensor.temp.outdoor">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/sensors/temp02</Param>
+            <Param>temperature</Param>
+        </Collector>
+        
+        <Collector ID="sensor.temp.server_room">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/sensors/temp03</Param>
+            <Param>temperature</Param>
+        </Collector>
+        
+        <!-- Humidity Sensors -->
+        <Collector ID="sensor.humidity.indoor">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/sensors/hum01</Param>
+            <Param>humidity</Param>
+        </Collector>
+        
+        <Collector ID="sensor.humidity.outdoor">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/sensors/hum02</Param>
+            <Param>humidity</Param>
+        </Collector>
+        
+        <!-- Motion Sensors -->
+        <Collector ID="sensor.motion.entrance">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/sensors/motion01</Param>
+            <Param>detected</Param>
+        </Collector>
+        
+        <Collector ID="sensor.motion.hallway">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/sensors/motion02</Param>
+            <Param>detected</Param>
+        </Collector>
+        
+        <!-- Power Monitoring -->
+        <Collector ID="power.consumption">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/power</Param>
+            <Param>watts</Param>
+        </Collector>
+        
+        <Collector ID="power.voltage">
+            <Executable>Collectors/JsonCollector.py</Executable>
+            <Param>http://iot-gateway:8080/api/power</Param>
+            <Param>voltage</Param>
+        </Collector>
+        
+        <!-- Device Control Actors -->
+        <Actor ID="hvac_on">
+            <Executable>curl -X POST http://iot-gateway:8080/api/hvac/on</Executable>
+        </Actor>
+        
+        <Actor ID="hvac_off">
+            <Executable>curl -X POST http://iot-gateway:8080/api/hvac/off</Executable>
+        </Actor>
+        
+        <Actor ID="lights_toggle">
+            <Executable>curl -X POST http://iot-gateway:8080/api/lights/toggle</Executable>
+        </Actor>
+        
+        <TargetConnection IP="localhost" PORT="5100"/>
+    </Namespace>
+</Minion>
