@@ -2,11 +2,11 @@
 
 [![GitHub](https://img.shields.io/badge/github-intel%2FBoard--Instrumentation--Framework-blue)](https://github.com/intel/Board-Instrumentation-Framework)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-22%2F22%20passing-brightgreen)](tests/)
+[![Tests](https://img.shields.io/badge/tests-20%2F20%20passing-brightgreen)](tests/)
 [![License](https://img.shields.io/badge/license-see%20parent-lightgrey)](../license.txt)
 
 **Version**: 3.0.0  
-**Test Coverage**: 100% (22/22 tests passing)  
+**Test Coverage**: 100% (20/20 tests passing)  
 **Time Savings**: 95%+ across all components
 
 ---
@@ -36,24 +36,34 @@ cd biff-agents
 
 ```bash
 # Interactive collector creation
-python -m biff_agents_minion.cli collector create
+python -m biff_cli collector create
 
-# Available templates: cpu_monitor, memory_monitor, network_monitor, 
-# docker_monitor, prometheus, and 6 more
+# List available collector types
+python -m biff_cli collector list
+
+# Generate quickstart config
+python -m biff_cli config generate quickstart -o quickstart_configs
 ```
 
 ### Generate Marvin Dashboard (Phase 3)
 
 ```bash
+# List available widgets and dashboard templates
+python -m biff_agents_marvin.cli list-widgets
+python -m biff_agents_marvin.cli list-composers
+
 # Quickstart dashboard (1 tab, auto-layout)
-python -m biff_agents_marvin dashboard quickstart \
-  -c MinionConfig.xml \
+python -m biff_agents_marvin.cli dashboard quickstart \
+  -c quickstart_configs/MinionConfig.xml \
   -o my_dashboard
 
 # Monitoring dashboard (3 tabs: Overview/Details/Status)
-python -m biff_agents_marvin dashboard monitoring \
-  -c MinionConfig.xml \
+python -m biff_agents_marvin.cli dashboard monitoring \
+  -c quickstart_configs/MinionConfig.xml \
   -o monitoring_dashboard
+
+# Interactive mode (guided wizard)
+python -m biff_agents_marvin.cli interactive
 
 # Run generated dashboard
 cd my_dashboard
@@ -77,12 +87,14 @@ java -jar ../Marvin/build/libs/BIFF.Marvin.jar -i App.Config.xml
 - **Test Coverage**: 100% (13/13 tests passing)
 - **Time Savings**: 91% (18 hours → 1.7 hours)
 
-### Phase 3: Marvin Automation 🚧 **IN PROGRESS (60% COMPLETE)**
-- **4 Widget Builders**: Text, LED, Gauge, Chart
-- **2 Dashboard Composers**: Quickstart, Monitoring  
+### Phase 3: Marvin Automation ✅ **COMPLETE (Phase 3 Week 8 Day 5)**
+- **8 Widget Builders**: Text, LED, Button, Gauge, Chart, Memory, Network, System
+- **3 Dashboard Composers**: Quickstart, Monitoring, Performance  
 - **Smart Defaults**: Auto-detect units, ranges, thresholds
 - **One-Command Generation**: Complete dashboards in seconds
-- **Test Coverage**: 100% (9/9 tests passing)
+- **CLI Enhancements**: list-widgets, list-composers, interactive mode, batch generation
+- **5 Example Dashboards**: Server monitoring, app performance, IoT, network ops, containers
+- **Test Coverage**: 100% (20/20 tests passing: 14 unit + 6 integration)
 - **Time Savings**: 99.5% (2.5 hours → 10 seconds)
 
 ---
@@ -93,43 +105,66 @@ java -jar ../Marvin/build/libs/BIFF.Marvin.jar -i App.Config.xml
 
 ```
 biff-agents/
-├── biff_agents_minion/          # Phase 2: Minion Automation (1,800 LOC)
-│   ├── cli.py                   # Main CLI interface
+├── biff_cli/                    # Unified CLI interface
+│   ├── main.py                  # Main CLI entry point
+│   └── __main__.py              # python -m biff_cli support
+│
+├── biff_agents_core/            # Phase 2: Minion Automation (1,800 LOC)
 │   ├── templates/               # 11 collector templates
 │   │   ├── cpu_monitor.py
 │   │   ├── docker_monitor.py
 │   │   ├── prometheus.py
 │   │   └── ...
+│   ├── builders/                # Collector builders
+│   │   └── collector_builder.py
+│   ├── generators/              # Config generators
+│   │   ├── minion_generator.py
+│   │   └── oscar_generator.py
 │   └── utils/
-│       ├── xml_generator.py     # XML generation
-│       └── validators.py        # Input validation
+│       ├── collector_discovery.py
+│       └── xml_generator.py
 │
-├── biff_agents_marvin/          # Phase 3: Marvin Automation (2,240 LOC)
-│   ├── cli.py                   # Main CLI interface
-│   ├── builders/                # Widget builders
+├── biff_agents_marvin/          # Phase 3: Marvin Automation (3,750 LOC)
+│   ├── cli.py                   # Marvin CLI interface
+│   ├── builders/                # 8 widget builders
 │   │   ├── widget_builder.py   # Abstract base
 │   │   ├── text_widget_builder.py
 │   │   ├── led_widget_builder.py
+│   │   ├── button_widget_builder.py
 │   │   ├── gauge_widget_builder.py
-│   │   └── chart_widget_builder.py
-│   ├── composers/               # Dashboard composers
-│   │   ├── dashboard_composer.py     # Abstract base
+│   │   ├── chart_widget_builder.py
+│   │   ├── memory_widget_builder.py
+│   │   ├── network_widget_builder.py
+│   │   └── system_widget_builder.py
+│   ├── composers/               # 3 dashboard composers
+│   │   ├── dashboard_composer.py         # Abstract base
 │   │   ├── quickstart_composer.py
-│   │   └── monitoring_composer.py
+│   │   ├── monitoring_composer.py
+│   │   └── performance_composer.py
 │   └── utils/
 │       └── minion_discovery.py  # Data source discovery
+│
+├── examples/                    # 5 example dashboards
+│   ├── 01_server_monitoring_config.xml
+│   ├── 02_application_performance_config.xml
+│   ├── 03_iot_sensors_config.xml
+│   ├── 04_network_operations_config.xml
+│   ├── 05_containers_config.xml
+│   ├── generate_examples.py
+│   └── README.md
 │
 ├── quickstart_configs/          # Example configurations
 │   └── MinionConfig.xml         # Demo config with 2 collectors
 │
-├── tests/                       # Test suite (1,020 LOC)
-│   ├── test_minion_templates.py      # 13 tests - Phase 2
-│   └── test_marvin_composer.py       # 9 tests - Phase 3
+├── tests/                       # Test suite (1,200+ LOC)
+│   ├── test_integration.py           # Phase 2 integration tests
+│   ├── test_marvin_composer.py       # 14 tests - Phase 3 unit
+│   └── test_marvin_integration.py    # 6 tests - Phase 3 integration
 │
-└── docs/                        # Documentation (5,000+ LOC)
-    ├── PHASE2_COMPLETE.md       # Phase 2 summary
-    ├── PHASE3_PLAN.md           # Phase 3 roadmap
-    └── PHASE3_WEEK8_SUMMARY.md  # Current status
+└── docs/                        # Documentation
+    ├── PHASE2_COMPLETE.md
+    ├── PHASE3_WEEK8_SUMMARY.md
+    └── ...
 ```
 
 ### Data Flow
