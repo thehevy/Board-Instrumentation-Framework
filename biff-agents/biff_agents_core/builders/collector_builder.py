@@ -686,7 +686,7 @@ class CollectorWizard:
         self.responses = {}
     
     def _prompt(self, question: str, options: Optional[List[str]] = None, default: Optional[str] = None) -> str:
-        """Prompt user for input"""
+        """Prompt user for input (strips BOM for Windows PowerShell compatibility)"""
         if options:
             print(f"\n{question}")
             for i, option in enumerate(options, 1):
@@ -694,6 +694,13 @@ class CollectorWizard:
             
             while True:
                 choice = input(f"Choose (1-{len(options)}){f' [{default}]' if default else ''}: ").strip()
+                
+                # Strip BOM if present (Windows PowerShell compatibility)
+                if choice.startswith('\ufeff'):
+                    choice = choice[1:]
+                elif choice.startswith('ï»¿'):
+                    choice = choice[3:]
+                
                 if not choice and default:
                     return default
                 try:
@@ -710,6 +717,13 @@ class CollectorWizard:
             prompt_text += ": "
             
             response = input(prompt_text).strip()
+            
+            # Strip BOM if present (Windows PowerShell/echo adds UTF-8 BOM)
+            if response.startswith('\ufeff'):
+                response = response[1:]
+            elif response.startswith('ï»¿'):
+                response = response[3:]
+            
             return response if response else (default or "")
     
     def _validate_metric_id(self, metric_id: str) -> Tuple[bool, str]:

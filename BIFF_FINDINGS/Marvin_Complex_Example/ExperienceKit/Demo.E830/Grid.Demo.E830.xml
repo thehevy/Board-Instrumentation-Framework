@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: 
+#    Basic template for an external grid file
+#
+##############################################################################
+
+	CreationSize Width="1920" Height="1050"
+-->
+<MarvinExternalFile>
+	<AliasList>
+		<Alias E830.Dir="$(AppDir)\Demo.E830"/>
+		<Import>$(E830.Dir)\DefinitionFiles\Alias.List.Demo.E830.xml</Import>
+		<DefaultAlias Gauge.Min="0"/>
+		<DefaultAlias Gauge.Max="200"/>
+		<DefaultAlias Tick.Number="6"/>
+		<DefaultAlias Gauge.Midpoint="MarvinMath(MarvinMath($(Gauge.Max),-,$(Gauge.Min)),div,2)"/>
+		<DefaultAlias Gauge.UnitText=""/>
+		<DefaultAlias Gauge.Title=""/>
+		<DefaultAlias Gauge.Style="E830"/>
+		<DefaultAlias ID.Lookup="DEFAULT"/>
+	</AliasList>
+	<Grid Align="Center">
+		<StyleOverride>
+			<Item>
+				-fx-background-color: rgba(10,10,10,0.5);
+				-fx-background-radius: 10 10 10 10;
+				-fx-background-insets: -10 -10 -10 0;
+			</Item>
+		</StyleOverride>
+
+		<!-- MACRO SECTION -->
+		<GridMacro Name="Single.Image">
+			<Widget File="$(E830.Dir)\Widget\Image\ImageScale.xml" row="$(CurrentRowAlias)" column="$(CurrentColumnAlias)" Width="100%g" Height="100%g" Align="S" Task="$(Task.ID)">
+				<Source>$(E830.Dir)\Images\E830.$(Image).png</Source>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="Single.Test.Image">
+			<Widget File="$(E830.Dir)\Widget\Image\ImageScale.xml" row="$(CurrentRowAlias)" column="$(CurrentColumnAlias)" Width="100%g" Height="100%g" Align="S" Task="$(Task.ID)">
+				<Source>$(E830.Dir)\Images\Test.E830.$(Image).png</Source>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="Image.Block">
+			<Grid row="0" column="0" width="100%g" height="100%g"  align="Center" >
+				<StyleOverride>
+					<Item>
+						-fx-background-color: rgba(0,0,0,0.5);
+						-fx-background-radius: 10 10 10 10;
+						-fx-border-radius: 10 10 10 10;
+						-fx-border-color: rgba(255,255,255,0.9);
+						-fx-border-width: 1pt;
+					</Item>
+				</StyleOverride>
+				<DynamicGrid row="0" column="0" width="96%g" height="96%g" align="Center">
+					<For Count="4">
+						<GridFile Macro="Single.Image" ID="$(CurrentValueAlias)" Image="$(CurrentValueAlias)" Task.ID="Show.$(task_prefix).Left.$(CurrentValueAlias)"/>
+					</For>
+					<MinionSrc ID="Left.Images" Namespace="local_test_images"/>
+					<Initial ID="1"/>
+				</DynamicGrid>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="Image.Rt.Block">
+			<Grid row="0" column="0" width="100%g" height="100%g"  align="Center" >
+				<StyleOverride>
+					<Item>
+						-fx-background-color: rgba(0,0,0,0.5);
+						-fx-background-radius: 10 10 10 10;
+						-fx-border-radius: 10 10 10 10;
+						-fx-border-color: rgba(255,255,255,0.9);
+						-fx-border-width: 1pt;
+					</Item>
+				</StyleOverride>
+				<DynamicGrid row="0" column="0" width="96%g" height="96%g" align="Center">
+					<For Count="4">
+						<GridFile Macro="Single.Test.Image" ID="$(CurrentValueAlias)" Image="$(CurrentValueAlias)" Task.ID="Show.$(task_prefix).Right.$(CurrentValueAlias)"/>
+					</For>
+					<MinionSrc ID="Right.Images" Namespace="local_test_images"/>
+					<Initial ID="1"/>
+				</DynamicGrid>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="Gauge.Single">
+		<!-- 
+			This XML code defines a GridMacro named "Gauge.Single" that represents a reusable component for creating a radial gauge widget. 
+			The macro requires the following parameters to be provided:
+
+			1. Gauge.Title: The title of the gauge, displayed as a label.
+			2. Gauge.Max: The maximum value for the gauge's range.
+			3. Gauge.Namespace: The namespace for the gauge's data source.
+			4. Gauge.ID: The unique identifier for the gauge's data source.
+			5. Gauge.Style: The style of the gauge, which can be either "Standard" or "Reverse".
+
+			The macro uses the following elements:
+			- <Widget>: Specifies the file path to the gauge widget XML and defines its layout properties (row, column, height, width).
+			- <ValueRange>: Sets the minimum and maximum values for the gauge.
+			- <StyleOverride>: Overrides the style of the gauge using the provided style ID.
+			- <MinionSrc>: Links the gauge to a data source using the provided ID and namespace.
+			- <Title>: Sets the title of the gauge using the provided title parameter.
+		-->	
+			<Widget File="$(E830.Dir)\Widget\Gauge\GaugeRadial.Blue.xml" row="0" column="0" height="100%g" width="100%g" Task="Show.$(Flip_ID)">
+				<ValueRange Min="0" Max="$(Gauge.Max)">
+				</ValueRange>
+				<StyleOverride ID="$(Gauge.Style)"/>
+				<MinionSrc ID="$(Gauge.ID)" Namespace="$(Gauge.Namespace)"/>
+				<Title>$(Gauge.Title)</Title>
+			</Widget>
+		</GridMacro>
+
+
+		<GridMacro Name="Gauge.Big">
+		<!-- 
+			Documentation for GridMacro "Gauge.Big":
+
+			Description:
+			This macro defines a large radial gauge widget with customizable properties. 
+			It uses the "GaugeRadial.Big.Blue.xml" widget file and allows for dynamic 
+			configuration of its title, value range, style, and data source.
+
+			Parameters:
+			- Gauge.Title: The title displayed on the gauge.
+			- Gauge.Max: The maximum value for the gauge (not directly used in this macro, but implied for configuration).
+			- Gauge.Namespace: The namespace for the data source of the gauge.
+			- Gauge.ID: The identifier for the data source of the gauge.
+			- Gauge.Style: The style of the gauge, which can be "Standard" or "Reverse".
+
+			Widget Configuration:
+			- File: Specifies the widget file to use for rendering the gauge.
+			- ValueRange: Defines the minimum and maximum values for the gauge.
+			- StyleOverride: Overrides the style of the gauge using the provided ID.
+			- MinionSrc: Configures the data source for the gauge using the provided ID and namespace.
+			- Title: Sets the title of the gauge using the provided parameter.
+
+			Usage:
+			This macro is intended to be used in scenarios where a large radial gauge 
+			visualization is required, with customizable properties for title, style, 
+			and data source.
+		-->		
+			<Widget File="$(E830.Dir)\Widget\Gauge\GaugeRadial.Big.Blue.xml" row="0" column="0" height="100%g" width="100%g" Task="Show.$(Flip_ID)">
+				<ValueRange Min="0" Max="1000"/>
+				<StyleOverride ID="$(Gauge.Style)"/>
+				<MinionSrc ID="$(Gauge.ID)" Namespace="$(Gauge.Namespace)"/>
+				<Title>$(Gauge.Title)</Title>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="Network.Gauges.Grid">
+		<!--
+			Documentation:
+			This XML file defines a GridMacro named "Network.Gauges.Grid" that displays a grid layout for network gauges. 
+			The grid is divided into two sections: Tx (transmit) gauges and Rx (receive) gauges, each representing network 
+			interface statistics for up to five interfaces (iface1 to iface5). 
+
+			Key Elements:
+			1. **Grid Layout**:
+				- The main grid spans the entire area (100% width and height) and is styled with a semi-transparent black 
+				background, rounded corners, and a white border.
+
+			2. **StyleOverride**:
+				- Customizes the grid's appearance with CSS-like properties, including background color, border color, 
+				and radius.
+
+			3. **Tx Gauges**:
+				- Displays transmit (Tx) statistics for each network interface.
+				- Each gauge is represented by a "Gauge.Single" macro with attributes:
+				- `Gauge.ID`: Unique identifier for the Tx gauge (e.g., `netdev.$(iface1).tx_gbps`).
+				- `Gauge.Title`: Title of the gauge (e.g., `$(iface1) Tx`).
+				- `Gauge.Min` and `Gauge.Max`: Minimum and maximum values for the gauge (0 to 200).
+				- `Gauge.Style`: Style of the gauge (e.g., "E830").
+
+			4. **Rx Gauges**:
+				- Displays receive (Rx) statistics for each network interface.
+				- Similar to Tx gauges but uses a different style (`non-E830`).
+
+			5. **Spacers**:
+				- "Spacer.xml" widgets are used to add spacing between gauges for better layout and readability.
+
+			6. **Dynamic Row and Column Management**:
+				- Uses aliases like `$(NextRowAlias)` and `$(NextColumnAlias)` to dynamically position gauges in the grid.
+
+			Purpose:
+			This layout is designed for visualizing network performance metrics in a structured and visually appealing manner, 
+			with separate sections for transmit and receive data for multiple interfaces.
+		-->
+			<Grid row="0" column="0" width="100%g" height="100%g" >
+				<StyleOverride>
+					<Item>
+						-fx-background-color: rgba(0,0,0,0.5);
+						-fx-background-radius: 5 5 5 5;
+						-fx-border-radius: 5 5 5 5;
+						-fx-border-color: rgba(255,255,255,0.9);
+						-fx-border-width: 0.2pt;
+					</Item>
+				</StyleOverride>
+				<!-- Tx Gauges -->
+				<Widget File="Spacer.xml" row="0" column="0" width="5%g" height="5%g"/>
+				<Grid Macro="Gauge.Single" row="$(NextRowAlias)" column="1" width="15%g" height="40%g" Gauge.ID="netdev.$(iface1).tx_gbps" Gauge.Title="$(iface1) Tx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="E830"/>
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="15%g" height="40%g" Gauge.ID="netdev.$(iface2).tx_gbps" Gauge.Title="$(iface2) Tx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="E830" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="15%g" height="40%g" Gauge.ID="netdev.$(iface3).tx_gbps" Gauge.Title="$(iface3) Tx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="E830" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="15%g" height="40%g" Gauge.ID="netdev.$(iface4).tx_gbps" Gauge.Title="$(iface4) Tx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="E830" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="15%g" height="40%g" Gauge.ID="netdev.$(iface5).tx_gbps" Gauge.Title="$(iface5) Tx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="E830" />
+
+				<!-- Rx Gauges -->
+				<Grid Macro="Gauge.Single" row="$(NextRowAlias)" column="1" width="15%g" height="40%g" Gauge.ID="netdev.$(iface1).rx_gbps" Gauge.Title="$(iface1) Rx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="non-E830" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="15%g" height="40%g" Gauge.ID="netdev.$(iface2).rx_gbps" Gauge.Title="$(iface2) Rx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="non-E830" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="15%g" height="40%g" Gauge.ID="netdev.$(iface3).rx_gbps" Gauge.Title="$(iface3) Rx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="non-E830" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="15%g" height="40%g" Gauge.ID="netdev.$(iface4).rx_gbps" Gauge.Title="$(iface4) Rx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="non-E830" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="15%g" height="40%g" Gauge.ID="netdev.$(iface5).rx_gbps" Gauge.Title="$(iface5) Rx" Gauge.Min="0" Gauge.Max="200" Gauge.Style="non-E830" />
+				<Widget File="Spacer.xml" row="$(NextRowAlias)" column="$(NextColumnAlias)" width="5%g" height="5%g"/>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="Gauge.Big.Block" Align="Center">
+		<!-- 
+			This XML file defines a GridMacro named "Gauge.Big.Block" with a central alignment. 
+			The macro includes the following components:
+
+			1. **StyleOverride**:
+				- Customizes the appearance of the grid with background color, border radius, and border color.
+
+			2. **Grid**:
+				- A container grid with dimensions spanning 100% width and 95% height, aligned centrally.
+				- Executes a task identified by "Show.$(Flip_ID)".
+
+			3. **Child Elements**:
+				- **Spacer Widgets**:
+				- Used to create spacing between grid elements with varying dimensions.
+				- **Image.Block Grid**:
+				- A grid block with a macro "Image.Block" occupying 30% width and 95% height.
+				- **Gauge.Big Grid**:
+				- A grid block with a macro "Gauge.Big" configured for displaying a gauge with:
+					- ID: "Tb.Tx.Total"
+					- Title: "Total Tx Throughput"
+					- Minimum value: 0
+					- Maximum value: 1000
+					- Style: "E830"
+				- **Image.Rt.Block Grid**:
+				- A grid block with a macro "Image.Rt.Block" occupying 30% width and 95% height.
+
+			This structure is designed to create a visually appealing and functional layout for displaying gauges, images, and spacers in a grid format.
+		-->
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Grid row="0" column="0" width="100%g" height="95%g"  align="Center" >
+				<Widget File="Spacer.xml" row="0" column="$(NextColumnAlias)" width="1%g" height="4%g"/>
+				<Grid Macro="Image.Block" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="30%g" height="95%g" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="4%g" height="2%g"/>
+				<Grid Macro="Gauge.Big" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="30%g" height="95%g" Gauge.ID="Tb.Tx.Total" Gauge.Title="Total Tx Throughtput" Gauge.Min="0" Gauge.Max="1000" Gauge.Style="Big-E830" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="4%g" height="2%g"/>
+				<Grid Macro="Image.Rt.Block" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="30%g" height="95%g" />
+				<Widget File="Spacer.xml" row="$(CurrentRowAlias)" column="$(NextColumnAlias)" width="1%g" height="2%g"/>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="CPU.Chart">
+		<!-- CPU Chart Macro -->
+		<!-- 
+			Documentation:
+			This XML defines a `GridMacro` named "CPU.Chart" which is used to display a CPU chart widget with specific styling and configuration. 
+
+			- **GridMacro Name**: "CPU.Chart"
+				- Contains a `StyleOverride` block to define custom styles for the grid, including background color, border radius, and border color.
+				- The grid spans the entire area (`width="100%g"`, `height="100%g"`) and is associated with a task `Show.$(Flip_ID)`.
+
+			- **Widget**:
+				- The widget is sourced from the file `$(E830.Dir)\Widget\Chart\ChartBarCPU.xml`.
+				- Positioned within the grid (`row="0"`, `column="0"`) and occupies 98% of the grid's width and height.
+				- Configurations:
+					- `MinionSrc`: Links the widget to a specific data source using `ID="$(CPU.Chart.ID)"` and `Namespace="$(CHART_NS)"`.
+					- `Title`: Dynamically sets the chart title using `$(CHART_TITLE)`.
+					- `xAxis`: Configures the x-axis with a dynamic count value `$(CPU.Count)`.
+					- `yAxis`: Sets the maximum value of the y-axis to 100.
+				- Contains an additional `StyleOverride` block for widget-specific styles, such as legend visibility, bar gap, category gap, and font size.
+				- Includes a `Peekaboo` element for managing chart scaling, linked to the namespace "ChartScale" and ID "ChartScale".
+
+			Purpose:
+			This configuration is designed to create a visually styled and dynamically configurable CPU chart widget for the application.
+		-->
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Widget File="$(E830.Dir)\Widget\Chart\ChartBarCPU.xml" row="0" column="0" width="98%g" height="98%g">
+					<MinionSrc ID="$(CPU.Chart.ID)" Namespace="$(CHART_NS)"/>
+					<Title>$(CHART_TITLE)</Title>
+					<xAxis Count="$(CPU.Count)"/>
+					<yAxis MaxValue="100"/>
+					<StyleOverride>
+						<Item>
+							-fx-legend-visible:false; 
+							-fx-bar-gap:0; 
+							-fx-category-gap:1;
+							-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em;
+						</Item>
+					</StyleOverride>
+					<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+				</Widget>
+			</Grid>
+		</GridMacro>
+
+		<!-- Button Macro -->
+		<!--
+			Documentation:
+			This XML snippet defines a GridMacro named "Button" which represents a reusable UI component for a button widget. 
+			The widget is configured with the following attributes and elements:
+
+			- **Widget**: 
+				- `File`: Specifies the file path to the button widget XML definition.
+				- `row` and `column`: Define the grid position of the widget.
+				- `Width` and `Height`: Set the dimensions of the widget as percentages of the grid size.
+				- `Align`: Specifies the alignment of the widget within the grid cell.
+				- `Task`: A dynamic attribute that links to a task defined by the `$(BUTTON.TASK)` variable.
+
+			- **Title**: 
+				- Defines the button's label, dynamically set using the `$(Button.Label)` variable.
+
+			- **Peekaboo**: 
+				- Configures namespace and ID for the Peekaboo feature, with values dynamically set using `$(Button.Peekaboo.Namespace)` and `$(Button.Peekaboo.ID)`.
+				- Includes a `Default` attribute for fallback behavior.
+
+			- **StyleOverride**: 
+				- Customizes the button's style with an ID of "CompareButton".
+				- Contains a single `Item` element that defines:
+					- Font size calculated using the `MarvinMath` function with dynamic variables.
+					- Font family dynamically set using the `$(Intel_FONT)` variable.
+
+			This macro allows for dynamic and reusable button configurations in the UI, leveraging variable substitution for flexibility.
+		-->
+		<GridMacro Name="Button">
+			<Widget File="$(E830.Dir)\Widget\Button\Button.xml" row="0" column="0" Width="100%g" Height="100%g" Align="Center" Task="$(BUTTON.TASK)">
+				<Title>$(Button.Label)</Title>
+				<Peekaboo Namespace="$(Button.Peekaboo.Namespace)" ID="$(Button.Peekaboo.ID)" Default="$(Default)"/>
+				<StyleOverride ID="CompareButton">
+					<Item>-fx-font-size: MarvinMath($(Text.Size),*,$(Button.Text.Size),2)em;
+						-fx-font-family:$(Intel_FONT);
+					</Item>
+				</StyleOverride>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="Dev.Space.Grid">
+		<!-- 
+			This XML file defines a GridMacro named "Dev.Space.Grid" which contains a grid layout with specific styling and widgets.
+
+			- **GridMacro Name**: "Dev.Space.Grid"
+				- Represents a reusable macro for a grid layout.
+
+			- **Grid**:
+				- **Attributes**:
+					- `row`: Specifies the row position of the grid (value: 0).
+					- `column`: Specifies the column position of the grid (value: 0).
+					- `width`: Sets the width of the grid to 100% of the parent container.
+					- `height`: Sets the height of the grid to 100% of the parent container.
+				- **StyleOverride**:
+					- Customizes the grid's appearance with the following styles:
+						- Background color: `rgba(161, 224, 162, 0.88)`.
+						- Background radius: `5px` for all corners.
+						- Border radius: `5px` for all corners.
+						- Border color: `rgba(255,255,255,0.9)`.
+						- Border width: `0.2pt`.
+
+			- **Widgets**:
+				1. **Spacer Widget**:
+					- **File**: "Spacer.xml".
+					- **Attributes**:
+						- `row`: 0.
+						- `column`: 0.
+						- `width`: 95% of the grid width.
+						- `height`: 5% of the grid height.
+					- Acts as a spacer within the grid.
+
+				2. **Text Widget**:
+					- **File**: "$(E830.Dir)\Widget\Text\Text.xml".
+					- **Attributes**:
+						- `row`: 1.
+						- `column`: 0.
+						- `width`: 95% of the grid width.
+						- `height`: 85% of the grid height.
+					- **InitialValue**: Sets the initial value of the text to "0".
+					- **StyleOverride (ID: increase)**:
+						- Customizes the text widget's font:
+							- Font family: `$(Intel_Font)`.
+							- Font size: Calculated using `MarvinMath` with parameters `$(Text.Size)`, `*`, `$(Increase.Text.Size)`, and `2` (in `em` units).
+					- **MinionSRC**:
+						- **ID**: `$(CPU.CoreCount)`.
+						- **Namespace**: `$(Server.1)`.
+						- Links the widget to a data source for dynamic content.
+
+			This XML structure is designed for a specific UI layout in the Intel Vision Demo application, providing a styled grid with dynamic text content.
+		-->
+			<Grid row="0" column="0" width="100%g" height="100%g">
+				<StyleOverride>
+					<Item>
+						-fx-background-color: rgba(161, 224, 162, 0.88);
+						-fx-background-radius: 5 5 5 5;
+						-fx-border-radius: 5 5 5 5;
+						-fx-border-color: rgba(255,255,255,0.9);
+						-fx-border-width: 0.2pt;
+					</Item>
+				</StyleOverride>
+				<Widget File="Spacer.xml" row="0" column="0" width="95%g" height="5%g"/>
+				<Widget File="$(E830.Dir)\Widget\Text\Text.xml" row="1" column="0" width="95%g" height="85%g">
+					<InitialValue>0</InitialValue>
+					<StyleOverride ID="increase">
+						<Item>-fx-font-family:$(Intel_Font);</Item>
+						<Item>-fx-font-size:MarvinMath($(Text.Size),*,$(Increase.Text.Size),2)em</Item>
+					</StyleOverride>
+					<MinionSRC ID="$(CPU.CoreCount)" Namespace="$(Server.1)"/>
+				</Widget>				
+			</Grid>
+		</GridMacro>
+
+<!-- END MACRO SECTION -->
+
+<!-- VISIBLE GRID DATA -->
+
+		<!-- 
+			This XML snippet represents a widget configuration for a grid layout. 
+			The widget is defined using the `<Widget>` tag with the following attributes:
+			- `File`: Specifies the file name of the widget (e.g., "Spacer.xml").
+			- `row`: Indicates the row position of the widget in the grid.
+			- `column`: Indicates the column position of the widget in the grid.
+			- `width`: Defines the width of the widget as a percentage of the grid's width (e.g., "1%g").
+			- `height`: Defines the height of the widget as a percentage of the grid's height (e.g., "3%g").
+
+			This configuration is typically used to define the layout and positioning of UI elements in a grid-based interface.
+		-->
+		<Widget File="Spacer.xml" row="0" column="0" width="1%g" height="3%g"/>
+
+		<Grid row="1" column="1" width="98%g" height="15%g">
+		<!-- 
+			This XML configuration defines a grid layout for displaying dynamic CPU utilization charts. 
+
+			- The outer `<Grid>` element specifies the overall layout with a row, column, width, and height.
+			- Inside the grid, a `<DynamicGrid>` is used to manage dynamic content with specified dimensions and alignment.
+			- Two `<GridFile>` elements are defined to represent CPU utilization charts:
+				- Each `<GridFile>` includes attributes for macro, flip ID, chart title, namespace, and CPU count.
+				- The `CHART_TITLE` dynamically incorporates the core count and utilization details.
+				- The `CHART_NS` and `CPU.Count` attributes are dynamically linked to specific servers (`Server.1` and `Server.2`).
+				- A `<Transition>` element specifies the transition effect as "DISSOLVING_BLOCKS".
+			- The `<Initial>` element sets the initial state of the second chart.
+			- The `<MinionSRC>` element defines a namespace and ID for managing the dynamic grid panel.
+
+			This configuration is designed for visualizing CPU core utilization across different systems in a dynamic and interactive manner.
+		-->
+			<DynamicGrid row="0" column="0" width="100%g" height="95%g" align="Center">
+				<GridFile Macro="CPU.Chart" FLIP_ID="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.1" ID="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.1" CHART_TITLE="Link Partner Core Count $(CPU.Core.Count) -- Utilization per Core" CHART_NS="$(Server.2)" CPU.Count="$(Server.2.CPU.Count)" >
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<GridFile Macro="CPU.Chart" FLIP_ID="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.2" ID="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.2" CHART_TITLE="System Under Test Core Count $(CPU.Core.Count) -- Utilization per Core" CHART_NS="$(Server.1)" CPU.Count="$(Server.1.CPU.Count)">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<Initial ID="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.2"/>
+				<MinionSRC Namespace="$(task_prefix)_DYN_CPU_CHART_GRID.PANEL" ID="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP"/>
+			</DynamicGrid>
+		</Grid>	
+
+		<!-- Left Column -->
+		<Grid row="2" column="1"  width="98%g" height="80%g">
+		<!-- 
+			This XML file defines a grid layout structure for a user interface. Below is a breakdown of the components:
+
+			1. **Main Grid**:
+				- Positioned at row 2, column 1 with a width of 98% and height of 80%.
+				- Contains nested widgets and grids for layout and dynamic content.
+
+			2. **Spacer Widget**:
+				- A widget used for spacing, located at row 0, column 0 with a width of 100% and height of 5%.
+				- Alignment is set to "Center".
+
+			3. **Dynamic Grid**:
+				- Nested within a grid at row "$(NextRowAlias)", column 0 with a width of 100% and height of 95%.
+				- Contains two `GridFile` elements for dynamic content:
+				- **Network.Gauges.Grid**: Represents a grid with a dissolving blocks transition.
+				- **Gauge.Big.Block**: Represents a block with a dissolving blocks transition.
+				- Includes an `Initial` element to set the initial state and a `MinionSRC` element for namespace and ID configuration.
+
+			4. **Additional Spacers**:
+				- Spacer widgets are used throughout the layout for spacing, with varying heights (e.g., 2% or 5%).
+
+			5. **Commented Code**:
+				- A commented-out grid macro (`Network.Gauges.Grid`) is present, which may be used for future or alternative configurations.
+
+			Purpose:
+			- This layout is designed to organize and display dynamic content with transitions and spacing for a visually structured interface.
+		-->
+			<Widget File="Spacer.xml" row="0" column="0" width="100%g" height="5%g" align="Center"/>
+			<!-- <Grid Macro="Network.Gauges.Grid" row="1" column="$(CurrentColumnAlias)" width="95%g" height="50%g"/> -->
+			<Grid row="$(NextRowAlias)" column="0"  width="100%g" height="96%g"  align="Center">
+				<Widget File="Spacer.xml" row="$(NextRowAlias)" column="0" width="100%g" height="5%g" align="Center"/>
+				<DynamicGrid row="$(NextRowAlias)" column="0" width="100%g" height="95%g" align="Center">
+					<GridFile Macro="Network.Gauges.Grid" FLIP_ID="$(task_prefix)_DYN_MAIN_GRID.FLIP.1" ID="$(task_prefix)_DYN_MAIN_GRID.FLIP.1" ID.Lookup="Network.Gauges.Grid" IFACE="$(iface1)">
+						<Transition>DISSOLVING_BLOCKS</Transition>
+					</GridFile>
+
+					<GridFile Macro="Gauge.Big.Block" FLIP_ID="$(task_prefix)_DYN_MAIN_GRID.FLIP.2" ID="$(task_prefix)_DYN_MAIN_GRID.FLIP.2" ID.Lookup="Gauge.Big.Block">
+						<Transition>DISSOLVING_BLOCKS</Transition>
+					</GridFile>
+
+					<Initial ID="$(task_prefix)_DYN_MAIN_GRID.FLIP.2"/>
+					<MinionSRC Namespace="$(task_prefix)_DYN_MAIN_GRID.PANEL" ID="$(task_prefix)_DYN_MAIN_GRID.FLIP" />
+
+				</DynamicGrid>
+
+				<Widget File="Spacer.xml" row="$(NextRowAlias)" column="0" width="100%g" height="2%g" align="Center"/>
+			</Grid>
+
+			<Widget File="Spacer.xml" row="$(NextRowAlias)"  column="$(CurrentColumnAlias)" width="100%g" height="2%g" align="Center"/>
+		</Grid>
+		<Widget File="Spacer.xml" row="$(NextRowAlias)" column="$(CurrentColumnAlias)" width="100%g" height="2%g" align="Center"/>		
+
+		<!-- END VISIBLE GRID DATA -->
+
+
+	<!-- GRID SPECIFIC TASKS -->
+	<!-- DYN_CPU_CHART_GRID Flip Control -->
+	<TaskList ID="Show.$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.1">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_CPU_CHART_GRID.PANEL" ID="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP" Data="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.2"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.2">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_CPU_CHART_GRID.PANEL" ID="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP" Data="$(task_prefix)_DYN_CPU_CHART_GRID.FLIP.1"/>
+		</TaskItem>
+	</TaskList>
+
+	<!-- DYN_MAIN_GRID Flip Control -->
+	<TaskList ID="Show.$(task_prefix)_DYN_MAIN_GRID.FLIP.1">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_MAIN_GRID.PANEL" ID="$(task_prefix)_DYN_MAIN_GRID.FLIP" Data="$(task_prefix)_DYN_MAIN_GRID.FLIP.2"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_MAIN_GRID.FLIP.2">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_MAIN_GRID.PANEL" ID="$(task_prefix)_DYN_MAIN_GRID.FLIP" Data="$(task_prefix)_DYN_MAIN_GRID.FLIP.1"/>
+		</TaskItem>
+	</TaskList>
+
+	<For Count="4" StartValue="0">
+		<TaskList ID="Show.$(task_prefix).Right.$(CurrentValueAlias)">
+			<TaskItem Type="Marvin">
+				<DataToInsert Namespace="local_test_images" ID="Right.images" Data="Next"/>
+			</TaskItem>
+		</TaskList>
+	</For>
+
+	<For Count="4" StartValue="0">
+		<TaskList ID="Show.$(task_prefix).Left.$(CurrentValueAlias)">
+			<TaskItem Type="Marvin">
+				<DataToInsert Namespace="local_test_images" ID="Left.images" Data="Next"/>
+			</TaskItem>
+		</TaskList>
+	</For>
+
+<!--  Oscar specific tasks --> 
+	<TaskList ID="Start.Playback.$(task_prefix).Oscar">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=1</Param>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Pause.Playback.$(task_prefix).Oscar">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">PausePlayback</Task>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Playback.5.(task_prefix).Oscar">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=5</Param>
+		</TaskItem>
+	</TaskList>
+
+<!--  Oscar Switch to Recorded Data File tasks -->
+	<TaskList ID="Change.Test.TX.Test">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">StopLive</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">StopPlayback</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">LoadFile</Task> 
+				<Param>tpdemo_tx.biff</Param> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="1500">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=1</Param>
+			<Param>Repeat</Param>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Change.Test.RX.Test">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">StopLive</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">StopPlayback</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">LoadFile</Task> 
+				<Param>tpdemo_rx.biff</Param> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="1500">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=1</Param>
+			<Param>Repeat</Param>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Change.Test.BX.Test">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">StopLive</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">StopPlayback</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">LoadFile</Task> 
+				<Param>tpdemo_bx.biff</Param> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="1500">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=1</Param>
+			<Param>Repeat</Param>
+		</TaskItem>
+	</TaskList>
+
+<!--  Oscar Switch to Live Data tasks -->
+	<TaskList ID="Change.Test.Go.Live">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">StopPlayback</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">StartLive</Task> 
+		</TaskItem>
+	</TaskList>
+
+	<!-- END GRID SPECIFIC TASKS -->
+	</Grid>
+</MarvinExternalFile>	

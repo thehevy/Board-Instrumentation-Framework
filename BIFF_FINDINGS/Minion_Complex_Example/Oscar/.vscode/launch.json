@@ -1,0 +1,31 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Oscar: OscarConfig.xml",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/Oscar.py",
+            "args": ["-i","OscarConfig.xml","-vvvv"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Oscar: Proxy 2 Marvin",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/Oscar.py",
+            "args": ["-i","tcptest.xml","-vvvv"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Current File (External Terminal)",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "externalTerminal"
+        }
+    ]
+}

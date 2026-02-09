@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MarvinExternalFile>
+	<AliasList>
+		<Alias Scale.Height="MarvinMath($(CANVAS_HEIGHT),div,900,2)" />
+		<Alias Scale.Width="MarvinMath($(CANVAS_WIDTH),div,1600,2)" />
+		<Alias Text.Size="MarvinMath($(Scale.Width),MIN,$(Scale.Height),2)" />
+		<Alias Intel_Font="&quot;Intel Clear&quot;" />
+		<Alias Intel_Font_Pro="&quot;Intel Clear Pro&quot;" />
+		<!-- Primary Colors -->
+		<Alias Intel_Color1="#0071C5" />
+		<Alias Intel_Color2="#FFFFFF" />
+		<!-- Accent Colors -->
+		<Alias Intel_Color3="#F3D54E" />
+		<Alias Intel_Color4="#003C71" />
+		<Alias Intel_Color5="#00AEEF" />
+		<Alias Intel_Color6="#C4D600" />
+		<Alias Intel_Color7="#FC4C02" />
+		<Alias Intel_Color8="#FFA300" />
+		<!-- UI Component Background Colors -->
+		<Alias Intel_Color9="#252525" />
+		<Alias Intel_Color10="#555555" />
+		<Alias Intel_Color11="#BBBBBB" />
+		<Alias Intel_Color12="#F3F3F3" />
+		<Alias Intel_Color13="#f0f1f3" />
+		<Alias Text.Block.Text.Size="1" />
+
+
+		<Alias Server.1="SUT" />
+		<Alias Server.1.CPU.Count="384" />
+
+		<Alias Server.2="LP" />
+		<Alias Server.2.CPU.Count="384" />
+
+		<Alias iface1="ens1np0"/>
+		<Alias iface2="ens6np0"/>
+		<Alias iface3="ens28np0"/>
+		<Alias iface4="ens7np0"/>
+		<Alias iface5="ens31np0"/>
+		<!-- <Alias iface="ens1np0"/> -->
+
+		<!-- Chart Data -->
+		<Alias CPU.Core.Count.Minion="system.cpu_count"/>
+		<Alias CPU.Core.Count="384" />
+		<Alias CPU.Chart.Namespace="SUT" />
+		<!-- Options for CPU Chart -->
+		<!-- <Alias CPU.Chart.ID="All.Cores"/> -->
+		<Alias CPU.Chart.ID="system.cpu_util_list" />
+		<!-- <Alias CPU.Chart.ID="CPU.Utilization" /> -->
+
+		<Alias Gauge.Namespace="SUT" />
+		<Alias RPCPERF.Namespace="RPCPERF_Client_SPR" />
+		<Alias Chart.Max.Value="5000" />
+		<Alias Chart.Text.Size="1" />
+		<Alias Chart.Text.Size.Small=".85" />
+		<Alias Chart.Namespace="SUT" />
+		<Alias E830.Client.Namespace="SUT" />
+		<Alias Gain.Text.Size="2" />
+		<Alias Increase.Text.Size="2.2" />
+		<Alias IPMI.PS1.ID="" />
+		<Alias Title.1="SUT" />
+		<Alias Title.2="LP" />
+		<Alias E830.Server="SUT" />
+
+		<Alias task_prefix="Demo_E830"/>
+
+		<Alias task_OscarID="E830_task"/>
+		<!-- <Alias Recorded_OscarID="IntelVisionDemoMain"/> -->
+		<Alias Recorded_OscarID="$(ComputerName)"/>
+	</AliasList>
+</MarvinExternalFile>

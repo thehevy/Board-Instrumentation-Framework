@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MarvinExternalFile>
+       <AliasList>
+              <!-- Menu 1 Task List -->
+              <Alias E830.Task.Start.1="Tab.ExperienceKit.Start.E830.Workload" E830.Task.Selected.1="" />
+              <Alias E830.Task.Start.2="Tab.ExperienceKit.Start.E830.Workload.Performance" E830.Task.Selected.2="" />
+              <Alias E830.Task.Start.3="Tab.ExperienceKit.Start.E830.Workload.Performance.8" E830.Task.Selected.3="" />
+              <Alias E830.Task.Start.4="Tab.ExperienceKit.Start.E830.Workload.Performance.Locked" E830.Task.Selected.4="" />
+       </AliasList>
+</MarvinExternalFile>

@@ -1,0 +1,94 @@
+/*******************************************************************************
+ *                                                                             *
+ * Charts                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart {
+    -fx-padding: 1px;
+}
+
+.chart-plot-background {
+    -fx-background-color: rgba(184, 184, 184, 0.7);
+}
+
+.chart-content {
+    -fx-padding: 10px;
+}
+
+.chart-title {
+    -fx-font-size: 1em;
+    -fx-text-fill: -fx-text-background-color;
+}
+
+.chart-legend {
+    -fx-background-color: -fx-shadow-highlight-color, linear-gradient(to bottom, derive(#262626, -10%), derive(#262626, -5%)), linear-gradient(from 0px 0px to 0px 4px, derive(#262626, -4%), derive(#262626, 10%));
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+    -fx-background-radius: 4, 4, 3;
+    -fx-padding: 1px;
+    -fx-font-size: .9em;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #ffffff;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * ChartPlot                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart-vertical-grid-lines {
+    -fx-stroke: null;
+    -fx-stroke-dash-array: null;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #777777;
+    -fx-stroke-dash-array: 0.25em, 0.25em;
+}
+
+.chart-alternative-column-fill {
+    -fx-fill: null;
+    -fx-stroke: null;
+}
+
+.chart-alternative-row-fill {
+    -fx-fill: null;
+    -fx-stroke: null;
+}
+
+.chart-vertical-zero-line {
+    -fx-stroke: #777777;
+}
+
+.chart-horizontal-zero-line {
+    -fx-stroke: #777777;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Axis                                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.axis {
+    AXIS_COLOR: #777777;
+    -fx-tick-label-font-size: 1em;
+    -fx-tick-label-fill: -fx-text-background-color;
+}
+
+.default-color0.chart-bar {
+    -fx-bar-fill: #C81326;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: #003C71;
+}
+
+.axis-label {
+    -fx-text-fill: #ffffff;
+}

@@ -1,0 +1,929 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: 
+#    Basic template for an external grid file
+#
+##############################################################################
+
+	CreationSize Width="1920" Height="1050"
+-->
+<MarvinExternalFile>
+	<AliasList>
+		<Alias E830.Dir="$(AppDir)\Demo.E830"/>
+		<Import>$(E830.Dir)\DefinitionFiles\Alias.List.Demo.E830.xml</Import>
+		<DefaultAlias Gauge.Min="0"/>
+		<DefaultAlias Gauge.Max="10"/>
+		<DefaultAlias Tick.Number="6"/>
+		<DefaultAlias Gauge.Midpoint="MarvinMath(MarvinMath($(Gauge.Max),-,$(Gauge.Min)),div,2)"/>
+		<DefaultAlias Gauge.UnitText=""/>
+		<DefaultAlias Gauge.Title=""/>
+		<DefaultAlias Gauge.Style="non-E830"/>
+		<DefaultAlias ID.Lookup="DEFAULT"/>
+	</AliasList>
+	<Grid Align="Center">
+		<StyleOverride>
+			<Item>
+				-fx-background-color: rgba(10,10,10,0.5);
+				-fx-background-radius: 10 10 10 10;
+				-fx-background-insets: -10 -10 -10 0;
+			</Item>
+		</StyleOverride>
+
+		<!-- MACRO SECTION -->
+		<GridMacro Name="Single.Image">
+			<Widget File="$(E830.Dir)\Widget\Image\ImageScale.xml" row="$(CurrentRowAlias)" column="$(CurrentColumnAlias)" Width="100%g" Height="100%g" Align="S">
+				<Source>$(E830.Dir)\Images\E830.$(Image).png</Source>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="Result.Image">
+			<Widget File="$(E830.Dir)\Widget\Image\ImageScale.xml" row="0" column="0" Width="100%g" Height="100%g" Align="SW">
+				<Source>$(E830.Dir)\Images\E830.$(Image).png</Source>
+			</Widget>
+			<Grid row="0" column="0" width="100%g" height="100%g" align="NW">
+				<Widget File="Spacer.xml" row="0" column="0" width="9%g" height="20%g" align="NW" />
+
+				<Widget File="$(E830.Dir)\Widget\Text\Text.xml" row="0" column="$(NextColumnAlias)" width="25%g" height="20%g">
+					<InitialValue>0</InitialValue>
+					<StyleOverride ID="increase">
+						<Item>-fx-font-family:$(Intel_Font);</Item>
+						<Item>-fx-font-size:MarvinMath($(Text.Size),*,$(Increase.Text.Size),2)em</Item>
+					</StyleOverride>
+					<MinionSRC ID="Increase_STDDEV_Latency" Namespace="$(E830.Client.Namespace)"/>
+				</Widget>
+
+				<Widget File="Spacer.xml" row="0" column="$(NextColumnAlias)" width="8%g" height="20%g"/>
+
+				<Widget File="$(E830.Dir)\Widget\Text\Text.xml" row="0" column="$(NextColumnAlias)" width="20%g" height="20%g">
+					<InitialValue>0</InitialValue>
+					<StyleOverride ID="increase">
+						<Item>-fx-font-family:$(Intel_Font);</Item>
+						<Item>-fx-font-size:MarvinMath($(Text.Size),*,$(Increase.Text.Size),2)em</Item>
+					</StyleOverride>
+					<MinionSRC ID="Increase_MEAN_LATENCY" Namespace="$(E830.Client.Namespace)"/>
+				</Widget>
+
+				<Widget File="Spacer.xml" row="0" column="$(NextColumnAlias)" width="10%g" height="20%g"/>
+
+				<Widget File="$(E830.Dir)\Widget\Text\Text.xml" row="0" column="$(NextColumnAlias)" width="20%g" height="20%g">
+					<InitialValue>0</InitialValue>
+					<StyleOverride ID="increase">
+						<Item>-fx-font-family:$(Intel_Font);</Item>
+						<Item>-fx-font-size:MarvinMath($(Text.Size),*,$(Increase.Text.Size),2)em</Item>
+					</StyleOverride>
+					<MinionSRC ID="Increase_Transaction" Namespace="$(E830.Client.Namespace)"/>
+				</Widget>
+
+				<Widget File="Spacer.xml" row="0" column="$(NextColumnAlias)" width="5%g" height="20%g"/>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="Image.Block">
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(FLIP_ID)">
+				<StyleOverride>
+					<Item>
+						-fx-background-color: rgba(0,0,0,0.5);
+						-fx-background-radius: 10 10 10 10;
+						-fx-border-radius: 10 10 10 10;
+						-fx-border-color: rgba(255,255,255,0.9);
+						-fx-border-width: 1pt;
+					</Item>
+				</StyleOverride>
+				<DynamicGrid row="0" column="0" width="96%g" height="96%g" align="Center">
+					<For Count="6">
+						<GridFile Macro="Single.Image" ID="$(CurrentValueAlias)" Image="$(CurrentValueAlias)"/>
+					</For>
+					<GridFile Macro="Result.Image" ID="6" Image="6"/>
+					<MinionSrc ID="Client_Test_status_image" Namespace="$(E830.server)"/>
+					<Initial ID="1"/>
+				</DynamicGrid>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="Gauge.Single">
+			<!-- 	
+			Calling Macro "Gauge.Single" requires the following to be sent to the macro:
+			Gauge.Title
+			Gauge.Max
+			Gauge.Namespace
+			Gauge.ID
+			Gauge.Style - Standard / Reverse
+			-->
+			<Widget File="$(E830.Dir)\Widget\Gauge\Gauge200GbE.xml" row="0" column="0" height="100%g" width="100%g">
+				<ValueRange Min="0" Max="$(Gauge.Max)">
+				</ValueRange>
+				<StyleOverride ID="$(Gauge.Style)"/>
+				<MinionSrc ID="$(Gauge.ID)" Namespace="$(Gauge.Namespace)"/>
+				<Title>$(Gauge.Title)</Title>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="Gauge.Big">
+			<!-- 	
+			Calling Macro "Gauge.Single" requires the following to be sent to the macro:
+			Gauge.Title
+			Gauge.Max
+			Gauge.Namespace
+			Gauge.ID
+			Gauge.Style - Standard / Reverse
+			-->
+			<Widget File="$(E830.Dir)\Widget\Gauge\Gauge1000GbE.xml" row="0" column="0" height="100%g" width="100%g">
+				<ValueRange Min="0" Max="$(Gauge.Max)">
+				</ValueRange>
+				<StyleOverride ID="$(Gauge.Style)"/>
+				<MinionSrc ID="$(Gauge.ID)" Namespace="$(Gauge.Namespace)"/>
+				<Title>$(Gauge.Title)</Title>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="Gauge.Block" Align="Center">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Widget File="Spacer.xml" row="0" column="0" width="2%g" height="2%g"/>
+				<Grid Macro="Gauge.Single" row="1" column="$(NextColumnAlias)" width="47%g" height="95%g" Gauge.ID="netdev.$(IFACE).rx_gbps" Gauge.Title="$(IFACE)_Rx_Gbps" Gauge.Min="0" Gauge.Max="200" Gauge.Style="non-E830" />
+				<Widget File="Spacer.xml" row="1" column="$(NextColumnAlias)" width="2%g" height="5%g"/>
+				<Grid Macro="Gauge.Single" row="1" column="$(NextColumnAlias)" width="47%g" height="95%g" Gauge.ID="netdev.$(IFACE).tx_gbps" Gauge.Title="$(IFACE)_Tx_Gbps" Gauge.Min="0" Gauge.Max="200" Gauge.Style="E830" />
+				<Widget File="Spacer.xml" row="2" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="Gauge.Big.Block" Align="Center">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Widget File="Spacer.xml" row="1" column="$(NextColumnAlias)" width="2%g" height="5%g"/>
+				<Grid Macro="Gauge.Single" row="1" column="$(NextColumnAlias)" width="95%g" height="95%g" Gauge.ID="netdev.$(IFACE).tx_gbps" Gauge.Title="$(IFACE)_Tx_Gbps" Gauge.Min="0" Gauge.Max="200" Gauge.Style="E830" />
+				<Widget File="Spacer.xml" row="2" column="$(NextColumnAlias)" width="2%g" height="2%g"/>
+			</Grid>
+		</GridMacro>
+
+		<!-- CPU Chart Macro -->
+		<GridMacro Name="CPU.Chart">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Widget File="$(E830.Dir)\Widget\Chart\ChartBarCPU.xml" row="0" column="0" width="98%g" height="98%g">
+					<MinionSrc ID="system.cpu_util_list" Namespace="$(CPU.Chart.Namespace)"/>
+					<Title>System Under Test Core Count $(CPU.Core.Count) -- Utilization per Core</Title>
+					<xAxis Count="$(CPU.Core.Count)"/>
+					<yAxis MaxValue="100"/>
+					<StyleOverride>
+						<Item>
+							-fx-legend-visible:false; 
+							-fx-bar-gap:0; 
+							-fx-category-gap:1;
+							-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em;
+						</Item>
+					</StyleOverride>
+					<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+				</Widget>
+			</Grid>
+		</GridMacro>
+		<GridMacro Name="CPU.Chart2">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Widget File="$(E830.Dir)\Widget\Chart\ChartBarCPU.xml" row="0" column="0" width="98%g" height="98%g">
+					<MinionSrc ID="system.cpu_util_list" Namespace="LP"/>
+					<Title>Link Partner Core Count $(CPU.Core.Count) -- Utilization per Core</Title>
+					<xAxis Count="$(CPU.Core.Count)"/>
+					<yAxis MaxValue="100"/>
+					<StyleOverride>
+						<Item>
+							-fx-legend-visible:false; 
+							-fx-bar-gap:0; 
+							-fx-category-gap:1;
+							-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em;
+						</Item>
+					</StyleOverride>
+					<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+				</Widget>
+			</Grid>
+		</GridMacro>
+
+ 		<!-- CPU Frequency Chart Macro -->
+		<GridMacro Name="CPU.Frequency.Chart">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Widget File="$(E830.Dir)\Widget\Chart\ChartBarCPU_Freq.xml" row="0" column="0" width="98%g" height="98%g">
+					<MinionSrc ID="System.cpu_frequency_list" Namespace="$(CPU.Chart.Namespace)"/>
+					<Title>Current Frequency per Core</Title>
+					<xAxis Count="$(CPU.Core.Count)"/>
+					<yAxis MaxValue="3700000"/>
+					<StyleOverride>
+						<Item>
+							-fx-legend-visible:false; 
+							-fx-bar-gap:0; 
+							-fx-category-gap:1;
+							-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em;
+							CHART_COLOR_1: linear-gradient(to top, 
+										rgb(0,200,0) 0%,
+										rgb(0,255,64) 75%,
+                                        rgb(128,255,64) 85%,
+										rgb(255,204,102) 95%,
+                                        rgb(255,51,00) 100%);
+							CHART_COLOR_2: rgba(184,184,184,0.7);
+						</Item>
+					</StyleOverride>
+					<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+				</Widget>
+			</Grid>
+		</GridMacro>
+
+		<!-- Button Macro -->
+		<GridMacro Name="Button">
+			<Widget File="$(E830.Dir)\Widget\Button\Button.xml" row="0" column="0" Width="100%g" Height="100%g" Align="Center" Task="$(BUTTON.TASK)">
+				<Title>$(Button.Label)</Title>
+				<Peekaboo Namespace="$(Button.Peekaboo.Namespace)" ID="$(Button.Peekaboo.ID)" Default="$(Default)"/>
+				<StyleOverride ID="CompareButton">
+					<Item>-fx-font-size: MarvinMath($(Text.Size),*,$(Button.Text.Size),2)em;
+						-fx-font-family:$(Intel_FONT);
+					</Item>
+				</StyleOverride>
+			</Widget>
+		</GridMacro>
+
+		<!-- Multi SRC charts -->
+		<!-- RPCPERF_P_ Chart Macro -->
+		<GridMacro Name="RPCPERF.P.Chart">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Widget File="$(E830.Dir)\Widget\Chart\ChartBar.xml" row="0" column="0" width="100%g" height="100%g">
+					<MaxSteppedRange>500,1000,2500,5000,10000,50000</MaxSteppedRange>
+					<Title>Average RPC-PERF Client Latency Values</Title>
+					<yAxis Label="Latency" MaxValue="500"/>
+					<Series Label="P25" ID="Series1"/>
+					<Series Label="P50" ID="Series2"/>
+					<Series Label="P75" ID="Series3"/>
+					<Series Label="P90" ID="Series4"/>
+					<Series Label="P99" ID="Series5"/>
+					<Series Label="P999" ID="Series6"/>
+					<Series Label="P9999" ID="Series7"/>
+
+					<SeriesSet Title="P Values">
+						<MinionSrc ID="P25" Namespace="eps-svr-1" SeriesID="Series1"/>
+						<MinionSrc ID="P50" Namespace="eps-svr-1" SeriesID="Series2"/>
+						<MinionSrc ID="P75" Namespace="eps-svr-1" SeriesID="Series3"/>
+						<MinionSrc ID="P90" Namespace="eps-svr-1" SeriesID="Series4"/>
+						<MinionSrc ID="P99" Namespace="eps-svr-1" SeriesID="Series5"/>
+						<MinionSrc ID="P999" Namespace="eps-svr-1" SeriesID="Series6"/>
+						<MinionSrc ID="P9999" Namespace="eps-svr-1" SeriesID="Series7"/>
+					</SeriesSet>
+
+					<StyleOverride ID="$(CSS_OVERRIDE)">
+						<Item>-fx-legend-visible:True;-fx-bar-gap:2;-fx-category-gap:0;-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em; </Item>
+					</StyleOverride>
+					<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+				</Widget>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="BUSYPOLL.CHART">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Widget File="$(E830.Dir)\Widget\Chart\ChartBar.xml" row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Title>$(Chart.Title)</Title>
+				<MaxSteppedRange>500,1000,2500,5000,10000,50000</MaxSteppedRange>
+				<xAxis Count="24"/>
+				<yAxis Label="$(Label)" Max.Value="$(CurrentMaxSteppedRange)"/>
+				<Series Label="Rx not_busy_poll" ID="Series1"/>
+				<Series Label="Rx busy_poll" ID="Series2"/>
+				<Series Label="Tx not_busy_poll" ID="Series3"/>
+				<Series Label="Tx busy_poll" ID="Series4"/>
+				<For Count="24" StartValue="0">
+					<SeriesSet Title="$(CurrentValueAlias)">
+						<MinionSrc ID="netdev.$(Category)_$(CurrentCountAlias).pkt_not_busy_poll" Namespace="$(Chart.Namespace)" SeriesID="Series1"/>
+						<MinionSrc ID="netdev.$(Category)_$(CurrentCountAlias).pkt_busy_poll" Namespace="$(Chart.Namespace)" SeriesID="Series2"/>
+						<MinionSrc ID="netdev.$(Category2)_$(CurrentCountAlias).pkt_not_busy_poll" Namespace="$(Chart.Namespace)" SeriesID="Series3"/>
+						<MinionSrc ID="netdev.$(Category2)_$(CurrentCountAlias).pkt_busy_poll" Namespace="$(Chart.Namespace)" SeriesID="Series4"/>
+					</SeriesSet>
+				</For>
+				<StyleOverride ID="$(CSS_OVERRIDE)">
+					<Item>-fx-legend-visible:True;-fx-bar-gap:-2;-fx-category-gap:1;-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em; </Item>
+				</StyleOverride>
+				<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="RATE.CHART">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Widget File="$(E830.Dir)\Widget\Chart\ChartBar.xml" row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Title>$(Chart.Title)</Title>
+				<MaxSteppedRange>100000,200000,500000</MaxSteppedRange>
+				<xAxis Count="24"/>
+				<yAxis Label="$(Label)" MaxValue="100000"/>
+				<Series Label="Current Request Rate" ID="Series1"/>
+				<Series Label="Current Response Rate" ID="Series2"/>
+				<Series Label="Result Request Rate" ID="Series3"/>
+				<Series Label="Result Response Rate" ID="Series4"/>				
+				<For Count="24" StartValue="12300">
+					<SeriesSet Title="$(CurrentValueAlias)">
+						<MinionSrc ID="$(Category)_rpcperf_port_$(CurrentValueAlias)_request" Namespace="$(RPCPERF.Namespace)" SeriesID="Series1"/>
+						<MinionSrc ID="$(Category)_rpcperf_port_$(CurrentValueAlias)_response" Namespace="$(RPCPERF.Namespace)" SeriesID="Series2"/>
+						<MinionSrc ID="result_rpcperf_port_$(CurrentValueAlias)_request" Namespace="$(RPCPERF.Namespace)" SeriesID="Series3"/>
+						<MinionSrc ID="result_rpcperf_port_$(CurrentValueAlias)_response" Namespace="$(RPCPERF.Namespace)" SeriesID="Series4"/>
+					</SeriesSet>
+				</For>
+				<StyleOverride ID="$(CSS_OVERRIDE)">
+					<Item>-fx-legend-visible:True;-fx-bar-gap:-2;-fx-category-gap:0;-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em; </Item>
+				</StyleOverride>
+				<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="RPCPERF.Chart">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+			<Widget File="$(E830.Dir)\Widget\Chart\ChartBar.xml" row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<Title>$(Chart.Title)</Title>
+				<MaxSteppedRange>500,1000,2500,5000,10000,50000</MaxSteppedRange>
+				<yAxis Label="$(Label)" MaxValue="500"/>
+				<Series Label="$(Category) RPC-PERF Client P9999 Window Values" ID="Series1"/>
+				<Series Label="$(Category2) RPC-PERF Client P9999 Window Values" ID="Series2"/>
+				<For Count="24" StartValue="12300">
+					<SeriesSet Title="$(CurrentValueAlias)">
+						<MinionSrc ID="$(Category)_rpcperf_port_$(CurrentValueAlias)_p9999" Namespace="$(RPCPERF.Namespace)" SeriesID="Series1"/>
+						<MinionSrc ID="$(Category2)_rpcperf_port_$(CurrentValueAlias)_p9999" Namespace="$(RPCPERF.Namespace)" SeriesID="Series2"/>
+					</SeriesSet>
+				</For>
+				<StyleOverride ID="$(CSS_OVERRIDE)">
+					<Item>-fx-legend-visible:True;-fx-bar-gap:-2;-fx-category-gap:0;-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em; </Item>
+				</StyleOverride>
+				<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+			</Widget>
+		</GridMacro>
+
+		<GridMacro Name="Dynamic.Chart.Large">
+			<DynamicGrid row="0" column="0" width="100%g" height="100%g" >
+				<GridFile Macro="$(GRID_ID)" ID="1000" Max.Value="1000" />
+				<GridFile Macro="$(GRID_ID)" ID="2000" Max.Value="2000" />
+				<GridFile Macro="$(GRID_ID)" ID="5000" Max.Value="5000"/>
+				<GridFile Macro="$(GRID_ID)" ID="10000" Max.Value="10000"/>
+				<GridFile Macro="$(GRID_ID)" ID="250000" Max.Value="250000"/>
+				<GridFile Macro="$(GRID_ID)" ID="500000" Max.Value="500000"/>
+				<GridFile Macro="$(GRID_ID)" ID="1000000" Max.Value="1000000"/>
+				<MinionSRC ID="Chart.Max.Value.$(ID.Lookup)" Namespace="$(E830.Client.Namespace)"/>
+				<Initial ID="$(Initial_MAX)"/>
+			</DynamicGrid>
+		</GridMacro>
+
+		<!-- COLOR CHANGING GRID -->
+
+		<GridMacro Name="Status.Grid">
+			<Grid row="0" column="0" width="100%g" height="100%g">
+				<StyleOverride>
+					<Item>
+						-fx-background-color: $(Color);
+						-fx-background-radius: 5 5 5 5;
+						-fx-border-radius: 5 5 5 5;
+						-fx-border-color: rgba(255,255,255,0.9);
+						-fx-border-width: 0.2pt;
+					</Item>
+				</StyleOverride>
+			</Grid>
+		</GridMacro>
+
+		<!-- CPU STATUS // USES: COLOR CHANGING GRID -->
+		<GridMacro Name="CPU.State">
+			<!-- <Grid row="$(NextRowAlias)" column="0" width="100%g" height="70%g"> -->
+				<Grid row="0" column="0" width="100%g" height="100%g">
+					<For Count="$(Server.$(Server.Number).CPU.Count)">
+						<DynamicGrid row="0" column="$(CurrentCountAlias)" width="MarvinMath(98,DIV,$(Server.$(Server.Number).CPU.Count),2)%g" height="100%g">
+							<GridFile Macro="Status.Grid" ID="$(Correct.Setting)" Color="Green"/>
+							<GridFile Macro="Status.Grid" ID="$(Wrong.Setting)" Color="transparent"/>
+							<GridFile Macro="Status.Grid" ID="blank" Color="transparent"/>
+							<Initial ID="blank"/>
+							<MinionSRC Namespace="$(Server.$(Server.Number))" ID="system.cpu$(CurrentCountAlias).scaling_governor"/>
+						</DynamicGrid>
+					</For>
+				</Grid>
+			<!-- </Grid> -->
+		</GridMacro>
+
+		<!-- CPU.LOAD.DETAILS -->
+		<GridMacro Name="CPU.LOAD.DETAILS">
+			<!-- <Grid row="0" column="0" width="100%g" height="30%g"> -->
+				<Widget File="$(E830.Dir)\Widget\LCD\LCD.xml" row="0" column="0" width="20%g" height="90%g" TASK="Change.Test.E8301">
+					<Title>Previous loadavf_1m</Title>
+					<UnitsOverride></UnitsOverride>
+					<MinionSRC Namespace="$(Server.$(Server.Number))" ID="previous_loadavf_1m"/>
+				</Widget>
+				<Widget File="Spacer.xml" row="0" column="1" width="10%g" height="100%g"/>
+				<Widget File="$(E830.Dir)\Widget\LCD\LCD.xml" row="0" column="2" width="20%g" height="90%g">
+					<Title>Current loadavf_1m</Title>
+					<UnitsOverride></UnitsOverride>
+					<MinionSRC Namespace="$(Server.$(Server.Number))" ID="current_loadavf_1m"/>
+				</Widget>
+			<!-- </Grid> -->
+		</GridMacro>
+
+		<GridMacro Name="CPU.STATS">
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(Flip_ID)">
+				<StyleOverride>
+					<Item>
+						-fx-background-color: rgba(0,0,0,0.5);
+						-fx-background-radius: 10 10 10 10;
+						-fx-border-radius: 10 10 10 10;
+						-fx-border-color: rgba(255,255,255,0.9);
+						-fx-border-width: 1pt;
+					</Item>
+				</StyleOverride>			
+				<Grid Macro="CPU.LOAD.DETAILS" row="$(NextRowAlias)" column="0" width="100%g" height="40%g" />
+				<Grid Macro="CPU.State"
+						row="$(NextRowAlias)"
+						column="0"
+						width="100%g"
+						height="10%g"
+						Correct.Setting="Performance"
+						Wrong.Setting="PowerSave"/>
+				<Grid Macro="CPU.State"
+						row="$(NextRowAlias)"
+						column="0"
+						width="100%g"
+						height="10%g"
+						Correct.Setting="PowerSave"
+						Wrong.Setting="Performance" />
+			</Grid>
+		</GridMacro>
+
+		<!-- TEST.DETAILS.UPPER -->
+		<GridMacro Name="TEST.DETAILS.UPPER">
+			<Widget File="$(E830.Dir)\Widget\LCD\LCD.xml" row="0" column="0" height="80%g" TASK="Start.Playback.$(task_prefix).Oscar">
+				<Title>Item Size</Title>
+				<UnitsOverride>MB</UnitsOverride>
+				<StyleOverride ID="lcd-E830"/>
+				<!-- <MinionSRC Namespace="$(Server.$(Server.Number))" ID="current_item_size"/> -->
+				<!-- <MinionSRC Namespace="$(Server.$(Server.Number))" ID="static_item_size"/> -->
+				<MinionSRC Namespace="$(Server.$(Server.Number))" ID="Fixed_item_size"/>
+				<ToolTip>
+					<DisplayString>start 2x</DisplayString>
+					<StyleOverride><Item>-fx-background-color:blue</Item></StyleOverride>
+				</ToolTip>
+			</Widget>
+			<Widget File="Spacer.xml" row="0" column="1" width="5%g" height="100%g"/>
+			<Widget File="$(E830.Dir)\Widget\LCD\LCD.xml" row="0" column="2" height="80%g" TASK="Pause.Playback.$(task_prefix).Oscar">
+				<Title>Target Queries Per Second</Title>
+				<UnitsOverride>MQPS</UnitsOverride>
+				<Decimals>2</Decimals>
+				<!-- <MinionSRC Namespace="$(Server.$(Server.Number))" ID="current_thrpt"/> -->
+				<MinionSRC Namespace="$(Server.$(Server.Number))" ID="static_thrpt"/>
+				<ToolTip>
+					<DisplayString>pause</DisplayString>
+					<StyleOverride><Item>-fx-background-color:blue</Item></StyleOverride>
+				</ToolTip>				
+			</Widget>
+			<Widget File="Spacer.xml" row="0" column="3" width="5%g" height="100%g"/>
+			<Widget File="$(E830.Dir)\Widget\LCD\LCD.xml" row="0" column="4"  height="80%g" TASK="Playback.5.(task_prefix).Oscar" >
+				<Title>Actual Queries Per Second</Title>
+				<UnitsOverride>MQPS</UnitsOverride>
+				<Decimals>2</Decimals>
+				<MinionSRC Namespace="$(Server.$(Server.Number))" ID="thrpt"/>
+				<ToolTip>start 5x
+					<DisplayString>start 5x</DisplayString>
+					<StyleOverride><Item>-fx-background-color:blue</Item></StyleOverride>
+				</ToolTip>				
+			</Widget>
+		</GridMacro>
+
+		<!-- TEST.DETAILS.LOWER -->
+		<GridMacro Name="TEST.DETAILS.LOWER">
+			<Widget File="$(E830.Dir)\Widget\Chart\ChartBar.xml" row="0" column="0" width="48%g" height="98%g">
+				<Title>RPC-PERF to Pelikan_Twemcache Connections</Title>
+				<MaxSteppedRange>2500,25000,150000,1500000</MaxSteppedRange>
+				<xAxis Count="1" />
+				<yAxis Label="Connections" MaxValue="2500"/>
+				<Series Label="Connections" ID="Series1"/>
+					<SeriesSet Title="Number of Pelikan Connections">
+						<!-- <MinionSrc ID="current_nconn" Namespace="$(Server.$(Server.Number))" SeriesID="Series1"/> -->
+						<MinionSrc ID="static_nconn" Namespace="$(Server.$(Server.Number))" SeriesID="Series1"/>
+					</SeriesSet>
+				<StyleOverride ID="$(CSS_OVERRIDE)">
+					<Item>
+						-fx-legend-visible:False; 
+						-fx-bar-gap:0; 
+						-fx-category-gap:1;
+						-fx-tick-label-font-size: 1.75em;
+						-fx-text-fill: #ffffff;
+						-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em;
+					</Item>
+				</StyleOverride>
+				<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+			</Widget>
+			<Widget File="Spacer.xml" row="0" column="$(NextColumnAlias)" width="4%g" height="98%g"/>
+			<Widget File="$(E830.Dir)\Widget\Chart\ChartBarLoadAvg.xml" row="0" column="$(NextColumnAlias)" width="48%g" height="98%g" >
+				<Title>Average CPU Load over 1 Minute</Title>
+				<MaxSteppedRange>25,50,100</MaxSteppedRange>
+				<xAxis Count="1" />
+				<yAxis Label="Load Avg %" MaxValue="25" MajorTickInterval="10" MinorTickInterval="0" TickLabelVisible="True"/>
+				<Series Label="1m Load Avg" ID="Series1"/>
+					<SeriesSet Title="1m Load Avg">
+						<MinionSrc ID="current_loadavg_1m" Namespace="$(Server.$(Server.Number))" SeriesID="Series1"/>
+					</SeriesSet>
+				<StyleOverride >
+					<Item>
+						-fx-legend-visible:False; 
+						-fx-bar-gap:0; 
+						-fx-category-gap:1;
+						-fx-tick-label-font-size: 1.75em;
+						-fx-text-fill: #ffffff;
+						-fx-font-size:MarvinMath($(Text.Size),*,$(Chart.Text.Size),2)em;
+						-fx-bar-fill: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+					</Item>
+				</StyleOverride>
+				<Peekaboo Namespace="ChartScale" ID="ChartScale"/>
+			</Widget>	
+		</GridMacro>
+
+		<!-- PANEL // USES: CPU STATE, IPMP, and BUSYPOLL -->
+		<GridMacro Name="System.Panel">
+			<StyleOverride>
+				<Item>
+					-fx-background-color: rgba(0,0,0,0.5);
+					-fx-background-radius: 10 10 10 10;
+					-fx-border-radius: 10 10 10 10;
+					-fx-border-color: rgba(255,255,255,0.9);
+					-fx-border-width: 1pt;
+				</Item>
+			</StyleOverride>
+
+			<Grid row="0" column="1" width="100%g" height="100%g">
+				<Grid Macro="TEST.DETAILS.UPPER" row="2" column="0" width="100%g" height="30%g" />
+				<Grid Macro="Dynamic.Chart.Large" row="3" column="0" width="100%g" height="70%g" GRID_ID="TEST.DETAILS.LOWER" Initial_MAX="2000" CSS_OVERRIDE="CONNECTIONS" ID.Lookup="CONNECTIONS"/>
+			</Grid>
+		</GridMacro>
+
+		<GridMacro Name="TEST_DETAILS.Block">
+			<Grid row="0" column="0" width="100%g" height="100%g" Task="Show.$(FLIP_ID)">
+				<Grid Macro="System.Panel" row="0" column="0" width="100%g" height="100%g" Server.Number="1" />
+			</Grid>
+		</GridMacro>
+
+		<!-- END MACRO SECTION -->
+
+
+		<!-- VISIBLE GRID DATA -->
+
+		<Widget File="Spacer.xml" row="2" column="0" width="3%g" height="2%g"/>
+		<Grid row="1" column="1" colspan="3" width="95%g" height="15%g">
+			<DynamicGrid row="0" column="0" width="100%g" height="95%g" align="Center">
+				<GridFile Macro="CPU.Chart2" FLIP_ID="$(task_prefix)_DYN_LEFT_TOP.FLIP.1" ID="$(task_prefix)_DYN_LEFT_TOP.FLIP.1"  >
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<GridFile Macro="CPU.Chart" FLIP_ID="$(task_prefix)_DYN_LEFT_TOP.FLIP.2" ID="$(task_prefix)_DYN_LEFT_TOP.FLIP.2">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<Initial ID="$(task_prefix)_DYN_LEFT_TOP.FLIP.2"/>
+				<MinionSRC Namespace="$(task_prefix)_DYN_LEFT_TOP.PANEL" ID="$(task_prefix)_DYN_LEFT_TOP.FLIP"/>
+			</DynamicGrid>
+		</Grid>	
+
+		<!-- Left Column -->
+		<Grid row="2" column="1"  width="45%g" height="66%g">
+			<Widget File="Spacer.xml" row="$(NextRowAlias)" column="0" width="100%g" height="2%g"/>
+			<DynamicGrid row="$(NextRowAlias)" column="0" width="100%g" height="31%g" align="Center">
+				<GridFile Macro="Gauge.Block" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID.Lookup="THROUGHPUT" IFACE="$(iface1)">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<GridFile Macro="CPU.STATS" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID.Lookup="CPU.STATS">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<Initial ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1"/>
+				<MinionSRC Namespace="$(task_prefix)_DYN_LEFT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP" IFACE="$(iface1)"/>
+			</DynamicGrid>
+
+			<Widget File="Spacer.xml" row="$(NextRowAlias)" column="0" width="100%g" height="2%g"/>
+
+			<DynamicGrid row="$(NextRowAlias)" column="0" width="100%g" height="31%g" align="Center">
+				<GridFile Macro="Gauge.Block" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID.Lookup="THROUGHPUT" IFACE="$(iface2)">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<GridFile Macro="CPU.STATS" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID.Lookup="CPU.STATS">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<Initial ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1"/>
+				<MinionSRC Namespace="$(task_prefix)_DYN_LEFT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP" IFACE="$(iface2)"/>
+			</DynamicGrid>
+
+
+			<Widget File="Spacer.xml" row="$(NextRowAlias)" column="0" width="100%g" height="2%g"/>
+		</Grid>
+
+		<Widget File="Spacer.xml" row="2" column="2" width="4%g" height="2%g"/>
+
+		<!-- Right Column -->
+		<Grid row="2" column="3" width="45%g" height="66%g">
+			<Widget File="Spacer.xml" row="$(NextRowAlias)" column="0" width="100%g" height="2%g"/>
+			<DynamicGrid row="$(NextRowAlias)" column="0" width="100%g" height="31%g" align="Center">
+				<GridFile Macro="Gauge.Block" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID.Lookup="THROUGHPUT" IFACE="$(iface3)">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<GridFile Macro="CPU.STATS" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID.Lookup="CPU.STATS">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<Initial ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1"/>
+				<MinionSRC Namespace="$(task_prefix)_DYN_LEFT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP" IFACE="$(iface1)"/>
+			</DynamicGrid>
+
+			<Widget File="Spacer.xml" row="$(NextRowAlias)" column="0" width="100%g" height="2%g"/>
+
+			<DynamicGrid row="$(NextRowAlias)" column="0" width="100%g" height="31%g" align="Center">
+				<GridFile Macro="Gauge.Block" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID.Lookup="THROUGHPUT" IFACE="$(iface4)">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<GridFile Macro="CPU.STATS" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID.Lookup="CPU.STATS">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<Initial ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1"/>
+				<MinionSRC Namespace="$(task_prefix)_DYN_LEFT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP" IFACE="$(iface2)"/>
+			</DynamicGrid>
+			<DynamicGrid row="$(NextRowAlias)" column="0" width="100%g" height="31%g" align="Center">
+				<GridFile Macro="Gauge.Block" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1" ID.Lookup="THROUGHPUT" IFACE="$(iface5)">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<GridFile Macro="CPU.STATS" Server.Number="1" FLIP_ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2" ID.Lookup="CPU.STATS">
+					<Transition>DISSOLVING_BLOCKS</Transition>
+				</GridFile>
+				<Initial ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1"/>
+				<MinionSRC Namespace="$(task_prefix)_DYN_LEFT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP" IFACE="$(iface2)"/>
+			</DynamicGrid>
+
+			<Widget File="Spacer.xml" row="$(NextRowAlias)" column="0" width="100%g" height="2%g"/>
+		</Grid>
+
+		<Widget File="Spacer.xml" row="2" column="4" width="3%g" height="2%g"/>
+		<!-- END VISIBLE GRID DATA -->
+
+
+	<!-- GRID SPECIFIC TASKS -->
+	<!-- <Tasklist ID="Start.Baseline">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="Baseline.workload.button" ID="Baseline.workload.button" Data="Marvin:[Title]Running...[/Title]"/>
+		</TaskItem>
+		<TaskItem Type="Marvin" Postpone="60000">
+			<DataToInsert Namespace="Baseline.workload.button" ID="Baseline.workload.button" Data="Marvin:[Title]Start Baseline Workload[/Title]"/>
+		</TaskItem>
+	</Tasklist> -->
+
+	<TaskList ID="Show.$(task_prefix)_DYN_LEFT_TOP.FLIP.1">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_LEFT_TOP.PANEL" ID="$(task_prefix)_DYN_LEFT_TOP.FLIP" Data="$(task_prefix)_DYN_LEFT_TOP.FLIP.2"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_LEFT_TOP.FLIP.2">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_LEFT_TOP.PANEL" ID="$(task_prefix)_DYN_LEFT_TOP.FLIP" Data="$(task_prefix)_DYN_LEFT_TOP.FLIP.1"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_LEFT_CENTER.FLIP.1">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_LEFT_CENTER.PANEL" ID="$(task_prefix)_DYN_LEFT_CENTER.FLIP" Data="$(task_prefix)_DYN_LEFT_CENTER.FLIP.2"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_LEFT_CENTER.FLIP.2">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_LEFT_CENTER.PANEL" ID="$(task_prefix)_DYN_LEFT_CENTER.FLIP" Data="$(task_prefix)_DYN_LEFT_CENTER.FLIP.1"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_LEFT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP" Data="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.2">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_LEFT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP" Data="$(task_prefix)_DYN_LEFT_BOTTOM.FLIP.1"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_RIGHT_TOP.FLIP.1">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_RIGHT_TOP.PANEL" ID="$(task_prefix)_DYN_RIGHT_TOP.FLIP" Data="$(task_prefix)_DYN_RIGHT_TOP.FLIP.2"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_RIGHT_TOP.FLIP.2">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_RIGHT_TOP.PANEL" ID="$(task_prefix)_DYN_RIGHT_TOP.FLIP" Data="$(task_prefix)_DYN_RIGHT_TOP.FLIP.1"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_RIGHT_CENTER.FLIP.1">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_RIGHT_CENTER.PANEL" ID="$(task_prefix)_DYN_RIGHT_CENTER.FLIP" Data="$(task_prefix)_DYN_RIGHT_CENTER.FLIP.2"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_RIGHT_CENTER.FLIP.2">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_RIGHT_CENTER.PANEL" ID="$(task_prefix)_DYN_RIGHT_CENTER.FLIP" Data="$(task_prefix)_DYN_RIGHT_CENTER.FLIP.1"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_RIGHT_BOTTOM.FLIP.1">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_RIGHT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_RIGHT_BOTTOM.FLIP" Data="$(task_prefix)_DYN_RIGHT_BOTTOM.FLIP.2"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Show.$(task_prefix)_DYN_RIGHT_BOTTOM.FLIP.2">
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="$(task_prefix)_DYN_RIGHT_BOTTOM.PANEL" ID="$(task_prefix)_DYN_RIGHT_BOTTOM.FLIP" Data="$(task_prefix)_DYN_RIGHT_BOTTOM.FLIP.1"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Start.Playback.$(task_prefix).Oscar">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=2</Param>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Pause.Playback.$(task_prefix).Oscar">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">PausePlayback</Task>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Playback.5.(task_prefix).Oscar">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=5</Param>
+		</TaskItem>
+	</TaskList>
+	<TaskList ID="Change.Test.BASELINE">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Stop</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">LoadFile</Task> 
+				<Param>BASELINE.biff</Param> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="750">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=2</Param>
+		</TaskItem>
+		<TaskItem Type="Marvin" Postpone="750">
+			<DataToInsert Namespace="$(Server.1)" ID="Fixed_item_size" Data="4096"/>
+						<DataToInsert Namespace="ChartScale" ID="ChartScale" Data="Reset"/>
+		</TaskItem>
+	</TaskList>
+	<TaskList ID="Change.Test.E8304K">
+				<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Stop</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">LoadFile</Task> 
+				<Param>E8304K.biff</Param> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="750">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=2</Param>
+		</TaskItem>
+				<TaskItem Type="Marvin" Postpone="750">
+			<DataToInsert Namespace="$(Server.1)" ID="Fixed_item_size" Data="4096"/>
+						<DataToInsert Namespace="ChartScale" ID="ChartScale" Data="Reset"/>
+		</TaskItem>
+	</TaskList>
+	<TaskList ID="Change.Test.E8308K">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Stop</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">LoadFile</Task> 
+				<Param>E8308K.biff</Param> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="750">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=2</Param>
+		</TaskItem>
+		<TaskItem Type="Marvin" Postpone="1500">
+			<DataToInsert Namespace="$(Server.1)" ID="Fixed_item_size" Data="8192"/>
+						<DataToInsert Namespace="ChartScale" ID="ChartScale" Data="Reset"/>
+		</TaskItem>
+	</TaskList>
+	<TaskList ID="Change.Test.E830RAMPUP">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Stop</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">LoadFile</Task> 
+				<Param>E830RAMPUP.biff</Param> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="750">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=5</Param>
+		</TaskItem>
+		<TaskItem Type="Marvin" Postpone="750">
+			<DataToInsert Namespace="$(Server.1)" ID="Fixed_item_size" Data="4096"/>
+			<DataToInsert Namespace="ChartScale" ID="ChartScale" Data="Reset"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="Change.Test.E8301">
+		<TaskItem Type="Oscar">
+			<Task OscarID="$(Recorded_OscarID)">Stop</Task> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="500">
+			<Task OscarID="$(Recorded_OscarID)">LoadFile</Task> 
+				<Param>E830_NO_PINNING_IRQ_AFFINITY_NO_WORKER_PERFORMANCE_SPR.biff</Param> 
+		</TaskItem>
+		<TaskItem Type="Oscar" Postpone="750">
+			<Task OscarID="$(Recorded_OscarID)">Playback</Task>
+			<Param>speed=5</Param>
+		</TaskItem>
+		<TaskItem Type="Marvin" Postpone="750">
+			<DataToInsert Namespace="$(Server.1)" ID="Fixed_item_size" Data="4096"/>
+			<DataToInsert Namespace="ChartScale" ID="ChartScale" Data="Reset"/>
+		</TaskItem>
+	</TaskList>
+
+	<!-- END GRID SPECIFIC TASKS -->
+	</Grid>
+</MarvinExternalFile>	

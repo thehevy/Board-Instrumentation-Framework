@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Minion SingleThreading="false">
+  <Namespace>
+    <Name>QuickStart</Name>
+    <DefaultFrequency>1000</DefaultFrequency>
+    <TargetConnection IP="localhost" PORT="1100"/>
+    <Collector ID="randomval.value">
+      <Executable>Collectors/RandomVal.py</Executable>
+      <Param>GetBoundedRandomValue</Param>
+      <Param>0</Param>
+      <Param>100</Param>
+    </Collector>
+    <Collector ID="cpu.value">
+      <Executable>Collectors/CPU.py</Executable>
+      <Param>GetCPU_Percentage</Param>
+    </Collector>
+  </Namespace>
+</Minion>

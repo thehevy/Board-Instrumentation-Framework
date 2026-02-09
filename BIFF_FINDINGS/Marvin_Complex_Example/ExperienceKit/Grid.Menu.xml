@@ -1,0 +1,1077 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: Main Menu system
+#    Called by: Tab.Experience.Kit.xml
+#
+##############################################################################
+-->
+<MarvinExternalFile>
+	<AliasList>
+		<DefaultAlias MID="Main.Menu"/>
+	</AliasList>
+	<Grid>
+		<!-- START GRID MACRO SECTION -->
+
+		<!-- MACRO FOR ICONS -->
+		<!-- 
+			This XML snippet defines a GridMacro named "Icon" which is used to configure 
+			the appearance and behavior of an icon widget in a grid layout. 
+
+			Elements and Attributes:
+			- <GridMacro Name="Icon">: Defines a macro for a grid layout named "Icon".
+			- <StyleOverride>: Overrides the default style for the grid macro.
+				- <Item>: Sets the background color to transparent.
+			- <Widget>: Represents the icon widget with configurable properties.
+				- File: Specifies the file path for the widget definition.
+				- row, column: Defines the grid position of the widget.
+				- Width: Sets the width of the widget using a predefined variable "$(ICON_Size)".
+				- Height: Dynamically calculates the height using a MarvinMath expression.
+			- <MinionSrc>: Specifies the namespace and ID for the icon source.
+				- Namespace: Uses the "$(ICON_NAMESPACE)" variable.
+				- ID: Uses the "$(ICON_ID)" variable.
+			- <Peekaboo>: Configures additional behaviors for the icon.
+				- Namespace: Specifies the namespace for the Peekaboo behavior.
+				- ID: Specifies the ID for the Peekaboo behavior.
+			- <Shape>: Sets the shape of the icon using a variable "$(Icon.$(Icon_Shape))".
+			- <StyleOverride>: Applies a style override with the ID "Icon".
+			- <SelectedStyle>: Applies a style for the selected state with the ID "SelectedIcon".
+
+			Notes:
+			- The use of variables (e.g., "$(ICON_Size)", "$(Icon_Shape)") allows for dynamic 
+			  configuration and reuse of the macro in different contexts.
+			- The MarvinMath function is used to calculate the height based on the icon size 
+			  and shape ratio.
+		-->
+		<GridMacro Name="Icon">
+			<StyleOverride>
+				<Item>-fx-background-color: transparent</Item>
+			</StyleOverride>
+			<Widget File="$(AppDir)\Menu\Widget\Icon\Icon.xml" row="0" column="0" Width="$(ICON_Size)" Height="MarvinMath($(Icon_Size),*,$(Icon.$(Icon_Shape).Ratio))">
+				<MinionSrc Namespace="$(ICON_NAMESPACE)" ID="$(ICON_ID)" />
+				<Peekaboo Namespace="$(ICON_PEEKABOO_NAMESPACE)" ID="$(ICON_PEEKABOO_ID)" />
+				<Peekaboo Namespace="Icon.Deselect" ID="Deselect" />
+				<Shape>$(Icon.$(Icon_Shape))</Shape>
+				<StyleOverride ID="Icon"/>
+				<SelectedStyle ID="SelectedIcon"/>
+			</Widget>
+		</GridMacro>
+		<!-- MACRO FOR BUTTON -->
+		<!--
+			Documentation for GridMacro "Button":
+
+			This GridMacro defines a reusable button component with customizable properties and styles. 
+			It is designed to be used in a grid layout and supports various configurations through aliases.
+
+			Aliases:
+			- Button.Width: Specifies the width of the button (default: 280).
+			- Button.Height: Specifies the height of the button (default: 40).
+			- BUTTON_TEXT: The text displayed on the button (default: dynamically set using MID and BID).
+			- BUTTON_NAMESPACE: Namespace for the button's MinionSrc (default: "NA").
+			- BUTTON_ID: ID for the button's MinionSrc (default: "NA").
+			- BUTTON_PEEKABOO_NAMESPACE: Namespace for the first Peekaboo configuration (default: "NA").
+			- BUTTON_PEEKABOO_ID: ID for the first Peekaboo configuration (default: "NA").
+			- BUTTON_PEEKABOO_NAMESPACE2: Namespace for the second Peekaboo configuration (default: "NA").
+			- BUTTON_PEEKABOO_ID2: ID for the second Peekaboo configuration (default: "NA").
+			- BUTTON_TEXT_FONT: Font family for the button text (default: "Intel Clear").
+			- BUTTON_TEXT_SIZE: Font size for the button text (default: 15).
+			- BUTTON_TASK: Task associated with the button (default: "NA").
+			- BUTTON_PEEKABOO_DEFAULT: Default state for Peekaboo visibility (default: "Show").
+			- Button.Type: Specifies the type of the button (default: "MenuButton").
+
+			Layout:
+			- The button is placed in a grid with a width of 282 and height of 42, aligned to the center.
+			- A nested grid is used for additional styling and padding, with a width of 275 and height of 35.
+
+			Styling:
+			- The outer grid has a border with rounded corners and a color defined by $(Intel_Color11).
+			- The nested grid has a background color defined by $(Intel_Color1).
+			- The button widget supports custom styles and shapes, with font size and family configurable via aliases.
+
+			Widget:
+			- The button widget is loaded from an external XML file located at "$(AppDir)\Menu\Widget\Button\Button.xml".
+			- It supports dynamic text, MinionSrc, and Peekaboo configurations.
+			- A custom shape is defined for the button, and styles can be overridden using the "Button.Type" alias.
+			- A "SelectedStyle" is also defined for the button when it is in a selected state.
+
+			Usage:
+			- This macro can be used to create consistent and customizable buttons in the application.
+			- Configure the aliases as needed to adapt the button's appearance and behavior.
+		-->
+		<GridMacro Name="Button">
+			<AliasList>
+				<DefaultAlias Button.Width="280"/>
+				<DefaultAlias Button.Height="40"/>
+				<DefaultAlias BUTTON_TEXT="$($(MID).Button.$(BID).Text)"/>
+				<DefaultAlias BUTTON_NAMESPACE="NA"/>
+				<DefaultAlias BUTTON_ID="NA"/>
+				<DefaultAlias BUTTON_PEEKABOO_NAMESPACE="NA"/>
+				<DefaultAlias BUTTON_PEEKABOO_ID="NA"/>
+				<DefaultAlias BUTTON_PEEKABOO_NAMESPACE2="NA"/>
+				<DefaultAlias BUTTON_PEEKABOO_ID2="NA"/>
+				<DefaultAlias BUTTON_TEXT_FONT="Intel Clear"/>
+				<DefaultAlias BUTTON_TEXT_SIZE="15"/>
+				<DefaultAlias BUTTON_TASK="NA"/>
+				<DefaultAlias BUTTON_PEEKABOO_DEFAULT="Show"/>
+				<DefaultAlias Button.Type="MenuButton"/>
+			</AliasList>
+			<Grid row="0" column="0" hgap="0" vgap="0" Align="Center" Width="282" Height="42">
+				<StyleOverride>
+					<Item>-fx-background-radius: 2,2,2,2;	-fx-border-color: $(Intel_Color11);	-fx-border-width: 1pt;	-fx-border-radius: 2,2,2,2;</Item>
+				</StyleOverride>
+				<Grid row="0" column="0" Width="275" Height="35">
+					<PaddingOverride top="4" bottom="4" right="12" left="60" />
+					<StyleOverride>
+						<Item>-fx-background-color:$(Intel_Color1);</Item>
+					</StyleOverride>
+				</Grid>
+				<Widget File="$(AppDir)\Menu\Widget\Button\Button.xml" row="0" column="0" Width="$(Button.Width)" Height="$(Button.Height)" Align="W" Task="$(BUTTON_TASK)">
+					<InitialValue>$(BUTTON_TEXT)</InitialValue>
+					<MinionSrc Namespace="$(BUTTON_NAMESPACE)" ID="$(BUTTON_ID)" />
+					<Peekaboo Namespace="$(BUTTON_PEEKABOO_NAMESPACE)" ID="$(BUTTON_PEEKABOO_ID)" Default="$(BUTTON_PEEKABOO_DEFAULT)"/>
+					<Peekaboo Namespace="$(BUTTON_PEEKABOO_NAMESPACE2)" ID="$(BUTTON_PEEKABOO_ID2)" />
+					<Shape>M278,40H2a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0H278a2,2,0,0,1,2,2V38A2,2,0,0,1,278,40Z</Shape>
+					<StyleOverride ID="$(Button.Type)">
+						<Item>-fx-font-size:$(BUTTON_TEXT_SIZE);	-fx-font-family:$(BUTTON_TEXT_FONT);</Item>
+					</StyleOverride>
+					<SelectedStyle ID="SelectedButton">
+						<Item>-fx-font-size:$(BUTTON_TEXT_SIZE);	-fx-font-family:$(BUTTON_TEXT_FONT);</Item>
+					</SelectedStyle>
+				</Widget>
+			</Grid>
+		</GridMacro>
+		<!-- MACRO FOR BUTTON WITH ICON(s) -->
+		<!--
+			Documentation for GridMacro "Icon.Button":
+			This macro defines the structure and behavior of a button with an icon in a grid-based menu system. 
+			It includes dynamic aliasing, conditional rendering, and task handling for various button types.
+
+			Elements:
+			- AliasList:
+				Defines default aliases for button properties such as text, icon, and tasks. 
+				Supports dynamic replacement using REPLACE attributes.
+
+			- DynamicGrid:
+				Contains the button's grid structure with two states: Selected and Default.
+				Includes initial state and source for dynamic menu options.
+
+			- IF/Else Conditions:
+				- Checks if the icon is "Blank" and renders a spacer widget if true.
+				- Otherwise, renders a grid with an icon and additional properties.
+				- Checks if the "More" attribute is "Yes" to render an expandable submenu.
+
+			- TaskList:
+				Defines tasks associated with the button, including:
+				- Resetting all buttons to default.
+				- Selecting the current button.
+				- Expanding submenus for different button types (SubMenu, Dynamic, Fixed, Toggle, Link).
+				- Handling special cases like "Legal" buttons or linking to external documents.
+
+			- TaskItem:
+				Specifies individual tasks with types such as "OtherTask", "Marvin", and "Desktop".
+				Includes data insertion into namespaces and conditional execution based on button type.
+
+			- Nested IF/Else Logic:
+				Handles complex conditions for button types and their respective behaviors, 
+				including dynamic menu expansion, fixed menu handling, toggle functionality, and link navigation.
+
+			- Selected Button TaskList:
+				Contains tasks specific to the selected state of the button, such as resetting menu buttons.
+
+			Purpose:
+			This macro is designed to provide a flexible and dynamic framework for creating interactive menu buttons 
+			with icons, supporting various configurations and behaviors based on user interaction and menu structure.
+		-->
+		<GridMacro Name="Icon.Button">
+			<AliasList>
+				<DefaultAlias Main.Menu.Button.0.Text="Home"/>
+				<DefaultAlias Main.Menu.Button.0.Icon="Home"/>
+				<DefaultAlias Run.REPLACE.Menu.Button.1.Task="Yes" REPLACE="$(MID)"/>
+				<DefaultAlias Main.Menu.Button.REPLACE.Text="Legal" REPLACE="MarvinMath($(Main.Menu.Button.Count),+,1)"/>
+				<DefaultAlias Main.Menu.Button.REPLACE.Icon="Legal" REPLACE="MarvinMath($(Main.Menu.Button.Count),+,1)"/>
+			</AliasList>
+			<DynamicGrid row="0" column="0">
+				<GridFile Macro="Button" ID="$(MID).$(BID).Selected" BUTTON_Task="$(TabID).$(MID).$(BID).Selected" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_PEEKABOO_NAMESPACE="$(MID).$(BID).Button.Select" BUTTON_PEEKABOO_ID="Select" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect"/>
+				<GridFile Macro="Button" ID="$(MID).$(BID).Default" BUTTON_Task="$(TabID).$(MID).$(BID)" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_PEEKABOO_NAMESPACE="$(MID).$(BID).Button.Select" BUTTON_PEEKABOO_ID="Select" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect"/>
+				<Initial ID="$(MID).$(BID).Default"/>
+				<MinionSrc ID="$(MID).$(BID).Choice" Namespace="$(MID).$(BID).Menu"/>
+			</DynamicGrid>
+			<IF Value1="$(ICON)" Compare="IF_EQ" Value2="Blank">
+				<Then>
+					<Widget File="Spacer.XML" row="0" column="0" Align="W" Width="65"/>
+				</Then>
+				<Else>
+					<Grid row="0" column="0" Align="W" Width="65">
+						<ClickThroughTransparent Propagate="True">True</ClickThroughTransparent>
+						<Widget File="Spacer.XML" row="0" column="0" width="30" height="4"/>
+						<Grid Macro="Icon" row="1" column="1" Icon_Shape="$(Icon)" ICON_Size="$(Icon.Size)" ICON_PEEKABOO_NAMESPACE="$(MID).Icon.$(BID)" ICON_PEEKABOO_ID="Option"/>
+					</Grid>
+				</Else>
+			</IF>
+			<If Value1="$(More)" Compare="IF_EQ" Value2="Yes">
+				<Then>
+					<Grid row="0" column="0" Align="E" Width="$(Menu.Button.Width)">
+						<ClickThroughTransparent Propagate="True">True</ClickThroughTransparent>
+						<DynamicGrid row="1" column="0">
+							<GridFile Macro="Icon" ID="$(MID).$(BID).Selected" ICON_Size="$(More.Size)" ICON_PEEKABOO_NAMESPACE="$(MID).Icon.$(BID)" ICON_PEEKABOO_ID="Option" Icon_Shape="LESS"/>
+							<GridFile Macro="Icon" ICON_Size="$(More.Size)" ICON_PEEKABOO_NAMESPACE="$(MID).Icon.$(BID)" ICON_PEEKABOO_ID="Option" Icon_Shape="MORE" ID="$(MID).$(BID).Default"/>
+							<Initial ID="$(MID).$(BID).Default"/>
+							<MinionSrc ID="$(MID).$(BID).Choice" Namespace="$(MID).$(BID).Menu"/>
+						</DynamicGrid>
+						<Widget File="Spacer.XML" row="0" column="1" width="10" height="4"/>
+					</Grid>
+				</Then>
+			</If>
+			<!-- BUTTON TASKS -->
+			<TaskList ID="$(TabID).$(MID).$(BID)">
+				<!-- Resets all buttons to default -->
+				<TaskItem Type="OtherTask" ID="$(TabID).Reset.Menu.Buttons"/>
+				<TaskItem Type="Marvin">
+					<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+					<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+				</TaskItem>
+				<!-- Selects this button -->
+				<TaskItem Type="Marvin" Postpone="250">
+					<DataToInsert ID="$(MID).$(BID).Choice" Namespace="$(MID).$(BID).Menu" Data="$(MID).$(BID).Selected"/>
+					<DataToInsert ID="Select" Namespace="$(MID).$(BID).Button.Select" Data="Select"/>
+					<DataToInsert ID="Option" Namespace="$(MID).Icon.$(BID)" Data="Select"/>
+				</TaskItem>
+				<!-- Expands SubMenu for button (if defined) -->
+				<IF Value1="$($(MID).Button.$(BID).Type)" Compare="IF_EQ" Value2="SubMenu">
+					<Then>
+						<TaskItem Type="Marvin" Postpone="250">
+							<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display" Data="Insert"/>
+						</TaskItem>
+						<For Count="$($(MID).Button.Count)" StartValue="1">
+							<TaskItem Type="Marvin" Postpone="250">
+								<DataToInsert ID="Display" Namespace="$(MID).Button.$(CurrentValueAlias).Display" Data="Insert"/>
+							</TaskItem>
+						</For>
+					</Then>
+					<Else>
+						<!-- EXPANDS DYNAMIC MENUS -->
+						<IF Value1="$($(MID).Button.$(BID).Type)" Compare="IF_EQ" Value2="Dynamic">
+							<Then>
+								<TaskItem Type="Marvin" Postpone="250">
+									<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display.1" Data="Insert"/>
+									<DataToInsert ID="Display.Grid" Namespace="Display.Panel" Data="$(Main.Menu.Button.$(BID).MID)"/>
+								</TaskItem>	
+							</Then>
+							<Else>
+								<!-- EXPANDS FIXED MENUS -->
+								<IF Value1="$($(MID).Button.$(BID).Type)" Compare="IF_EQ" Value2="Fixed">
+								<Then>
+									<TaskItem Type="Marvin" Postpone="250">
+										<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display" Data="Insert"/>
+										<DataToInsert ID="Display.Grid" Namespace="Display.Panel" Data="$(Main.Menu.Button.$(BID).MID)"/>
+									</TaskItem>
+									<TaskItem Type="Marvin" Postpone="350">
+										<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+										<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+									</TaskItem>
+									<IF Value1="$(Run.$(MID.Group).Button.1.Task)" Compare="IF_NE" Value2="No">
+										<Then>
+											<TaskItem Type="OtherTask" Postpone="400" ID="$(TabID).$(MID.Group).Button.1.Task"/>
+										</Then>
+									</IF>
+								</Then>
+								<Else>
+									<IF Value1="$($(MID).Button.$(BID).Type)" Compare="IF_EQ" Value2="Toggle">
+										<Then>
+											<TaskItem Type="Marvin">
+												<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display" Data="Insert"/>
+												<DataToInsert ID="Display.Grid" Namespace="Display.Panel" Data="$(Main.Menu.Button.$(BID).MID)"/>
+												<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+												<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+											</TaskItem>
+											<TaskItem Type="OtherTask" Postpone="400" ID="$(TabID).$(MID.Group).Button.1.Task"/>
+										</Then>
+										<Else>
+											<!-- LINK BUTTON -->
+											<IF Value1="$($(MID).Button.$(BID).Type)" Compare="IF_EQ" Value2="Link">
+												<Then>
+													<TaskItem Type="Marvin" Postpone="250">
+														<DataToInsert ID="Display.Grid" Namespace="Display.Panel" Data="Link"/>
+													</TaskItem>
+													<TaskItem Type="Desktop">
+														<Document Action="Browse">$(Main.Menu.Button.$(BID).Link)</Document> 
+													</TaskItem>
+												</Then>
+												<Else>
+													<!-- LEGAL BUTTON -->
+													<IF Value1="$(BID)" Compare="IF_EQ" Value2="MarvinMath($(Main.Menu.Button.Count),+,1)">
+														<Then>
+															<TaskItem Type="Marvin" Postpone="250">
+																<DataToInsert ID="Display.Grid" Namespace="Display.Panel" Data="Legal"/>
+															</TaskItem>
+														</Then>
+														<Else>
+															<!-- If not a submenu, changes display to correct panel -->
+															<TaskItem Type="Marvin" Postpone="250">
+																<DataToInsert ID="Display.Grid" Namespace="Display.Panel" Data="$(Main.Menu.Button.$(BID).MID)"/>
+															</TaskItem>
+														</Else>
+													</IF>
+												</Else>
+											</IF>
+										</Else>	
+									</IF>
+								</Else>	
+								</IF>
+							</Else>
+						</IF>
+					</Else>
+				</IF>
+			</TaskList>
+			<!-- SELECTED BUTTON TASKS -->
+			<TaskList ID="$(TabID).$(MID).$(BID).Selected">
+				<TaskItem Type="OtherTask" ID="$(TabID).Reset.Menu.Buttons"/>
+			</TaskList>
+		</GridMacro>
+		<!-- MACRO FOR SUBMENU BUTTON -->
+		<!--
+			This XML defines a GridMacro named "SubMenu.Button" which is used to create a dynamic grid layout for buttons and icons 
+			in a submenu. The macro includes the following components:
+
+			1. **DynamicGrid**:
+			   - Contains two GridFile elements for button states ("Selected" and "Default").
+			   - Each button has attributes for task IDs, text, text size, and peekaboo namespaces/IDs for "Select" and "Deselect" states.
+			   - An Initial element sets the default button state.
+			   - A MinionSrc element links the button to a menu namespace.
+
+			2. **Conditional Rendering**:
+			   - An If element checks if the "More" attribute is set to "Yes".
+			   - If true, additional UI elements are rendered:
+				 - A Grid element with alignment, width, and click-through transparency properties.
+				 - A nested DynamicGrid for icons with "Selected" and "Default" states, similar to the buttons.
+				 - Icons have attributes for size, peekaboo namespaces/IDs, and shapes ("LESS" and "MORE").
+				 - An Initial element sets the default icon state.
+				 - A MinionSrc element links the icon to a menu namespace.
+				 - A Widget element adds a spacer for layout adjustments.
+
+			3. **Customization**:
+			   - The macro uses placeholders (e.g., $(MID), $(BID)) for dynamic substitution of IDs, text, and other attributes.
+			   - This allows for flexible reuse of the macro across different menu configurations.
+
+			Purpose:
+			- This macro is designed to create a consistent and dynamic submenu layout with buttons and icons that respond to user interactions.
+			- It supports conditional rendering for additional options when the "More" attribute is enabled.
+		-->
+		<!--
+			Documentation for GridMacro "SubMenu.Button":
+
+			This macro defines a dynamic grid structure for creating a submenu button with selectable and default states. 
+			It includes the following components:
+
+			1. **DynamicGrid**:
+			   - Contains two button states: "Selected" and "Default".
+			   - Each button is defined using the "GridFile" element with attributes for task, text, text size, and peekaboo namespaces/IDs for visibility toggling.
+
+			2. **Initial**:
+			   - Sets the default state of the button to "Default".
+
+			3. **MinionSrc**:
+			   - Defines a source for menu choices using a namespace.
+
+			4. **Conditional Block (If)**:
+			   - Checks if the "More" attribute is set to "Yes".
+			   - If true, adds additional elements:
+				 - A grid aligned to the east with a specified width.
+				 - Transparent click-through behavior for propagation.
+				 - A nested dynamic grid containing icons for "Selected" and "Default" states with peekaboo functionality.
+				 - A spacer widget for layout adjustments.
+
+			Attributes:
+			- `$(MID)`: Represents the menu ID.
+			- `$(BID)`: Represents the button ID.
+			- `$(TabID)`: Represents the tab ID.
+			- `$(More)`: Determines if additional elements are displayed.
+			- `$(Button.Text.Size)`: Specifies the size of the button text.
+			- `$(Menu.Button.Width)`: Specifies the width of the menu button.
+			- `$(More.Size)`: Specifies the size of the "More" icon.
+
+			Purpose:
+			- This macro is designed to create a flexible and interactive submenu button with selectable states and optional additional elements based on the "More" attribute.
+		-->
+		<GridMacro Name="SubMenu.Button">
+			<DynamicGrid row="0" column="0">
+				<GridFile Macro="Button" ID="$(MID).$(BID).Selected" BUTTON_Task="$(TabID).$(MID).$(BID).Selected" BUTTON_TEXT="$($(MID).Button.$(BID).Text)" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_PEEKABOO_NAMESPACE="$(MID).$(BID).Button.Select" BUTTON_PEEKABOO_ID="Select" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect"/>
+				<GridFile Macro="Button" ID="$(MID).$(BID).Default" BUTTON_Task="$(TabID).$(MID).$(BID)" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_TEXT="$($(MID).Button.$(BID).Text)" BUTTON_PEEKABOO_NAMESPACE="$(MID).$(BID).Button.Select" BUTTON_PEEKABOO_ID="Select" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect"/>
+				<Initial ID="$(MID).$(BID).Default"/>
+				<MinionSrc ID="$(MID).$(BID).Choice" Namespace="$(MID).$(BID).Menu"/>
+			</DynamicGrid>
+			<If Value1="$(More)" Compare="IF_EQ" Value2="Yes">
+				<Then>
+					<Grid row="0" column="0" Align="E" Width="$(Menu.Button.Width)">
+						<ClickThroughTransparent Propagate="True">True</ClickThroughTransparent>
+						<DynamicGrid row="1" column="0">
+							<GridFile Macro="Icon" ID="$(MID).$(BID).Selected" ICON_Size="$(More.Size)" ICON_PEEKABOO_NAMESPACE="$(MID).Icon.$(BID)" ICON_PEEKABOO_ID="Option" Icon_Shape="LESS"/>
+							<GridFile Macro="Icon" ICON_Size="$(More.Size)" ICON_PEEKABOO_NAMESPACE="$(MID).Icon.$(BID)" ICON_PEEKABOO_ID="Option" Icon_Shape="MORE" ID="$(MID).$(BID).Default"/>
+							<Initial ID="$(MID).$(BID).Default"/>
+							<MinionSrc ID="$(MID).$(BID).Choice" Namespace="$(MID).$(BID).Menu"/>
+						</DynamicGrid>
+						<Widget File="Spacer.XML" row="0" column="1" width="10" height="4"/>
+					</Grid>
+				</Then>
+			</If>
+		</GridMacro>
+		<!-- MACRO FOR SUBMENU BUTTON GROUP -->
+		<!--
+			Documentation for GridMacro "SubMenu.Menu":
+
+			This macro defines the structure and behavior of a submenu within a grid layout. 
+			It dynamically generates buttons and manages their associated tasks and display states.
+
+			Elements and Attributes:
+			- <GridMacro Name="SubMenu.Menu">: Defines the macro for the submenu.
+			- <Grid row="0" column="0">: Specifies the grid layout for the submenu buttons.
+
+			Dynamic Button Generation:
+			- <For Count="$($(MID).Button.Count)" StartValue="1">: Iterates through the buttons defined in the submenu.
+			- <If Value1="none" Compare="IF_NE" Value2="$($(MID).Button.$(CurrentValueAlias).Text)">: Ensures buttons with valid text are processed.
+			- <Grid Macro="Button" ...>: Dynamically creates a button with attributes such as task, text, namespace, and ID.
+
+			Peekaboo Element:
+			- <Peekaboo Namespace="$(MID.Group).Submenu.$(Submenu).Display" ID="Display" />: Manages the visibility of the submenu display.
+
+			Task Management:
+			- <TaskList>: Defines tasks associated with button actions.
+				- <TaskItem Type="Marvin">: Inserts or removes data for button states (e.g., "Select", "Deselect").
+				- <TaskItem Type="OtherTask">: Handles additional tasks such as hiding or inserting other submenu elements.
+
+			Conditional Logic:
+			- <IF Value1="$($(MID).Button.Count)" Compare="If_GT" Value2="0">: Checks if there are buttons to process.
+			- <IF Value1="None" Compare="IF_NE" Value2="$($(MID).Button.$(CurrentValueAlias).Text)">: Ensures valid button text before processing.
+			- <IF Value1="$($(MID.Group).Button.Count)" Compare="IF_NE" Value2="1">: Handles cases where multiple buttons exist in the group.
+
+			Submenu Display Management:
+			- <TaskList ID="$(TabID).Hide.Other.$(MID.Group).Submenu.$(Submenu)">: Removes display elements for other submenus.
+			- <TaskList ID="$(TabID).Insert.Other.$(MID.Group).Submenu.$(Submenu)">: Inserts display elements for other submenus.
+
+			Main Menu Task List:
+			- <TaskList ID="$(TabID).$(MID.Group).Main.Menu.$(Submenu)">: Manages the main menu tasks, including deselecting buttons and inserting submenu elements.
+
+			Purpose:
+			This macro is designed to create a dynamic and interactive submenu system, allowing for flexible button creation, task management, and display control within a grid layout.
+		-->
+		<GridMacro Name="SubMenu.Menu">
+			<Grid row="0" column="0">
+				<For Count="$($(MID).Button.Count)" StartValue="1">
+					<If Value1="none" Compare="IF_NE" Value2="$($(MID).Button.$(CurrentValueAlias).Text)">
+						<Then>
+							<Grid Macro="Button" row="$(CurrentCountAlias)" column="$(CurrentColumnAlias)" BUTTON_Task="$(TabID).$(MID).Button.$(CurrentValueAlias).Task" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_TEXT="$($(MID).Button.$(CurrentValueAlias).Text)" BUTTON_PEEKABOO_NAMESPACE="$(MID).Button.$(CurrentValueAlias)" BUTTON_PEEKABOO_ID="Default" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect" Button.Type="SubMenuButton" BUTTON_NAMESPACE="$(MID).Button.$(CurrentValueAlias).SRC" BUTTON_ID="$(MID).Button.$(CurrentValueAlias).ID"/>
+						</Then>
+					</If>
+				</For>
+				<Peekaboo Namespace="$(MID.Group).Submenu.$(Submenu).Display" ID="Display" />
+			</Grid>
+			<IF Value1="$($(MID).Button.Count)" Compare="If_GT" Value2="0">
+				<Then>
+					<For Count="$($(MID).Button.Count)" StartValue="1">
+						<IF Value1="None" Compare="IF_NE" Value2="$($(MID).Button.$(CurrentValueAlias).Text)">
+							<Then>
+								<TaskList ID="$(TabID).$(MID).Button.$(CurrentValueAlias).Task">
+									<TaskItem Type="Marvin">
+										<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+										<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+									</TaskItem>
+									<IF Value1="$($(MID.Group).Button.Count)" Compare="IF_NE" Value2="1">
+										<Then>	
+											<TaskItem Type="OtherTask" ID="$(TabID).Hide.Other.$(MID.Group).Submenu.$(Submenu)"/>
+										</Then>
+									</IF>
+									<TaskItem Type="Marvin" Postpone="1">
+										
+										<DataToInsert ID="Default" Namespace="$(MID).Button.$(CurrentValueAlias)" Data="Select"/>
+										<DataToInsert ID="Display.Folder.$(Folder).$(Submenu)" Namespace="Display.Panel" Data="$(Folder).$(Submenu).$(CurrentValueAlias)"/>
+									</TaskItem>
+								</TaskList>
+							</Then>
+						</IF>
+					</For>
+				</Then>
+			</IF>
+			<IF Value1="$($(MID.Group).Button.Count)" Compare="IF_NE" Value2="1">
+				<Then>
+					<TaskList ID="$(TabID).Hide.Other.$(MID.Group).Submenu.$(Submenu)">
+						<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+							<IF Value1="$(CurrentValueAlias)" Compare="If_NE" Value2="$(Submenu)">
+								<Then>
+									<TaskItem Type="Marvin">
+										<DataToInsert ID="Display" Namespace="$(MID.Group).Button.$(CurrentValueAlias).Display" Data="Remove"/>
+										<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.$(CurrentValueAlias).Display" Data="Remove"/>
+									</TaskItem>
+
+								</Then>
+							</IF>
+						</For>
+					</TaskList>
+				</Then>
+			</IF>
+			<TaskList ID="$(TabID).Insert.Other.$(MID.Group).Submenu.$(Submenu)">
+				<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+					<IF Value1="$(CurrentValueAlias)" Compare="If_NE" Value2="$(Submenu)">
+						<Then>
+							<TaskItem Type="Marvin">
+								<DataToInsert ID="Display" Namespace="$(MID.Group).Button.$(CurrentValueAlias).Display" Data="Insert"/>
+							</TaskItem>
+						</Then>
+					</IF>
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.$(CurrentValueAlias).Display" Data="Remove"/>
+					</TaskItem>
+				</For>
+			</TaskList>
+			<TaskList ID="$(TabID).$(MID.Group).Main.Menu.$(Submenu)">
+				<TaskItem Type="Marvin">
+					<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+					<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+				</TaskItem>
+				<TaskItem Type="OtherTask" ID="$(TabID).Insert.Other.$(MID.Group).Submenu.$(Submenu)" />
+			</TaskList>
+		</GridMacro>
+		<!-- MACRO FOR SUBMENU  -->
+		<!--
+			Documentation for GridMacro "SubMenu":
+
+			This macro defines a submenu structure within a grid layout. It includes buttons, submenus, and task lists 
+			for handling menu interactions. The macro is designed to dynamically generate menu items and their associated 
+			behaviors based on the provided data.
+
+			Elements:
+			- Grid Macro="Icon.Button":
+				Represents the main menu button with customizable styles, icons, and types.
+
+			- For Loop:
+				Iterates through the buttons in the menu group to dynamically create submenu buttons and their associated 
+				grids. It checks for valid button text and generates submenus if additional buttons exist.
+
+			- If Conditions:
+				Used to compare values and determine whether to include specific elements or execute tasks.
+
+			- TaskList:
+				Defines a list of tasks to be executed when a menu button is selected. Tasks include:
+				- Deselecting other buttons.
+				- Hiding other submenus.
+				- Inserting data into specific namespaces for menu updates.
+				- Handling default and selected states for buttons.
+
+			- Peekaboo:
+				Manages the visibility of menu elements by toggling their display state.
+
+			- DataToInsert:
+				Inserts data into specified namespaces to update the menu's state or display.
+
+			- TaskList ID="$(TabID).Hide.All.$(MID.Group).Submenu":
+				Handles the hiding of all submenus within the menu group. Iterates through submenu buttons and removes 
+				their display while ensuring the main menu button remains visible.
+
+			Parameters:
+			- $(MID.Group): Represents the menu group identifier.
+			- $(CurrentValueAlias): Refers to the current button or submenu being processed.
+			- $(TabID): Represents the tab identifier for the menu.
+			- $(Folder): Represents the folder or slide associated with the menu.
+
+			Usage:
+			This macro is intended for creating dynamic and hierarchical menu structures with customizable behaviors. 
+			It supports nested submenus and task-based interactions for a seamless user experience.
+		-->
+		<GridMacro Name="SubMenu">
+			<Grid Macro="Icon.Button" Row="0" Column="0" MID="Main.Menu" Button.Style="Default" ICON="$(Main.Menu.Button.$(BID).ICON)" MORE="Yes" Button.Type="MenuButton"/>
+			<Grid row="1" column="0">
+				<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+					<If Value1="none" Compare="IF_NE" Value2="$($(MID.Group).Button.$(CurrentValueAlias).Text)">
+						<Then>
+							<Grid row="$(CurrentCountAlias)" column="$(CurrentColumnAlias)">
+								<Grid Macro="SubMenu.Button" row="0" column="0" Button.Style="Default" BID="$(CurrentValueAlias)" MID="$(MID.Group)" MORE="Yes" Button.Type="SubMenuButton">
+									<Peekaboo Namespace="$(MID.Group).Button.$(CurrentValueAlias).Display" ID="Display" />
+								</Grid>
+								<IF Value1="$($(MID.Group).Submenu.$(CurrentValueAlias).Button.Count)" Compare="If_GT" Value2="0">
+									<Then>
+										<Grid Macro="SubMenu.Menu" row="1" column="0" MID="$(MID.Group).Submenu.$(CurrentValueAlias)" Submenu="$(CurrentValueAlias)">
+											<Peekaboo Namespace="$(MID.Group).Submenu.$(CurrentValueAlias).Display" ID="Display" />
+										</Grid>
+									</Then>
+								</IF>
+							</Grid>
+						</Then>
+					</If>
+				</For>
+				<Peekaboo Namespace="$(MID.Group).Submenu.Display" ID="Display" />
+			</Grid>
+			<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+				<If Value1="None" Compare="IF_NE" Value2="$($(MID.Group).Button.$(CurrentValueAlias).Text)">
+					<Then>
+						<TaskList ID="$(TabID).$(MID.Group).$(CurrentValueAlias)">
+							<TaskItem Type="OtherTask" ID="$(TabID).Deselect" />
+							<IF Value1="$($(MID.Group).Button.Count)" Compare="IF_NE" Value2="1">
+										<Then>	
+											<TaskItem Type="OtherTask" ID="$(TabID).Hide.Other.$(MID.Group).Submenu.$(CurrentValueAlias)"/>
+										</Then>
+									</IF>
+							<TaskItem Type="Marvin" Postpone="5">
+								<DataToInsert ID="$(MID.Group).$(CurrentValueAlias).Choice" Namespace="$(MID.Group).$(CurrentValueAlias).Menu" Data="$(MID.Group).$(CurrentValueAlias).Selected"/>
+								<DataToInsert ID="Default" Namespace="$(MID.Group).Button.$(CurrentValueAlias)" Data="Select"/>
+								<DataToInsert ID="Select" Namespace="$(MID.Group).$(CurrentValueAlias).Button.Select" Data="Select"/>
+								<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.$(CurrentValueAlias).Display" Data="Insert"/>
+								<DataToInsert ID="Display.Grid" Namespace="Display.Panel" Data="Slides.$(Folder)"/>
+								<DataToInsert ID="Group.Slide.$(Folder)" Namespace="Display.Panel" Data="$(Folder).$(CurrentValueAlias)"/>
+							</TaskItem>
+						</TaskList>
+					</Then>
+				</If>
+			</For> 
+			<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+				<If Value1="None" Compare="IF_NE" Value2="$($(MID.Group).Button.$(CurrentValueAlias).Text)">
+					<Then>
+						<TaskList ID="$(TabID).$(MID.Group).$(CurrentValueAlias).Selected">
+							<TaskItem Type="OtherTask" ID="$(TabID).$(MID.Group).Main.Menu.$(CurrentValueAlias)" />
+
+							<TaskItem Type="Marvin">
+								<DataToInsert ID="$(MID.Group).$(CurrentValueAlias).Choice" Namespace="$(MID.Group).$(CurrentValueAlias).Menu" Data="$(MID.Group).$(CurrentValueAlias).Default"/>
+							</TaskItem>
+						</TaskList>
+					</Then>
+				</If>
+			</For>
+			<TaskList ID="$(TabID).Hide.All.$(MID.Group).Submenu">
+				<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+					<IF Value1="$($(MID.Group).Submenu.$(CurrentValueAlias).Button.Count)" Compare="If_GT" Value2="0">
+						<Then>
+							<TaskItem Type="Marvin">
+								<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.$(CurrentValueAlias).Display" Data="Remove"/>
+							</TaskItem>
+						</Then>
+					</IF>
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="Display" Namespace="$(MID.Group).Button.$(CurrentValueAlias).Display" Data="Insert"/>
+					</TaskItem>
+				</For>
+			</TaskList>
+		</GridMacro>
+
+		<!-- MACRO FOR DYNAMIC SUBMENU -->
+		<!--
+			Documentation for GridMacro "Dynamic":
+
+			This macro defines a dynamic grid structure for creating a menu system with buttons and submenus. 
+			It includes the following key components:
+
+			1. **Dynamic Grid Definition**:
+			   - Dynamically generates buttons based on the count of items in a specified group (`$(MID.Group).Button.Count`).
+			   - Each button is represented by a `DynamicGrid` element with associated properties such as text, task, and namespace.
+
+			2. **Dynamic Button Creation**:
+			   - Uses a `<For>` loop to iterate through the button count and create buttons dynamically.
+			   - Each button has two states: "Active" and "Default", defined using `GridFile` elements.
+			   - Includes logic to handle button visibility and state transitions using `Peekaboo` and `MinionSrc`.
+
+			3. **Task Definitions**:
+			   - Defines tasks for button actions using `<TaskList>` elements.
+			   - Tasks include:
+				 - Default button tasks (`$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task`).
+				 - Active button tasks (`$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task.2`).
+				 - A task to hide all submenu buttons (`$(TabID).Hide.All.$(MID.Group).Submenu`).
+
+			4. **Task Logic**:
+			   - Default button tasks:
+				 - Deselects the current button and activates the next button in the sequence.
+				 - Executes a custom task associated with the button.
+			   - Active button tasks:
+				 - Executes a custom active task.
+				 - Resets the button state to "Default" and removes submenu items dynamically.
+			   - Hide submenu task:
+				 - Iterates through all buttons and removes their submenu display.
+
+			5. **Dynamic Behavior**:
+			   - The macro uses placeholders (`$(...)`) and dynamic expressions (`MarvinMath`) to calculate values and manage button states.
+			   - Ensures seamless transitions between button states and dynamic submenu management.
+
+			Usage:
+			- This macro is designed for creating dynamic menu systems in applications where the number of buttons and their properties are determined at runtime.
+			- It provides flexibility for defining custom tasks and managing button states dynamically.
+
+			Note:
+			- Ensure that the required placeholders and namespaces are properly defined in the application context for this macro to function correctly.
+		-->
+		<GridMacro Name="Dynamic">
+			<Grid File="$(AppDir)\Menu\DefinitionFiles\Alias.List.$(Folder).Menu.xml" row="0" column="0"/>
+			<Grid Macro="Icon.Button" Row="0" Column="0" MID="Main.Menu" Button.Style="Default" ICON="$(Main.Menu.Button.$(BID).ICON)" MORE="Yes" Button.Type="MenuButton"/>
+			<Grid row="1" column="0">
+				<For Count="$($(MID.Group).Button.Count)"	StartValue="1">
+					<!-- Dynamic Button -->
+					<If Value1="None" Compare="IF_NE" Value2="$($(MID.Group).Button.$(CurrentValueAlias).Text)">
+						<Then>
+							<DynamicGrid row="$(CurrentCountAlias)" column="$(CurrentColumnAlias)">
+								<GridFile Macro="Button" ID="Active" BUTTON_Task="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task.2" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_TEXT="$($(MID.Group).Button.$(CurrentValueAlias).Text.Active)" BUTTON_PEEKABOO_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias)" BUTTON_PEEKABOO_ID="Select" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect" Button.Type="SubMenuButton" BUTTON_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias).SRC" BUTTON_ID="$(MID.Group).Button.$(CurrentValueAlias).ID"/>
+								<GridFile Macro="Button" ID="Default" BUTTON_Task="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_TEXT="$($(MID.Group).Button.$(CurrentValueAlias).Text)" BUTTON_PEEKABOO_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias)" BUTTON_PEEKABOO_ID="Default" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect" Button.Type="SubMenuButton" BUTTON_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias).SRC" BUTTON_ID="$(MID.Group).Button.$(CurrentValueAlias).ID"/>
+								<Initial ID="Default"/>
+								<MinionSrc ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List"/>
+								<Peekaboo Namespace="$(MID.Group).Submenu.Display.$(CurrentValueAlias)" ID="Display" />
+							</DynamicGrid>
+						</Then>
+					</If>
+				</For>
+			</Grid>
+
+			<!-- DYNAMIC SUBMENU BUTTON TASKS  -->
+			<!-- DEFAULT BUTTON TASKS -->
+			<!-- First Dynamic Submenu Button -->
+			<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+			<TaskList ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task">
+				<TaskItem Type="Marvin">
+					<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+					<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+				</TaskItem>
+				<TaskItem Type="Marvin" Postpone="50">
+					<DataToInsert ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List" Data="Active"/>
+				</TaskItem>
+				<!-- Runs Custom task for button -->
+				<TaskItem Type="OtherTask" ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Action" />
+				<!-- Inserts next button -->
+				<IF Value1="$(CurrentValueAlias)" Compare="IF_NE" Value2="$(MID.Group).Button.Count)">
+						<Then>
+					<TaskItem Type="Marvin" Postpone="50">
+						<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display.MarvinMath($(CurrentValueAlias),+,1)" Data="Insert"/>
+						<DataToInsert ID="Select" Namespace="$(MID.Group).Button.$(CurrentValueAlias)" Data="Select"/>
+					</TaskItem>
+					</Then>
+						<Else>
+							<DataToInsert ID="Default" Namespace="$(MID.Group).Button.$(CurrentValueAlias)" Data="Select"/>
+						</Else>
+						</IF>
+			</TaskList>
+			</For>
+
+			<!-- ACTIVE BUTTON TASKS -->
+			<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+				<TaskList ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task.2">
+					<TaskItem Type="OtherTask" ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Action.Active"/>
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List" Data="Default"/>
+						<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+					</TaskItem>
+					<For Count="MarvinMath($($(MID.Group).Button.Count),-,1)" StartValue="$(CurrentValueAlias)">
+						<TaskItem Type="Marvin" Postpone="50">
+							<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display.MarvinMath($(CurrentValueAlias),+,1)" Data="Remove"/>
+							<DataToInsert ID="$(MID.Group).Button.MarvinMath($(CurrentValueAlias),+,1)" Namespace="$(MID.Group).Button.List" Data="Default"/>
+						</TaskItem>
+					</For>
+					<TaskItem Type="Marvin" Postpone="75">
+						<DataToInsert ID="Select" Namespace="$(MID.Group).Button.MarvinMath($(CurrentValueAlias),-,1)" Data="Select"/>
+					</TaskItem>
+				</TaskList>
+			</For> 
+
+			<TaskList ID="$(TabID).Hide.All.$(MID.Group).Submenu">
+				<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display.$(CurrentValueAlias)" Data="Remove"/>
+					</TaskItem>
+				</For>
+			</TaskList>
+		</GridMacro>
+		
+		<!-- MACRO FOR FIXED SUBMENU -->
+		<!-- 
+
+		This XML file defines a grid-based menu structure for the Intel Vision Experience Kit. 
+		It utilizes macros, dynamic grids, and conditional logic to dynamically generate menu buttons and submenus.
+
+		- **GridMacro Name="Fixed"**: Defines a fixed grid layout for the menu.
+		- **Grid File**: References an external XML file for alias definitions.
+		- **Grid Macro="Icon.Button"**: Creates a button with an icon and default styling for the main menu.
+		- **For Loop**: Iterates through the buttons in a group, dynamically generating grid elements for each button.
+			- **If Condition**: Ensures that buttons with a "None" text value are excluded.
+			- **DynamicGrid**: Dynamically generates grid elements for active and default button states.
+				- **GridFile Macro="Button"**: Defines button properties such as task, text size, text, namespace, and ID.
+				- **Initial ID="Default"**: Sets the default button state.
+				- **MinionSrc**: Links the button to its corresponding namespace and list.
+		- **Peekaboo**: Manages the visibility of submenu displays.
+
+		This structure allows for flexible and dynamic menu creation, supporting various button states and configurations.
+		-->
+		<GridMacro Name="Fixed">
+			<Grid File="$(AppDir)\Menu\DefinitionFiles\Alias.List.$(Folder).Menu.xml" row="0" column="0"/>
+			<Grid Macro="Icon.Button" Row="0" Column="0" MID="Main.Menu" Button.Style="Default" ICON="$(Main.Menu.Button.$(BID).ICON)" MORE="Yes" Button.Type="MenuButton"/>
+			<Grid row="1" column="0">
+				<For Count="$($(MID.Group).Button.Count)"	StartValue="1">
+					<!-- FIXED Button -->
+					<If Value1="None" Compare="IF_NE" Value2="$($(MID.Group).Button.$(CurrentValueAlias).Text)">
+						<Then>
+							<DynamicGrid row="$(CurrentCountAlias)" column="$(CurrentColumnAlias)">
+								<GridFile Macro="Button" ID="Active" BUTTON_Task="" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_TEXT="$($(MID.Group).Button.$(CurrentValueAlias).Text.Active)" BUTTON_PEEKABOO_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias)" BUTTON_PEEKABOO_ID="Select" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect" Button.Type="SubMenuButton" BUTTON_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias).SRC" BUTTON_ID="$(MID.Group).Button.$(CurrentValueAlias).ID"/>
+								<GridFile Macro="Button" ID="Default" BUTTON_Task="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_TEXT="$($(MID.Group).Button.$(CurrentValueAlias).Text)" BUTTON_PEEKABOO_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias)" BUTTON_PEEKABOO_ID="Default" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect" Button.Type="SubMenuButton" BUTTON_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias).SRC" BUTTON_ID="$(MID.Group).Button.$(CurrentValueAlias).ID"/>
+								<Initial ID="Default"/>
+								<MinionSrc ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List"/>
+							</DynamicGrid>
+						</Then>
+					</If>
+				</For>
+				<Peekaboo Namespace="$(MID.Group).Submenu.Display" ID="Display" />
+			</Grid>
+
+			<!-- FIXED SUBMENU BUTTON TASKS  -->
+			<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+				
+				<TaskList ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task">
+					<TaskItem Type="OtherTask" ID="$(TabID).Reset.All.$(MID.Group).Submenu"/>
+					<TaskItem Type="OtherTask" ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Action"/>
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+						<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+					</TaskItem>
+					<TaskItem Type="Marvin" Postpone="600">
+						<DataToInsert ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List" Data="Active"/>
+						<DataToInsert ID="Select" Namespace="$(MID.Group).Button.$(CurrentValueAlias)" Data="Select"/>
+					</TaskItem>
+				</TaskList>
+			</For> 
+
+			<TaskList ID="$(TabID).Hide.All.$(MID.Group).Submenu">
+				<TaskItem Type="Marvin">
+					<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display" Data="Remove"/>
+				</TaskItem>
+			</TaskList>
+			<TaskList ID="$(TabID).Reset.All.$(MID.Group).Submenu">
+				<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List" Data="Default"/>
+					</TaskItem>
+				</For>
+			</TaskList>
+		</GridMacro>
+
+		<!-- MACRO FOR TOGGLE SUBMENU -->
+		<!--
+			Documentation for GridMacro "Toggle":
+
+			This macro defines a toggle menu structure with dynamic button generation and associated tasks. 
+			It is designed to create a grid-based menu system with toggleable buttons and submenus.
+
+			Elements:
+			- <Grid>: Defines the layout of the menu grid and buttons.
+			- <For>: Iterates through the buttons in the menu group to dynamically generate button elements and tasks.
+			- <If>: Conditional logic to check if a button's text is not "None" before creating its grid and tasks.
+			- <DynamicGrid>: Dynamically generates grid elements for buttons with active and default states.
+			- <GridFile>: Defines button properties such as task, text, namespace, and ID for both active and default states.
+			- <Initial>: Sets the initial state of the button to "Default".
+			- <MinionSrc>: Links the button to its corresponding namespace and list.
+
+			Button Tasks:
+			- Default Button Tasks:
+				- Defined in <TaskList> with ID "$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task".
+				- Includes tasks for deselecting the button, activating it, and running a custom task for the first state.
+			- Active Button Tasks:
+				- Defined in <TaskList> with ID "$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task.2".
+				- Includes tasks for running a custom task for the second state, resetting the button to default, and selecting it.
+
+			Submenu Display:
+			- <Peekaboo>: Toggles the visibility of submenu elements based on the namespace and ID.
+
+			Hide All Submenu Task:
+			- <TaskList> with ID "$(TabID).Hide.All.$(MID.Group).Submenu":
+				- Contains a task to remove the display of all submenu elements.
+
+			Parameters:
+			- $(AppDir): Application directory path.
+			- $(Folder): Folder name for alias list.
+			- $(MID.Group): Menu group identifier.
+			- $(CurrentValueAlias): Current button alias in the iteration.
+			- $(TabID): Tab identifier for the menu.
+			- $(Button.Text.Size): Size of the button text.
+
+			Purpose:
+			This macro is used to create a toggleable menu system with dynamic button generation, 
+			allowing for flexible and customizable menu configurations.
+		-->
+		<GridMacro Name="Toggle">
+			<Grid File="$(AppDir)\Menu\DefinitionFiles\Alias.List.$(Folder).Menu.xml" row="0" column="0"/>
+			<Grid Macro="Icon.Button" Row="0" Column="0" MID="Main.Menu" Button.Style="Default" ICON="$(Main.Menu.Button.$(BID).ICON)" MORE="Yes" Button.Type="MenuButton"/>
+			<Grid row="1" column="0">
+				<For Count="$($(MID.Group).Button.Count)"	StartValue="1">
+					<!-- TOGGLE Button -->
+					<If Value1="None" Compare="IF_NE" Value2="$($(MID.Group).Button.$(CurrentValueAlias).Text)">
+						<Then>
+							<DynamicGrid row="$(CurrentCountAlias)" column="$(CurrentColumnAlias)">
+								<GridFile Macro="Button" ID="Active" BUTTON_Task="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task.2" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_TEXT="$($(MID.Group).Button.$(CurrentValueAlias).Text.Active)" BUTTON_PEEKABOO_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias)" BUTTON_PEEKABOO_ID="Select" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect" Button.Type="SubMenuButton" BUTTON_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias).SRC" BUTTON_ID="$(MID.Group).Button.$(CurrentValueAlias).ID"/>
+								<GridFile Macro="Button" ID="Default" BUTTON_Task="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task" BUTTON_TEXT_SIZE="$(Button.Text.Size)" BUTTON_TEXT="$($(MID.Group).Button.$(CurrentValueAlias).Text)" BUTTON_PEEKABOO_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias)" BUTTON_PEEKABOO_ID="Default" BUTTON_PEEKABOO_NAMESPACE2="Button.Deselect" BUTTON_PEEKABOO_ID2="Deselect" Button.Type="SubMenuButton" BUTTON_NAMESPACE="$(MID.Group).Button.$(CurrentValueAlias).SRC" BUTTON_ID="$(MID.Group).Button.$(CurrentValueAlias).ID"/>
+								<Initial ID="Default"/>
+								<MinionSrc ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List"/>
+							</DynamicGrid>
+						</Then>
+					</If>
+				</For>
+				<Peekaboo Namespace="$(MID.Group).Submenu.Display.$(CurrentValueAlias)" ID="Display" />
+			</Grid>
+
+			<!-- TOGGLE SUBMENU BUTTON TASKS  -->
+			<!-- DEFAULT BUTTON TASKS -->
+			<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+			<TaskList ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task">
+				<TaskItem Type="Marvin">
+					<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+					<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+				</TaskItem>
+				<TaskItem Type="Marvin" Postpone="50">
+					<DataToInsert ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List" Data="Active"/>
+				</TaskItem>
+				<!-- Runs Custom task for button's first state -->
+				<TaskItem Type="OtherTask" ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Action" />
+			</TaskList>
+			</For>
+
+			<!-- ACTIVE BUTTON TASKS -->
+			<For Count="$($(MID.Group).Button.Count)" StartValue="1">
+				<TaskList ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Task.2">
+					<!-- Runs Custom task for button's second state -->
+					<TaskItem Type="OtherTask" ID="$(TabID).$(MID.Group).Button.$(CurrentValueAlias).Action.Active"/>
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="$(MID.Group).Button.$(CurrentValueAlias)" Namespace="$(MID.Group).Button.List" Data="Default"/>
+						<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+					</TaskItem>
+					<TaskItem Type="Marvin" Postpone="75">
+						<DataToInsert ID="Select" Namespace="$(MID.Group).Button.$(CurrentValueAlias)" Data="Select"/>
+					</TaskItem>
+				</TaskList>
+			</For> 
+
+			<TaskList ID="$(TabID).Hide.All.$(MID.Group).Submenu">
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="Display" Namespace="$(MID.Group).Submenu.Display" Data="Remove"/>
+					</TaskItem>
+			</TaskList>
+		</GridMacro>
+		
+		<!-- END GRID MACRO SECTION -->
+
+		<!-- START VISIBLE GRID SECTION -->
+		<!-- Home Button -->
+		<!-- 
+			This XML code defines a dynamic grid structure for rendering menu items based on their type. 
+			It uses a loop to iterate through a specified number of menu buttons, dynamically generating 
+			grid elements for each button based on its type. The logic is as follows:
+
+			- A <For> loop iterates through menu buttons, starting from a specified value and ending at a 
+			  defined count (`$(Main.Menu.Button.Count)`).
+			- For each button:
+				- If the button type is "Button", a grid element with the "Icon.Button" macro is created.
+				- If the button type is "Link", a similar grid element with the "Icon.Button" macro is created.
+				- For other types, a grid element is created dynamically using the button's type as the macro 
+				  and additional attributes like folder, group, and icon are set based on the button's properties.
+			- The `row` and `column` attributes determine the grid placement, and other attributes like `MID`, 
+			  `BID`, and `ICON` are dynamically populated based on the button's properties.
+
+			This structure allows for flexible and dynamic menu rendering, supporting various button types 
+			and configurations.
+		-->
+		<For Count="$(Main.Menu.Button.Count)" StartValue="1">	
+			<IF Value1="$(Main.Menu.Button.$(CurrentValueAlias).Type)" Compare="IF_EQ" Value2="Button">
+				<Then>
+					<Grid Macro="Icon.Button" row="$(NextRowAlias)" column="0" MID="Main.Menu" BID="$(CurrentValueAlias)" ICON="$(Main.Menu.Button.$(CurrentValueAlias).ICON)"/>
+				</Then>
+				<Else>
+					<IF Value1="$(Main.Menu.Button.$(CurrentValueAlias).Type)" Compare="IF_EQ" Value2="Link">
+						<Then>
+							<Grid Macro="Icon.Button" row="$(NextRowAlias)" column="0" MID="Main.Menu" BID="$(CurrentValueAlias)" ICON="$(Main.Menu.Button.$(CurrentValueAlias).ICON)"/>
+						</Then>
+						<Else>
+							<Grid Macro="$(Main.Menu.Button.$(CurrentValueAlias).Type)" row="$(NextRowAlias)" column="0" Folder="$(Main.Menu.Button.$(CurrentValueAlias).MID)" MID.Group="$(Main.Menu.Button.$(CurrentValueAlias).MID).Menu" BID="$(CurrentValueAlias)" ICON="$(Main.Menu.Button.$(CurrentValueAlias).ICON)"/>
+						</Else>
+					</IF>
+				</Else>
+			</IF>
+		</For>
+		<!-- END START VISIBLE GRID SECTION -->
+	</Grid>
+	<!-- TASK AREA -->
+	<!-- 
+
+	This XML file defines a series of TaskLists for managing menu and submenu behaviors in the Marvin ExperienceKit application.
+
+	1. TaskList: $(TabID).Hide.All.SubMenu.Groups
+		- Iterates through all main menu buttons.
+		- Hides submenu groups for buttons that are not of type "Button" or "Link".
+		- Sets the "Submenu.Groups" data to 0 in the EXPKit namespace.
+
+	2. TaskList: $(TabID).Hide.All.SubMenus
+		- Iterates through all main menu buttons.
+		- Hides submenus for buttons of type "SubMenu".
+		- Sets the "Submenu" data to 0 in the EXPKit namespace.
+
+	3. TaskList: $(TabID).Reset.Menu.Buttons
+		- Iterates through all main menu buttons.
+		- Resets each menu button to its default choice.
+		- Calls the $(TabID).Hide.All.Submenu.Groups and $(TabID).Hide.All.Submenus tasks.
+
+	4. TaskList: $(TabID).Deselect
+		- Deselects buttons and icons by inserting "Deselect" data into the respective namespaces.
+
+	Purpose:
+	- These TaskLists are used to manage the visibility and state of menu buttons and submenus dynamically based on their type and user interactions.
+	- The structure ensures modularity and reusability of tasks across different menu configurations.
+	-->
+	<TaskList ID="$(TabID).Hide.All.SubMenu.Groups">
+		<For Count="$(Main.Menu.Button.Count)" StartValue="1">
+			<IF Value1="$(Main.Menu.Button.$(CurrentValueAlias).Type)" Compare="IF_NE" Value2="Button">
+				<Then>
+					<IF Value1="$(Main.Menu.Button.$(CurrentValueAlias).Type)" Compare="IF_NE" Value2="Link">
+						<Then>
+							<TaskItem Type="OtherTask" ID="$(TabID).Hide.All.$(Main.Menu.Button.$(CurrentValueAlias).MID).Menu.Submenu"/>
+						</Then>
+					</IF>
+				</Then>
+			</IF>
+		</For>
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="EXPKit" ID="Submenu.Groups" Data="0"/>
+		</TaskItem>
+	
+	</TaskList>
+
+	<TaskList ID="$(TabID).Hide.All.SubMenus">
+		<For Count="$(Main.Menu.Button.Count)" StartValue="1">
+			<IF Value1="$(Main.Menu.Button.$(CurrentValueAlias).Type)" Compare="IF_EQ" Value2="SubMenu">
+				<Then>
+					<TaskItem Type="Marvin">
+						<DataToInsert ID="Display" Namespace="$(Main.Menu.Button.$(CurrentValueAlias).MID).Menu.Submenu.Display" Data="Remove"/>
+					</TaskItem>
+				</Then>
+			</IF>
+		</For>
+		<TaskItem Type="Marvin">
+			<DataToInsert Namespace="EXPKit" ID="Submenu" Data="0"/>
+		</TaskItem>
+	</TaskList>
+
+	<TaskList ID="$(TabID).Reset.Menu.Buttons">
+		<For Count="$(Main.Menu.Button.Count)" StartValue="1">
+			<TaskItem Type="Marvin">
+				<DataToInsert ID="Main.Menu.$(CurrentValueAlias).Choice" Namespace="Main.Menu.$(CurrentValueAlias).Menu" Data="Main.Menu.$(CurrentValueAlias).Default"/>
+			</TaskItem>
+		</For>
+		<TaskItem Type="OtherTask" ID="$(TabID).Hide.All.Submenu.Groups"/>
+		<TaskItem Type="OtherTask" ID="$(TabID).Hide.All.Submenus"/>
+	</TaskList>
+	<TaskList ID="$(TabID).Deselect" >
+		<TaskItem Type="Marvin">
+			<DataToInsert ID="Deselect" Namespace="Button.Deselect" Data="Deselect"/>
+			<DataToInsert ID="Deselect" Namespace="Icon.Deselect" Data="Deselect"/>
+		</TaskItem>
+	</TaskList>
+
+</MarvinExternalFile>	

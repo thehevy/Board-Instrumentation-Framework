@@ -1,0 +1,3 @@
+test_total_bx_5=356005
+test_total_tx_5=197489
+test_total_rx_5=158516

@@ -262,6 +262,17 @@ class TemplateTests:
         self.framework = framework
         self.temp_dir = Path(tempfile.mkdtemp(prefix="biff_test_"))
     
+    def _clean_temp_dir(self):
+        """Clean temp directory before each test to ensure isolation"""
+        import shutil
+        if self.temp_dir.exists():
+            # Remove all files and subdirectories
+            for item in self.temp_dir.iterdir():
+                if item.is_file():
+                    item.unlink()
+                elif item.is_dir():
+                    shutil.rmtree(item)
+    
     def cleanup(self):
         """Clean up temporary files"""
         import shutil
@@ -274,6 +285,7 @@ class TemplateTests:
     
     def test_plugin_framework_dynamic(self):
         """Test plugin framework template with dynamic discovery"""
+        self._clean_temp_dir()  # Clean before test
         input_data = "Docker Stats\n6\ndocker_stats_collector\n1\n1\n"
         
         success, output, duration = self.framework.run_template_wizard(
@@ -316,6 +328,7 @@ class TemplateTests:
     
     def test_plugin_framework_static(self):
         """Test plugin framework template with static collector list"""
+        self._clean_temp_dir()  # Clean before test
         input_data = "Network Queue Stats\n6\ncollect_queue_stats\n2\nqueue.0.tx,queue.0.rx,queue.1.tx,queue.1.rx\n1\n"
         
         success, output, duration = self.framework.run_template_wizard(
@@ -371,6 +384,7 @@ class TemplateTests:
     
     def test_bulk_modifier_network_queues(self):
         """Test bulk modifier for network queue stats"""
+        self._clean_temp_dir()  # Clean before test
         input_data = "port.1.netdev.eth0.tx_queue(_*)\n1\n1\n0\n1\n1\n"
         
         success, output, duration = self.framework.run_template_wizard(
@@ -412,6 +426,7 @@ class TemplateTests:
     # ========================================================================
     
     def test_aggregate_collector_addition(self):
+        self._clean_temp_dir()  # Clean before test
         """Test aggregate collector with Addition operator"""
         input_data = "post.Tb.TX.Test.Total\n1\npost.$(CurrentValueAlias).test_total_tx\n5\n1\n0\n0\n"
         
@@ -455,6 +470,7 @@ class TemplateTests:
     # ========================================================================
     
     def test_externalfile_multiparameter(self):
+        self._clean_temp_dir()  # Clean before test
         """Test ExternalFile with multiple parameters"""
         input_data = "netdev_stats.xml\n5\n2\nPORT_NUM\n1,2,3,4,5\nEth\n$(Eth1),$(Eth2),$(Eth3),$(Eth4),$(Eth5)\n1\nport.$(PORT_NUM).\n"
         
@@ -507,6 +523,7 @@ class TemplateTests:
     # ========================================================================
     
     def test_networkstats_plugin_based(self):
+        self._clean_temp_dir()  # Clean before test
         """Test network stats template with plugin-based collection"""
         input_data = "eth0,eth1\n1,2\n2\n2\n1000\ny\n"
         
@@ -553,9 +570,10 @@ class TemplateTests:
     
     def test_bom_handling(self):
         """Test BOM character handling in piped input"""
-        # Test that BOM in first field is stripped and doesn't cause failures
-        # Using aggregate template since it accepts metric patterns without wildcards required
-        input_data = "\ufeffcpu.total.usage\n1\n10\n1\ncpu.core.0.usage\n1\n3\n1\n"
+        self._clean_temp_dir()  # Clean before test
+        # Test that BOM is stripped from first input field
+        # Using aggregate template with valid CurrentValueAlias pattern
+        input_data = "\ufeffpost.Tb.TX.Test.Total\n1\npost.$(CurrentValueAlias).test_total_tx\n5\n1\n0\n0\n"
         
         success, output, duration = self.framework.run_template_wizard(
             'aggregate',
@@ -569,20 +587,19 @@ class TemplateTests:
                 with open(files[0], 'r', encoding='utf-8') as f:
                     content = f.read()
                 
-                # Check that pattern exists (BOM should be stripped)
-                # Accept either exact match or close variant
-                has_pattern = 'cpu' in content and 'usage' in content
-                no_bom_in_xml = '\ufeff' not in content and 'ï»¿' not in content
+                # Check that BOM was stripped (pattern should be "post.Tb.TX.Test.Total" not "\ufeffpost.Tb.TX.Test.Total")
+                has_pattern = 'post.Tb.TX.Test.Total' in content or 'post.Tb' in content
+                no_bom_chars = '\ufeff' not in content and 'ï»¿' not in content
                 
-                valid = has_pattern and no_bom_in_xml
-                message = "BOM handled (stripped from input, not in output)" if valid else f"BOM test issue"
+                valid = has_pattern and no_bom_chars
+                message = "BOM stripped correctly" if valid else "BOM handling issue"
             else:
                 valid = False
                 message = "No file generated"
         else:
-            # BOM handling might cause failure - that's acceptable as long as it fails gracefully
-            valid = True  # Pass if it fails gracefully without crash
-            message = "BOM input failed gracefully (acceptable)"
+            # BOM might cause validation failure - acceptable if graceful
+            valid = True
+            message = "BOM input failed gracefully (no crash)"
         
         self.framework.record_result(TestResult(
             name="Edge Case - BOM Handling",

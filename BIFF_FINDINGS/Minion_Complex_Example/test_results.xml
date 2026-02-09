@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: 
+#    Demonstration collectors.  Uses a mix of built-in collectors and ones
+#    that are launched as external processes
+#
+#     These collectors will run on any system, does not use PSUTIL, is just 
+#     a bunch of random numbers to move widgets in Marvin
+#
+##############################################################################
+-->
+<ExternalMinionFile>
+	<DynamicCollector Prefix="post.$(PORT_NUM)." DoNotSend="False" OnlySendOnChange="False" Frequency="1000">
+		<File>testdata/test_results_$(PORT_NUM).txt</File>
+		<Precision>0</Precision>
+	</DynamicCollector>
+	<DynamicCollector Prefix="post.$(PORT_NUM)." DoNotSend="False" OnlySendOnChange="False" Frequency="5000">
+		<File>testdata/test_ethtool_stats_results_$(PORT_NUM).txt</File>
+		<Precision>0</Precision>
+	</DynamicCollector>
+	<DynamicCollector Prefix="post.$(PORT_NUM)." DoNotSend="False" OnlySendOnChange="False" Frequency="1000">
+		<File>testdata/test_total_$(PORT_NUM).txt</File>
+		<Precision>0</Precision>
+	</DynamicCollector>
+
+	<DynamicCollector  Prefix="previous.$(PORT_NUM)." DoNotSend="False" OnlySendOnChange="False" Frequency="1000">
+		<File>previous_run/test_results_$(PORT_NUM).txt</File>
+		<Precision>0</Precision>
+	</DynamicCollector>
+	<DynamicCollector Prefix="previous.$(PORT_NUM)." DoNotSend="False" OnlySendOnChange="False" Frequency="1000">
+		<File>previous_run/test_ethtool_stats_results_$(PORT_NUM).txt</File>
+		<Precision>0</Precision>
+	</DynamicCollector>
+	<DynamicCollector Prefix="previous.$(PORT_NUM)." DoNotSend="False" OnlySendOnChange="False" Frequency="1000">
+		<File>previous_run/test_total_$(PORT_NUM).txt</File>
+		<Precision>0</Precision>
+	</DynamicCollector>
+</ExternalMinionFile>

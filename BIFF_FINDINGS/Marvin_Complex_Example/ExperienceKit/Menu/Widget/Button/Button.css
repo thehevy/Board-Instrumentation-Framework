@@ -1,0 +1,81 @@
+/*
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: 
+#    
+#
+##############################################################################
+*/
+
+*{
+    -svg-main-color:-fx-base;
+    -hover-color:#00c7fd;
+}
+
+
+
+.label {
+     -fx-background-color: -svg-main-color;
+	 -fx-font-size:1.5em;
+     -fx-text-fill:black;
+	 -fx-font-family:"Swiss911 UCm BT";
+}
+
+.label:hover
+{
+    -fx-background-color: -hover-color;
+	-fx-text-fill:white;
+}                                
+
+#NoHover
+{
+    -hover-color:-svg-main-color;
+}
+
+#MenuButton
+{	-fx-background-color: white;
+	 -fx-font-size:1.5em;
+     -fx-text-fill:#0068b5;
+	 -fx-padding: 6 12 6 60;
+}
+
+#MenuButton:hover
+{	 -fx-background-color: #00c7fd;
+	 -fx-font-size:1.5em;
+     -fx-text-fill:#FFFFFF;
+}
+
+#SelectedButton
+{	-fx-background-color:  #0068b5;
+	 -fx-font-size:1.5em;
+     -fx-text-fill:#FFFFFF;
+	 -fx-padding: 6 12 6 60;
+	 -fx-border-color: #00c7fd;
+
+}
+
+#SubMenuButton
+{	-fx-background-color: #F3F3F3;
+	 -fx-font-size:1.5em;
+     -fx-text-fill:#0071C5;
+	 -fx-padding: 6 12 6 60;
+}
+
+#SubMenuButton:hover
+{	 -fx-background-color: #00AEEF;
+	 -fx-font-size:1.5em;
+     -fx-text-fill:#FFFFFF;
+}

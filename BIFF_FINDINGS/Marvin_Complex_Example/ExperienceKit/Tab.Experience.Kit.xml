@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: Main Tab
+#    Called by: App.Config.xml
+#
+##############################################################################
+-->
+<MarvinExternalFile>
+	<Tab>
+		<Title>$(TabTitle)</Title>
+		<AliasList>
+			<Import>$(AppDir)\DefinitionFiles\Alias.List.Global.xml</Import>
+		</AliasList>
+		<Grid Row="0" column="0" width="$(Grid.Base.Width)" height="$(Grid.Base.Height)">
+			<Grid File="$(AppDir)\Header\Grid.Header.xml" row="0" column="0" Width="$(CANVAS_WIDTH)" Height="90" Align="NW"/>
+			<Grid row="1"
+					column="0"
+					vgap="0"
+					hgap="0">
+
+				<Grid File="$(AppDir)/Grid.Menu.xml"
+						row="0"
+						column="0"
+						Width="$(Menu.Width)"
+						height="$(Grid.Main.Height)"
+						Align="NW"/>
+				<Widget File="Image\ImageScale_No_Ratio.xml"
+						row="0"
+						column="1"
+						Width="$(Grid.Main.Width)"
+						Height="$(Grid.Main.Height)"
+						Align="N">
+					<Source>$(AppDir)\Images\Demo.Background.jpeg</Source>
+				</Widget>		  
+				<Grid File="$(AppDir)\Grid.Main.Display.xml"
+						row="0"
+						column="1"
+						Width="$(Grid.Main.Width)"
+						Height="$(Grid.Main.Height)"
+						vgap="$(Grid.Base.vgap)"
+						hgap="$(Grid.Base.hgap)"
+						Align="N">
+					<PaddingOverride top="$(Grid.Base.Padding.Height)"/>
+				</Grid>
+			</Grid>
+		</Grid>
+	</Tab>
+</MarvinExternalFile>

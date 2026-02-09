@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: 
+#    Demonstration collectors.  Uses a mix of built-in collectors and ones
+#    that are launched as external processes
+#
+#     These collectors will run on any system, does not use PSUTIL, is just 
+#     a bunch of random numbers to move widgets in Marvin
+#
+##############################################################################
+-->
+<Minion>
+	<AliasList>
+		<Alias BytesPerSec2MBPS=".000782"/>
+		<Alias BytesPerSec2GBPS="0.00000000782"/> 
+		<Alias MyFreq="2000"/>
+		<Alias MyNetDevFreq="2000"/>
+		<Alias MyTestFreq="20000"/>
+		<Alias NUM_PORTS="5"/>
+
+		<Alias Eth1="ens1np0"/>
+		<Alias Eth2="ens6np0"/>
+		<Alias Eth3="ens7np0"/>
+		<Alias Eth4="ens28np0"/>
+		<Alias Eth5="ens31np0"/>
+	</AliasList>
+	<Namespace>
+		<Name>SUT</Name>
+		<DefaultFrequency>$(MyFreq)</DefaultFrequency>
+		<TargetConnection IP="10.166.85.54" PORT="54322"/>
+
+		<DynamicCollector DoNotSend="False" OnlySendOnChange="True" Frequency="10000">
+			<File>minion_status.log</File>
+			<Precision>0</Precision>
+		</DynamicCollector>
+
+		<Actor ID="start_netperf_test_param">
+			<Executable>$(WORKING_DIR)/start_test_run.sh</Executable>
+			<!-- ./run_demo.sh -r 5 -p "1 2 3 4 5" -l 10 -d 30 -t tx -->
+		</Actor>
+
+		<Actor ID="start_netperf_test_tx">
+			<Executable>$(WORKING_DIR)/start_test_run.sh</Executable>
+			<!-- ./run_demo.sh -r 5 -p "1 2 3 4 5" -l 10 -d 30 -t tx -->
+			<Param>5</Param>
+			<Param>1 2 3 4 5</Param>
+			<Param>10</Param>
+			<Param>30</Param>
+			<Param>tx</Param>
+		</Actor>
+		
+		<Actor ID="start_netperf_test_rx">
+			<Executable>$(WORKING_DIR)/start_test_run.sh</Executable>
+			<!-- ./run_demo.sh -r 5 -p "1 2 3 4 5" -l 10 -d 30 -t rx -->
+			<Param>5</Param>
+			<Param>1 2 3 4 5</Param>
+			<Param>10</Param>
+			<Param>30</Param>
+			<Param>rx</Param>
+		</Actor>
+
+		<Actor ID="start_netperf_test_bx">
+			<Executable>$(WORKING_DIR)/start_test_run.sh</Executable>
+			<!-- ./run_demo.sh -r 5 -p "1 2 3 4 5" -l 10 -d 30 -t bx -->
+			<Param>5</Param>
+			<Param>1 2 3 4 5</Param>
+			<Param>10</Param>
+			<Param>30</Param>
+			<Param>bx</Param>
+		</Actor>
+	</Namespace>
+</Minion>

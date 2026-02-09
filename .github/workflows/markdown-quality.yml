@@ -1,0 +1,125 @@
+name: Markdown Quality Check
+
+on:
+  pull_request:
+    paths:
+      - '**.md'
+  push:
+    branches:
+      - master
+    paths:
+      - '**.md'
+  workflow_dispatch:
+
+jobs:
+  markdown-lint:
+    name: Check Markdown Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+        
+      - name: Run markdownlint
+        run: |
+          markdownlint \
+            --config .github/agent-specs/.markdownlint.json \
+            --ignore node_modules \
+            --ignore build \
+            '**/*.md' || true
+        continue-on-error: true
+        
+      - name: Check character encoding
+        run: |
+          echo "Checking for UTF-8 encoding issues..."
+          
+          # Check for common encoding problems
+          if grep -r -P '[\x80-\xFF]{2,}' --include='*.md' . 2>/dev/null | \
+             grep -v -E '(node_modules|build|\.git)' ; then
+            echo "⚠️  Potential encoding issues found"
+            echo "Run: .github/scripts/fix-encoding.sh to fix"
+          else
+            echo "✓ No encoding issues detected"
+          fi
+        shell: bash
+        continue-on-error: true
+        
+      - name: Check trailing whitespace
+        run: |
+          echo "Checking for trailing whitespace..."
+          
+          if grep -r -n '\s\+$' --include='*.md' . 2>/dev/null | \
+             grep -v -E '(node_modules|build|\.git)' ; then
+            echo "⚠️  Trailing whitespace found"
+            echo "Fix with: sed -i 's/[[:space:]]*$//' file.md"
+            exit 1
+          else
+            echo "✓ No trailing whitespace"
+          fi
+        shell: bash
+        
+      - name: Check line lengths
+        run: |
+          echo "Checking for excessively long lines (>120 chars)..."
+          
+          violations=0
+          while IFS= read -r file; do
+            long_lines=$(awk 'length > 120 { count++ } END { print count+0 }' "$file")
+            if [ "$long_lines" -gt 0 ]; then
+              echo "⚠️  $file: $long_lines lines exceed 120 characters"
+              violations=$((violations + long_lines))
+            fi
+          done < <(find . -name '*.md' -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/build/*')
+          
+          if [ "$violations" -gt 0 ]; then
+            echo ""
+            echo "Total violations: $violations"
+            echo "See: .github/agent-specs/markdown-quality-agent.md for fixing guidelines"
+          else
+            echo "✓ All lines within 120 character limit"
+          fi
+        shell: bash
+        continue-on-error: true
+        
+      - name: Generate quality report
+        if: always()
+        run: |
+          echo "## Markdown Quality Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Statistics" >> $GITHUB_STEP_SUMMARY
+          
+          total_files=$(find . -name '*.md' -not -path '*/node_modules/*' -not -path '*/.git/*' | wc -l)
+          echo "- Total markdown files: $total_files" >> $GITHUB_STEP_SUMMARY
+          
+          total_lines=$(find . -name '*.md' -not -path '*/node_modules/*' -not -path '*/.git/*' -exec wc -l {} + | tail -1 | awk '{print $1}')
+          echo "- Total lines: $total_lines" >> $GITHUB_STEP_SUMMARY
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Recommendations" >> $GITHUB_STEP_SUMMARY
+          echo "- Review warnings above" >> $GITHUB_STEP_SUMMARY
+          echo "- Use [markdown-quality-agent](.github/agent-specs/markdown-quality-agent.md) for fixes" >> $GITHUB_STEP_SUMMARY
+          echo "- Critical: Fix encoding and trailing spaces" >> $GITHUB_STEP_SUMMARY
+        shell: bash
+
+  markdown-link-check:
+    name: Check Markdown Links
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Check links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          config-file: '.github/agent-specs/.markdown-link-check.json'
+        continue-on-error: true

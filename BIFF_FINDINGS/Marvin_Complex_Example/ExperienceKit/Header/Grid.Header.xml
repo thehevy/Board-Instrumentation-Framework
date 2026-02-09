@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: Intel Header
+#    Called by: Tab.Experience.Kit.xml
+#
+##############################################################################
+-->
+<MarvinExternalFile>
+	<!-- Add to Tab for Header -->
+	<!-- <Grid File="$(AppDir)\Grid.Header.xml" row="0" column="0" Width="$(CANVAS_WIDTH)" Height="90" Align="W"/> -->
+	<AliasList>
+<!-- 		<Alias Logo.Width="68.4"/>
+		<Alias Logo.Height="26.5244"/>
+		<Alias Box.Width="4.9587"/>
+		<Alias Box.Height="4.9587"/> -->
+		<Alias Logo.Width="100"/>
+		<Alias Logo.Height="MarvinMath($(Logo.Width),*,0.387784759056648,15)"/>
+		<Alias Box.Size="0.0724952484387727"/>
+	</AliasList>
+	<Grid Align="NW">
+		<StyleOverride>
+			<Item>-fx-background-color: linear-gradient(to right, #003C71 32%, #0071C5 78%, #00AEEF 95%);</Item>
+		</StyleOverride>
+		<Widget File="Spacer.xml"
+				Height="100%g"
+				Width="40"
+				row="0"
+				column="0"/>
+		<Grid Row="0"
+			Column="1"
+			Width="$(Logo.Width)"
+		    Height="$(Logo.Height)"
+			Align="NW">
+		<StyleOverride>
+			<Item>-fx-background-color: transparent</Item>
+		</StyleOverride>
+
+		<Widget File="$(AppDir)/Header/Widget/Logo/Logo.xml"
+		        row="0"
+		        column="0"
+		        Width="$(Logo.Width)"
+		    Height="$(Logo.Height)">
+			<Shape>M1.8,5.1h5v5h-5Zm.13,25.8V13.06h4.7V30.9Zm35.25.18a13.86,13.86,0,0,1-3.58-.39,5,5,0,0,1-2.3-1.29A5.13,5.13,0,0,1,30.05,27a15.26,15.26,0,0,1-.37-3.67V6.11h4.7v7h3.4v4h-3.4v6.24A10.16,10.16,0,0,0,34.49,25,1.94,1.94,0,0,0,35,26.11a2,2,0,0,0,1.11.49,12.47,12.47,0,0,0,1.7.11v4.37ZM60,30.9V4.74h4.7V30.9ZM27.11,20.77V30.9H22.37V21.47h0v0h0a5.3,5.3,0,0,0-1-3.42,3.8,3.8,0,0,0-3.08-1.23,4,4,0,0,0-3,1.27,5.34,5.34,0,0,0-1.24,3.7c0,.1,0,.21,0,.32V30.9H9.37V13.06H14v2.56l.25-.33a6.55,6.55,0,0,1,2.34-1.9,6.83,6.83,0,0,1,3.08-.69,7.13,7.13,0,0,1,5.47,2.12A8.49,8.49,0,0,1,27.11,20.77Zm30.45,2.86h-14l.05.16a4.49,4.49,0,0,0,1.69,2.48,5.43,5.43,0,0,0,3.24.91,6.22,6.22,0,0,0,4.52-2l3.38,2.57a10.12,10.12,0,0,1-7.93,3.5,9.74,9.74,0,0,1-3.82-.73,8.78,8.78,0,0,1-3-2,9,9,0,0,1-1.93-2.94,9.58,9.58,0,0,1-.7-3.63,9.15,9.15,0,0,1,.73-3.62,9.29,9.29,0,0,1,4.93-4.93,9.18,9.18,0,0,1,3.62-.73,9.7,9.7,0,0,1,3.74.71,8.69,8.69,0,0,1,2.9,2,9.2,9.2,0,0,1,1.89,2.95A9.58,9.58,0,0,1,57.56,22ZM53.05,20.3c0-1.3-1.5-3.58-4.73-3.58S43.59,19,43.59,20.31Zm17.15,9a1.67,1.67,0,0,1-.14.67,1.76,1.76,0,0,1-.37.56,1.9,1.9,0,0,1-.55.37,1.72,1.72,0,0,1-1.36,0,1.9,1.9,0,0,1-.55-.37,2,2,0,0,1-.37-.56,1.67,1.67,0,0,1-.14-.67,1.72,1.72,0,0,1,.14-.68,1.9,1.9,0,0,1,.37-.55,1.72,1.72,0,0,1,.55-.37,1.72,1.72,0,0,1,1.36,0,1.74,1.74,0,0,1,1.06,1.6Zm-.31,0a1.51,1.51,0,0,0-.11-.56,1.57,1.57,0,0,0-.31-.45A1.39,1.39,0,0,0,69,28a1.48,1.48,0,0,0-1.12,0,1.39,1.39,0,0,0-.45.31,1.57,1.57,0,0,0-.31.45,1.51,1.51,0,0,0-.11.56,1.46,1.46,0,0,0,.11.55,1.49,1.49,0,0,0,.31.46,1.57,1.57,0,0,0,.45.31,1.48,1.48,0,0,0,1.12,0,1.57,1.57,0,0,0,.45-.31,1.49,1.49,0,0,0,.31-.46A1.46,1.46,0,0,0,69.89,29.33Zm-.59,1h-.38l-.5-.81h-.26v.81h-.37v-2h.77a.73.73,0,0,1,.53.16.57.57,0,0,1,.17.44.5.5,0,0,1-.13.39.6.6,0,0,1-.34.16Zm-.56-1.16a.2.2,0,0,0,.11-.09.25.25,0,0,0,.05-.15.25.25,0,0,0-.05-.16.24.24,0,0,0-.11-.08.33.33,0,0,0-.15,0h-.43v.56h.43A.57.57,0,0,0,68.74,29.15Z
+			</Shape>
+			<StyleOverride ID="NoHover">
+<!-- 				<Item>-svg-main-color:#FFFFFF</Item>		
+ -->				<Item>-svg-main-color: radial-gradient(focus-distance 0% , center 4% 10% , radius 21% , #00c6fd 0%, #00c6fd 50%, white 51%)</Item>
+			</StyleOverride>
+		</Widget>
+<!-- 				<Widget File="$(AppDir)/Header/Widget/Logo/Logo.xml"
+		        row="0"
+		        column="0"
+		        width="$(Box.Size)"
+				Height="$(Box.Size)"
+				Align="NW">
+			<Shape>M1.8,5.1h5v5h-5Z</Shape>
+			<StyleOverride ID="NoHover">
+				<Item>-svg-main-color:#00ffbf</Item>		
+			</StyleOverride>
+		</Widget> -->
+		</Grid>	
+	</Grid>
+</MarvinExternalFile>	

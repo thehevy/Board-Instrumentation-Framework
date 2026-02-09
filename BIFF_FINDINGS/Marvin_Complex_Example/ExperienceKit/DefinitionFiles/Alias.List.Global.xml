@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2017 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: Primary Alias File
+#
+##############################################################################
+-->
+<MarvinExternalFile>
+	<AliasList>
+		<Alias Scale.Height="MarvinMath($(CANVAS_HEIGHT),div,900,2)"/>
+		<Alias Scale.Width="MarvinMath($(CANVAS_WIDTH),div,1600,2)"/>
+		<Alias Text.Size="MarvinMath($(Scale.Width),MIN,$(Scale.Height),2)"/>
+	
+		<Alias Intel_Font="&quot;Intel Clear&quot;"/>
+		<Import>$(AppDir)\Menu\DefinitionFiles\Alias.List.Main.Menu.xml</Import>		
+
+		<!-- Primary Colors -->
+		<Alias Intel_Color1="#0068b5"/>
+		<Alias Intel_Color2="#FFFFFF"/>
+
+		<!-- Accent Colors -->
+		<Alias Intel_Color3="#fec918"/>
+		<Alias Intel_Color4="#005b85"/>
+		<Alias Intel_Color5="#00c7fd"/>
+		<Alias Intel_Color6="#8bae46"/>
+		<Alias Intel_Color7="#e96115"/>
+		<Alias Intel_Color8="#ff8f51"/>
+
+		<!-- UI Component Background Colors -->
+		<Alias Intel_Color9="#262626"/>
+		<Alias Intel_Color10="#525252"/>
+		<Alias Intel_Color11="#aeaeae"/>
+		<Alias Intel_Color12="#e9e9e9"/>
+		<Alias Intel_Color13="#f0f1f3"/>
+		<Alias Button.Color="$(Intel_Color5)"/>
+		
+		<Alias Intel.Font="&quot;Intel Clear&quot;"/>
+
+		<!-- Classic Blue Palette -->
+		<Alias Intel.Classic.Blue.Tint.2="#76CEFF"/>
+		<Alias Intel.Classic.Blue.Tint.1="#00A3F6"/>
+		<Alias Intel.Classic.Blue="#0068B5"/>
+		<Alias Intel.Classic.Blue.Shade.1="#004A86"/>
+		<Alias Intel.Classic.Blue.Shade.2="#00285A"/>
+		
+		<!-- Energy Blue Palette -->
+		<Alias Intel.Energy.Blue.Tint.2="#B4F0FF"/>
+		<Alias Intel.Energy.Blue.Tint.1="#7BDEFF"/>
+		<Alias Intel.Energy.Blue="#00C7FD"/>
+		<Alias Intel.Energy.Blue.Shade.1="#0095CA"/>
+		<Alias Intel.Energy.Blue.Shade.2="#005B85"/>
+		
+		<!-- Dedicated Neutrals -->
+		<!-- Carbon Palette -->
+		<Alias Intel.Carbon.Tint.2="#E9E9E9"/>
+		<Alias Intel.Carbon.Tint.1="#AEAEAE"/>
+		<Alias Intel.Carbon="#808080"/>
+		<Alias Intel.Carbon.Shade.1="#525252"/>
+		<Alias Intel.Carbon.Shade.2="#262626"/>
+		
+		<!-- Blue Steel Palette -->
+		<Alias Intel.Blue.Steel.Tint.2="#B9D6E5"/>
+		<Alias Intel.Blue.Steel.Tint.1="#86B3CA"/>
+		<Alias Intel.Blue.Steel="#548FAD"/>
+		<Alias Intel.Blue.Steel.Shade.1="#41728A"/>
+		<Alias Intel.Blue.Steel.Shade.2="#183544"/>
+		
+		<!-- Natural -->
+		<!-- Geode Palette -->
+		<Alias Intel.Geode.Tint.2="#EEC3F7"/>
+		<Alias Intel.Geode.Tint.1="#CC94DA"/>
+		<Alias Intel.Geode="#8F5DA2"/>
+		<Alias Intel.Geode.Shade.1="#653171"/>
+	
+		<!-- Rust Palette -->
+		<Alias Intel.Rust.Tint.2="#FFC599"/>
+		<Alias Intel.Rust.Tint.1="#FF8F51"/>
+		<Alias Intel.Rust="#E96115"/>
+		<Alias Intel.Rust.Shade.1="#B24501"/>
+		
+		<!-- Moss Palette -->
+		<Alias Intel.Moss.Tint.2="#D7F3A2"/>
+		<Alias Intel.Moss.Tint.1="#B1D272"/>
+		<Alias Intel.Moss="#8BAE46"/>
+		<Alias Intel.Moss.Shade.1="#708541"/>
+		<Alias Intel.Moss.Shade.2="#515A3D"/>
+
+		<!-- Electric -->
+		<!-- Cobalt Palette -->
+		<Alias Intel.Cobalt.Tint.2="#98A1FF"/>
+		<Alias Intel.Cobalt.Tint.1="#5B69FF"/>
+		<Alias Intel.Cobalt="#1E2EB8"/>
+		<Alias Intel.Cobalt.Shade.1="#000F8A"/>
+		<Alias Intel.Cobalt.Shade.2="#000864"/>
+		
+		<!-- Coral Palette -->
+		<Alias Intel.Coral.Tint.2="#FFB6B9"/>
+		<Alias Intel.Coral.Tint.1="#FF848A"/>
+		<Alias Intel.Coral="#FF5662"/>
+		<Alias Intel.Coral.Shade.1="#C81326"/>
+		
+		<!-- Daisy Palette -->
+		<Alias Intel.Daisy.Tint.1="#FFE17A"/>
+		<Alias Intel.Daisy="#FEC91B"/>
+		<Alias Intel.Daisy.Shade.1="#EDB200"/>
+		<Alias Intel.Daisy.Shade.2="#C98F00"/>
+
+		<!-- Header Size -->
+		<Alias Header.Height="90"/>	
+		
+		<!-- Slide Image Area -->
+		<Alias Slide.Image.Width="95%g"/>
+		<Alias Slide.Image.Height="95%g"/>
+
+		<Alias Grid.Base.Width="$(CANVAS_WIDTH)"/>
+		<Alias Grid.Base.Height="$(CANVAS_HEIGHT)"/>
+		<Alias Grid.Main.Width="MarvinMath($(Grid.Base.Width),-,$(Menu.Width))"/>
+		<Alias Grid.Main.Height="MarvinMath($(Grid.Base.Height),-,$(Header.Height))"/>
+		
+		<Alias Grid.Base.vgap="0"/>
+		<Alias Grid.Base.hgap="0"/>
+		<Alias Grid.Base.Padding.Height="10"/>
+	</AliasList>
+</MarvinExternalFile>	
+

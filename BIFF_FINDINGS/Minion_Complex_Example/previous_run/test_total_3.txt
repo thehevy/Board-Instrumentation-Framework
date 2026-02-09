@@ -1,0 +1,3 @@
+test_total_bx_3=384548
+test_total_tx_3=197928
+test_total_rx_3=186620

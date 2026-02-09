@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: Main Display Panel
+#    Called by: Tab.Experience.Kit.xml
+#
+##############################################################################
+-->
+<MarvinExternalFile>
+	<Grid>
+		<!-- START GRID MACRO SECTION -->
+		<!-- Individual Slides -->
+		<GridMacro Name="Slide.View">
+			
+			<IF Value1="$(File.Type)" Compare="IF_EQ" Value2="Image">
+				<Then>
+					<Grid row="0" column="0" width="$(Slide.Image.Width)" height="$(Slide.Image.Height)">
+<!-- 						<IF Value1="$(Slide.Number)" Compare="IF_NE" Value2="Home">
+							<Then>
+								<StyleOverride>
+									<Item>-fx-background-color: white; </Item>
+								</StyleOverride>
+							</Then>
+						</IF> -->
+						<Widget File="Image\ImageScale.xml" row="0" column="0" width="100%g" height="100%g">
+							
+							<Source>$(AppDir)\InformationArea\$(Slide.Folder)\$(Slide.Number).png</Source>
+						</Widget>
+					</Grid>
+				</Then>
+				<Else>
+					<IF Value1="$(File.Type)" Compare="IF_EQ" Value2="Grid">
+						<Then>
+							<Grid File="$(AppDir)\InformationArea\$(Slide.Folder)\$(Slide.Number)\Grid.xml" row="0" column="0" width="$(Slide.Image.Width)" height="$(Slide.Image.Height)"/>
+						</Then>
+					</IF>
+				</Else>
+			</IF>
+		</GridMacro>
+
+		<!-- Slide Groups -->
+		<GridMacro Name="Slide.Folder.View">
+			<DynamicGrid row="0" column="0" Align="N" Width="100%g" Height="100%g">
+				<For Count="$($(Folder).Menu.Submenu.$(Folder.Number).Button.Count)" StartValue="1">
+					<GridFile Macro="Slide.View" ID="$(Slide.Folder).$(CurrentValueAlias)" Slide.Number="$(CurrentValueAlias)" File.Type="$($(Folder).Menu.Submenu.$(Folder.Number).Button.$(CurrentValueAlias).Type)"/>
+				</For>
+				<MinionSrc ID="Display.Folder.$(Slide.Folder)" Namespace="Display.Panel"/>
+				<Initial ID="$(Slide.Folder).1"/>
+			</DynamicGrid>
+		</GridMacro>
+
+		<!-- Slide Groups -->
+		<GridMacro Name="Group.Slide.Folder">
+			<DynamicGrid row="0" column="0" Align="N" Width="100%g" Height="100%g">
+				<IF Value1="$($(Folder).Menu.Button.Count)" Compare="If_GT" Value2="0">
+					<Then>
+						<For Count="$($(Folder).Menu.Button.Count)" StartValue="1">
+							<IF Value1="$($(Folder).Menu.Submenu.$(CurrentValueAlias).Button.Count)" Compare="If_GT" Value2="0">
+								<Then>
+									<GridFile Macro="Slide.Folder.View" ID="$(Folder).$(CurrentValueAlias)" Slide.Folder="$(Folder).$(CurrentValueAlias)" Folder.Number="$(CurrentValueAlias)"/>
+								</Then>
+							</IF>
+						</For>
+					</Then>
+				</IF>
+				<MinionSrc ID="Group.Slide.$(Folder)" Namespace="Display.Panel"/>
+				<Initial ID="$(Folder).1"/>
+			</DynamicGrid>
+		</GridMacro>
+		<!-- END GRID MACRO SECTION -->
+
+		<!-- START VISIBLE GRID SECTION -->
+		<DynamicGrid row="0" column="0" Align="N" Width="98%g" Height="98%g">
+			<GridFile Macro="Slide.View" Slide.Folder="Main" ID="Main.Menu" Slide.Number="home" File.Type="Image"/>
+			<For Count="MarvinMath($(Main.Menu.Button.Count),-,1)" StartValue="2">
+				<IF Value1="$(Main.Menu.Button.$(CurrentValueAlias).Type)" Compare="IF_EQ" Value2="SubMenu">
+					<Then>
+						<GridFile Macro="Group.Slide.Folder" ID="Slides.$(Main.Menu.Button.$(CurrentValueAlias).MID)" Folder="$(Main.Menu.Button.$(CurrentValueAlias).MID)"/>
+					</Then>
+					<Else>
+						<IF Value1="$(Main.Menu.Button.$(CurrentValueAlias).Type)" Compare="IF_EQ" Value2="Link">
+							<Then>
+								<GridFile Macro="Slide.View" Slide.Folder="Main" ID="Link" Slide.Number="home" File.Type="Image"/>
+							</Then>
+							<Else>
+								<GridFile Source="$(AppDir)\$(Main.Menu.Button.$(CurrentValueAlias).MID)\Grid.$(Main.Menu.Button.$(CurrentValueAlias).MID).xml" ID="$(Main.Menu.Button.$(CurrentValueAlias).MID)" MID="$(Main.Menu.Button.$(CurrentValueAlias).MID)"/>
+							</Else>
+						</IF>
+					</Else>
+				</IF>
+			</For>
+		<!-- 	<GridFile Source="$(AppDir)\Legal\Grid.Legal.xml" ID="Legal"/> -->
+			<MinionSrc ID="Display.Grid" Namespace="Display.Panel"/>
+			<Initial ID="Main.Menu"/>
+		</DynamicGrid>
+	</Grid>
+
+</MarvinExternalFile>

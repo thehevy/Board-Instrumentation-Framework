@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2017 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: Info Menu, and Info Submenu Button Names
+#	 Called by: Alias.List.Main.Menu
+#
+#	HOW TO USE THIS ALIAS LIST
+#	
+#	Alias List Name is defined in the $(AppDir)\Menu\DefinitionFiles\Alias.List.Main.Menu.xml file as MID
+#	Number of Main Buttons to be created is defined in the $(AppDir)\Menu\DefinitionFiles\Alias.List.Main.Menu.xml file as MID.Menu.Button.Count
+#	For the number of Main Buttons that is defined, they will need the following definition: 
+#	Text to be displayed: MID.Menu.Button.#.Text=
+#	A Submenu Button List Button Count: MID.Menu.Submenu.#.Button.Count=
+#	Each Submenu Button will need Text to be displayed: MID.Menu.Submenu.1.Button.1.Text=
+#	Each Submenu Button that is defined, needs a corresponding .png file located in the corresponding folder. $(AppDir)\InformationArea\MID.Submenu#\#.png
+#	For ease of use, make a copy of this file, and do a find/replace all for the default MID of Info
+#
+#	Example of all Alias' and file formats using EXAMPLE, as the MID
+#	<Alias EXAMPLE.Menu.Button.Count="2"/> defined in $(AppDir)\Menu\DefinitionFiles\Alias.List.Main.Menu.xml
+#
+#	<Alias EXAMPLE.Menu.Button.1.Text="Example Button Number 1"/>
+#	<Alias EXAMPLE.Menu.Button.2.Text="Example Button Number 2"/>
+#
+#	<Alias EXAMPLE.Menu.Submenu.1.Button.Count="2"/>
+#	<Alias EXAMPLE.Menu.Submenu.1.Button.1.Text="Submenu 1 button 1"/> with Image file 1.png in folder $(AppDir)\InformationArea\EXAMPLE.1\1.png
+#	<Alias EXAMPLE.Menu.Submenu.1.Button.2.Text="Submenu 1 button 2/>  with Image file 2.png in folder $(AppDir)\InformationArea\EXAMPLE.1\2.png
+#
+#	<Alias EXAMPLE.Menu.Submenu.2.Button.Count="1"/>
+#	<Alias EXAMPLE.Menu.Submenu.2.Button.1.Text="Submenu 2 button 1"/> with Image file 1.png in folder $(AppDir)\InformationArea\EXAMPLE.2\1.png
+#
+#	File Type can also be changed for each button. Defailt file Type is Image (.png files)
+#	Current Options are: Image ; Grid
+#	Only add this definition, if changing from a Image
+#	<Alias Example.Menu.Submenu.1.Button.1.Type="Grid"/>
+#
+##############################################################################
+-->
+<MarvinExternalFile>
+	<AliasList>
+		<!-- Main Button List Names -->
+		<Alias Info.Menu.Button.1.Text="Intel Vision Demo"/>
+		<Alias Info.Menu.Button.2.Text=""/>
+		<Alias Info.Menu.Button.3.Text=""/>
+		<Alias Info.Menu.Button.4.Text=""/>
+		<Alias Info.Menu.Button.5.Text=""/>
+		<Alias Info.Menu.Button.6.Text=""/>
+		<Alias Info.Menu.Button.7.Text=""/>
+		<Alias Info.Menu.Button.8.Text=""/>
+		<Alias Info.Menu.Button.9.Text=""/>
+		<Alias Info.Menu.Button.10.Text=""/>
+		
+		<!-- SUBMENU 1 -->
+		<Alias Info.Menu.Submenu.1.Button.Count="6"/>
+		
+		<!-- Button Names -->
+		<Alias Info.Menu.Submenu.1.Button.1.Text="Landing Page"/>
+		<Alias Info.Menu.Submenu.1.Button.2.Text="Introduction"/>
+		<Alias Info.Menu.Submenu.1.Button.3.Text="Queuing Problems"/>	
+		<Alias Info.Menu.Submenu.1.Button.4.Text="Intel Dynamic Load Balancer"/>
+		<Alias Info.Menu.Submenu.1.Button.5.Text="Application Device Queues"/>
+		<Alias Info.Menu.Submenu.1.Button.6.Text="E830 Workload Configuration"/>
+		<Alias Info.Menu.Submenu.1.Button.7.Text="Latency and Throughput"/>
+		<Alias Info.Menu.Submenu.1.Button.8.Text="Proven Performance"/>
+		<Alias Info.Menu.Submenu.1.Button.9.Text="E830 Solution Briefs"/>
+		<Alias Info.Menu.Submenu.1.Button.10.Text="Redis Demo Configuration"/>	
+						
+
+		<!-- Changes what the Button will display -->
+		<Alias Info.Menu.Submenu.1.Button.9.Type="Grid"/>		
+
+		<!-- SUBMENU 2 -->
+		<Alias Info.Menu.Submenu.2.Button.Count="1"/>
+		
+		<!-- Button Names -->
+		<Alias Info.Menu.Submenu.2.Button.1.Text="E830 Essentials"/>
+		
+		<!-- SUBMENU 3 -->
+		<Alias Info.Menu.Submenu.3.Button.Count="3"/>
+		
+		<!-- Button Names -->
+		<Alias Info.Menu.Submenu.3.Button.1.Text="E830 Essentials"/>
+		<Alias Info.Menu.Submenu.3.Button.2.Text="Multiple Tiers"/>
+		<Alias Info.Menu.Submenu.3.Button.3.Text="Application Response"/>
+		
+		<!-- SUBMENU 4 -->
+		<Alias Info.Menu.Submenu.4.Button.Count="2"/>
+		
+		<!-- Button Names -->
+		<Alias Info.Menu.Submenu.4.Button.1.Text="Demo Configuration"/>
+		<Alias Info.Menu.Submenu.4.Button.2.Text="Demo Details"/>
+			
+		
+		<!-- Setting Defaults -->
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.REPLACE.Button.Count="0" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.1.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.2.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.3.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.4.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.5.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.6.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.7.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.8.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.9.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.10.Button.REPLACE.Text="none" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		
+		<!-- Default File Extension -->
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.1.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.2.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.3.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.4.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.5.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.6.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.7.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.8.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.9.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		<For Count="20" StatValue="1">
+			<DefaultAlias Info.Menu.Submenu.10.Button.REPLACE.Type="Image" REPLACE="$(CurrentValueAlias)"/>
+		</For>
+		
+		
+	</AliasList>
+</MarvinExternalFile>	
+

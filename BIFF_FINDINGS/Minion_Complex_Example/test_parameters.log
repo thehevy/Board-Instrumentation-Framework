@@ -1,0 +1,7 @@
+Test.Runs=100
+Test.Ports="1 2 3 4 5"
+Test.Loops=5
+Test.Duration=120
+Test.Type=bx
+Test.Number=Completed 100 test runs
+Test.Status=Test Completed

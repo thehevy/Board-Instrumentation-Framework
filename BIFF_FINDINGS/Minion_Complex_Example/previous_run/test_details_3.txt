@@ -1,0 +1,1 @@
+Running 5 instance(s) of netperf tests for 120 seconds on port 3 which is mapped to netdev ens7np0.

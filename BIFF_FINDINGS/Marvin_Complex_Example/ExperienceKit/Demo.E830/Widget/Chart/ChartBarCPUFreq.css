@@ -1,0 +1,255 @@
+/*******************************************************************************
+ *                                                                             *
+ * Charts                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart {
+    -fx-padding: 5px;
+    padding: 5px;
+}
+
+.chart-plot-background {
+    -fx-background-color: rgba(185, 214, 229, 0.9);
+    background-color: rgba(185, 214, 229, 0.9);
+}
+
+.chart-content {
+    -fx-padding: 10px;
+    padding: 10px;
+}
+
+.chart-title {
+    -fx-font-size: 1.2em;
+    font-size: 1.2em;
+    -fx-text-fill: -fx-text-background-color;
+}
+
+.chart-legend {
+    -fx-background-color: -fx-shadow-highlight-color, linear-gradient(to bottom, derive(#262626, -10%), derive(#262626, -5%)), linear-gradient(from 0px 0px to 0px 4px, derive(#262626, -4%), derive(#262626, 10%));
+    background-color: -fx-shadow-highlight-color, linear-gradient(to bottom, derive(#262626, -10%), derive(#262626, -5%)), linear-gradient(from 0px 0px to 0px 4px, derive(#262626, -4%), derive(#262626, 10%));
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+    -fx-background-radius: 4, 4, 3;
+    -fx-padding: 6px;
+    padding: 6px;
+    -fx-text-fill: transparent;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * ChartPlot                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart-vertical-grid-lines {
+    -fx-stroke: null;
+    stroke: null;
+    -fx-stroke-dash-array: null;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #eeeded;
+    stroke: #eeeded;
+    -fx-stroke-dash-array: 0.25em, 0.25em;
+}
+
+.chart-alternative-column-fill {
+    -fx-fill: null;
+    -fx-stroke: null;
+    fill: null;
+    stroke: null;
+}
+
+.chart-alternative-row-fill {
+    -fx-fill: null;
+    -fx-stroke: null;
+    fill: null;
+    stroke: null;
+}
+
+.chart-vertical-zero-line {
+    -fx-stroke: #eeeded;
+    stroke: #eeeded;
+}
+
+.chart-horizontal-zero-line {
+    -fx-stroke: #eeeded;
+    stroke: #eeeded;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Axis                                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.axis {
+    -fx-axis_color: #eeeded;
+    AXIS_COLOR: #eeeded;
+    /*     -fx-tick-label-font-size: .75em;
+    -fx-tick-label-fill: #eeeded; */
+    -fx-tick-label-font-size: 0.01em;
+    -fx-tick-label-fill: transparent;
+    -fx-stroke: #eeeded;
+    stroke: #eeeded;
+}
+
+.default-color0.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: CHART_COLOR_1;
+    background-color: CHART_COLOR_1;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color3.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color4.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color5.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color6.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color7.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color8.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color9.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color10.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color11.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color12.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color13.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color14.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color15.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color16.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color17.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color18.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color19.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color20.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color21.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color22.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color23.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color24.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}
+
+.default-color25.chart-bar {
+    -fx-bar-fill: CHART_COLOR_1;
+    -fx-background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+    background-color: linear-gradient(to top, rgb(0, 200, 0) 0%, rgb(0, 255, 64) 75%, rgb(128, 255, 64) 85%, rgb(255, 204, 102) 95%, rgb(255, 51, 00) 100%);
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    This XML configuration defines a SteelGaugeRadial widget with the following properties:
+    
+    - **Style**: Specifies the CSS file to style the gauge (e.g., "GaugeRadial.Blue.css").
+    - **MinValue**: The minimum value displayed on the gauge (e.g., 0).
+    - **MaxValue**: The maximum value displayed on the gauge (e.g., 1000).
+    - **UnitText**: The text to display as the unit of measurement (e.g., empty or a specific unit).
+    - **Decimals**: The number of decimal places to display for the gauge value (e.g., 0).
+    - **DialStartAngle**: The starting angle of the gauge dial in degrees (e.g., 300).
+    - **DialRangeAngle**: The range of the gauge dial in degrees (e.g., 240).
+    - **MajorTicksSpace**: The spacing between major ticks on the gauge (e.g., 100).
+    - **MinorTicksSpace**: The spacing between minor ticks on the gauge (e.g., 10).
+    - **TickLableOrientation**: The orientation of tick labels (e.g., "Orthogonal").
+    - **EnhancedRateText**: A boolean value indicating whether enhanced rate text is enabled (e.g., True).
+-->
+<Widget Type = "SteelGaugeRadial">
+    <Style>GaugeRadial.Blue.css</Style>
+    <MinValue>0</MinValue>
+    <MaxValue>1000</MaxValue>
+    <UnitText> </UnitText>
+    <Decimals>0</Decimals>
+    <DialStartAngle>300</DialStartAngle>
+    <DialRangeAngle>240</DialRangeAngle>
+    <MajorTicksSpace>200</MajorTicksSpace>
+    <MinorTicksSpace>10</MinorTicksSpace>
+    <TickLableOrientation>Orthogonal</TickLableOrientation>
+    <EnhancedRateText>True</EnhancedRateText>
+</Widget>

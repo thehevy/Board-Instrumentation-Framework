@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2017 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: Demo Menu Fixed Button Names
+#	 Called by: Alias.List.Main.Menu
+#
+#	HOW TO USE THIS ALIAS LIST
+#	
+#	Alias List Name is defined in the $(AppDir)\Menu\DefinitionFiles\Alias.List.Main.Menu.xml file as MID
+#	Number of Buttons to be created is defined in the $(AppDir)\Menu\DefinitionFiles\Alias.List.Main.Menu.xml file as MID.Menu.Button.Count
+#	For the number of Buttons that is defined, they will need the following definition: 
+#	Text to be displayed: MID.Menu.Button.#.Text=
+#	Text to be displayed after button is selected: MID.Menu.Button.#.Text.Active=
+#	For ease of use, make a copy of this file, and do a find/replace all for the default MID of Demo
+#
+#	Example of all Alias' and file formats using EXAMPLE, as the MID
+#	<Alias EXAMPLE.Menu.Button.Count="2"/> defined in $(AppDir)\Menu\DefinitionFiles\Alias.List.Main.Menu.xml
+#
+#	<Alias EXAMPLE.Menu.Button.1.Text="Example Button Number 1"/>
+#	<Alias EXAMPLE.Menu.Button.2.Text="Example Button Number 2"/>
+#
+#	<Alias EXAMPLE.Menu.Button.1.Text.Active="Example Button Number 1 set to Active State"/>
+#	<Alias EXAMPLE.Menu.Button.2.Text.Active="Example Button Number 2 set to Active State"/>
+#
+#	A TaskList will need to be defined for each Button that is defined: 
+#	$(TabID).MID.Menu.Button.#.Action=
+#
+#
+##############################################################################
+-->
+<MarvinExternalFile>
+	<AliasList>
+
+		<Alias E830_TEST.Count="4"/>
+		<Alias E830_TEST.1="TX.Test"/>
+		<Alias E830_TEST.2="RX.Test"/>
+		<Alias E830_TEST.3="BX.Test"/>
+		<Alias E830_TEST.4="Go.Live"/>
+		<Alias Demo.E830.Menu.Button.1.Text="Show Tx Test"/>
+		<Alias Demo.E830.Menu.Button.2.Text="Show Rx Test"/>
+		<Alias Demo.E830.Menu.Button.3.Text="Show Bx Test"/>
+		<Alias Demo.E830.Menu.Button.4.Text="Go Live"/>
+
+		
+		<Alias Demo.E830.Menu.Button.1.Text.Active="Showing Tx Test"/>
+		<Alias Demo.E830.Menu.Button.2.Text.Active="Showing Rx Test"/>
+		<Alias Demo.E830.Menu.Button.3.Text.Active="Showing Bx Test"/>
+		<Alias Demo.E830.Menu.Button.4.Text.Active="Showing Live Data"/>
+
+
+	</AliasList>
+	<Grid>
+	</Grid>
+	<For Count="4" StartValue="1">
+		<TaskList ID="Tab.ExperienceKit.Demo.E830.Menu.Button.$(CurrentValueAlias).Action">
+		<TaskItem Type="OtherTask" ID="Change.TEST.$(E830_TEST.$(CurrentValueAlias))"/>
+		</TaskList>
+	</For>
+</MarvinExternalFile>	
+

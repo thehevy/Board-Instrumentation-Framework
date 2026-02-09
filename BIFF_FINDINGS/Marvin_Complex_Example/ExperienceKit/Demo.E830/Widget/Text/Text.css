@@ -1,0 +1,42 @@
+#CompareHeader {
+    -fx-font-family: "Arial Regular";
+	-fx-font-size: 1em; /* 14px */
+    -fx-text-fill: White;
+    -fx-wrap-text:true; /* true | false */
+}
+
+#DemoHeader {
+    -fx-font-family: "Arial Regular";
+	-fx-font-size: 1em; /* 14px */
+    -fx-text-fill: #0071C5;
+    -fx-wrap-text:true; /* true | false */
+}
+
+#TextBlock {
+    -fx-font-family: "Arial Regular";
+	-fx-font-size: 1em; /* 14px */
+    -fx-text-fill: #777777;
+    -fx-wrap-text:true; /* true | false */
+}
+
+#Gain {
+    -fx-font-family: "Arial Regular";
+	-fx-font-size: 1em; /* 14px */
+    -fx-text-fill: white;
+    -fx-wrap-text:true; /* true | false */
+}
+#E830 {
+    -fx-font-family: "Arial Regular";
+	-fx-font-size: .5em; /* 14px */
+    -fx-text-fill: #003C71;
+    -fx-wrap-text:true; /* true | false */
+}
+#non-E830 {
+    -fx-font-family: "Arial Regular";
+	-fx-font-size: .5em; /* 14px */
+    -fx-text-fill: #FC4C02;
+    -fx-wrap-text:true; /* true | false */
+}#increase {
+    -fx-text-fill: white;
+    -fx-wrap-text:true; /* true | false */
+}

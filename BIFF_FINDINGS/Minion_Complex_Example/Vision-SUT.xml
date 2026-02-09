@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: 
+#    Demonstration collectors.  Uses a mix of built-in collectors and ones
+#    that are launched as external processes
+#
+#     These collectors will run on any system, does not use PSUTIL, is just 
+#     a bunch of random numbers to move widgets in Marvin
+#
+##############################################################################
+-->
+<Minion>
+	<AliasList>
+		<Alias BytesPerSec2MBPS="0.00000782"/>
+		<Alias BytesPerSec2GBPS="0.00000000782"/> 
+		<Alias MyFreq="2000"/>
+		<Alias MyNetDevFreq="4000"/>
+		<Alias MyTestFreq="5000"/>
+		<Alias NUM_PORTS="5"/>
+
+		<Alias Eth1="ens1np0"/>
+		<Alias Eth2="ens6np0"/>
+		<Alias Eth3="ens7np0"/>
+		<Alias Eth4="ens28np0"/>
+		<Alias Eth5="ens31np0"/>
+	</AliasList>
+
+	<Namespace>
+		<Name>SUT</Name>
+		<DefaultFrequency>$(MyFreq)</DefaultFrequency>
+		<TargetConnection IP="10.166.85.54" PORT="54322"/>
+
+        <ExternalFile PORT_NUM="1" Eth="$(Eth1)">netdev_stats.xml</ExternalFile>
+        <ExternalFile PORT_NUM="2" Eth="$(Eth2)">netdev_stats.xml</ExternalFile>
+		<ExternalFile PORT_NUM="3" Eth="$(Eth3)">netdev_stats.xml</ExternalFile>
+		<ExternalFile PORT_NUM="4" Eth="$(Eth4)">netdev_stats.xml</ExternalFile>
+		<ExternalFile PORT_NUM="5" Eth="$(Eth5)">netdev_stats.xml</ExternalFile>
+
+        <ExternalFile PORT_NUM="1">test_results.xml</ExternalFile>
+        <ExternalFile PORT_NUM="2">test_results.xml</ExternalFile>
+		<ExternalFile PORT_NUM="3">test_results.xml</ExternalFile>
+		<ExternalFile PORT_NUM="4">test_results.xml</ExternalFile>
+		<ExternalFile PORT_NUM="5">test_results.xml</ExternalFile>
+
+		<DynamicCollector Prefix="minion." DoNotSend="False" OnlySendOnChange="False" Frequency="5000">
+			<File>test_parameters.log</File>
+			<Precision>0</Precision>
+		</DynamicCollector>
+
+		<Group Frequency="$(MyTestFreq)">
+			<Collector ID="post.Tb.TX.Test.Total">  
+				<Operator>Addition</Operator>
+				<Repeat Count="$(NUM_PORTS)" StartValue="1">
+					<Input DefaultValue="0">post.$(CurrentValueAlias).test_total_tx_$(CurrentValueAlias)</Input> 
+				</Repeat>
+				<Precision>0</Precision>
+			</Collector> 
+			<Collector ID="post.Tb.RX.Test.Total">  
+				<Operator>Addition</Operator> 
+				<Repeat Count="$(NUM_PORTS)" StartValue="1">
+					<Input DefaultValue="0">post.$(CurrentValueAlias).test_total_rx_$(CurrentValueAlias)</Input> 
+				</Repeat>
+				<Precision>0</Precision>
+			</Collector> 
+			<Collector ID="post.Tb.BX.Test.Total">  
+				<Operator>Addition</Operator> 
+				<Repeat Count="$(NUM_PORTS)" StartValue="1">
+					<Input DefaultValue="0">post.$(CurrentValueAlias).test_total_bx_$(CurrentValueAlias)</Input> 
+				</Repeat>
+				<Precision>0</Precision>
+			</Collector> 
+		</Group>
+
+		<Group Frequency="$(MyTestFreq)">
+			<Collector ID="previous.Tb.TX.Test.Total">  
+				<Operator>Addition</Operator>
+				<Repeat Count="$(NUM_PORTS)" StartValue="1">
+					<Input DefaultValue="0">previous.$(CurrentValueAlias).test_total_tx_$(CurrentValueAlias)</Input> 
+				</Repeat>
+				<Precision>0</Precision>
+			</Collector> 
+			<Collector ID="previous.Tb.RX.Test.Total">  
+				<Operator>Addition</Operator> 
+				<Repeat Count="$(NUM_PORTS)" StartValue="1">
+					<Input DefaultValue="0">previous.$(CurrentValueAlias).test_total_rx_$(CurrentValueAlias)</Input> 
+				</Repeat>
+				<Precision>0</Precision>
+			</Collector> 
+			<Collector ID="previous.Tb.BX.Test.Total">  
+				<Operator>Addition</Operator> 
+				<Repeat Count="$(NUM_PORTS)" StartValue="1">
+					<Input DefaultValue="0">previous.$(CurrentValueAlias).test_total_bx_$(CurrentValueAlias)</Input> 
+				</Repeat>
+				<Precision>0</Precision>
+			</Collector> 
+		</Group>
+	</Namespace>
+</Minion>

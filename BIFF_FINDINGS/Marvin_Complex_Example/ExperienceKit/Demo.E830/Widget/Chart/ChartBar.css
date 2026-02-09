@@ -1,0 +1,114 @@
+/*******************************************************************************
+ *                                                                             *
+ * Charts                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart {
+    -fx-padding: 5px;
+}
+
+.chart-plot-background {
+    -fx-background-color: rgba(185, 214, 229, 0.9);
+    background-color: rgba(185, 214, 229, 0.9);
+}
+
+.chart-content {
+    -fx-padding: 10px;
+}
+
+.chart-title {
+    -fx-font-size: 1em;
+    -fx-text-fill: -fx-text-background-color;
+}
+
+.chart-legend {
+    -fx-background-color: -fx-shadow-highlight-color, linear-gradient(to bottom, derive(#262626, -10%), derive(#262626, -5%)), linear-gradient(from 0px 0px to 0px 4px, derive(#262626, -4%), derive(#262626, 10%));
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+    -fx-background-radius: 4, 4, 3;
+    -fx-padding: 5px;
+    -fx-font-size: .9em;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #ffffff;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * ChartPlot                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart-vertical-grid-lines {
+    -fx-stroke: null;
+    -fx-stroke-dash-array: null;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #eeeded;
+    -fx-stroke-dash-array: 0.25em, 0.25em;
+}
+
+.chart-alternative-column-fill {
+    -fx-fill: null;
+    -fx-stroke: null;
+}
+
+.chart-alternative-row-fill {
+    -fx-fill: null;
+    -fx-stroke: null;
+}
+
+.chart-vertical-zero-line {
+    -fx-stroke: #eeeded;
+}
+
+.chart-horizontal-zero-line {
+    -fx-stroke: #eeeded;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Axis                                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.axis {
+    AXIS_COLOR: #eeeded;
+    -fx-tick-label-font-size: .75em;
+    -fx-tick-label-fill: -fx-text-background-color;
+}
+
+#BUSYPOLL {
+    CHART_COLOR_1: #FFC599;
+    CHART_COLOR_2: #C98F00;
+    CHART_COLOR_3: #FFE17A;
+    CHART_COLOR_4: #B24501;
+}
+
+#P_VALUES {
+    CHART_COLOR_1: #B4F0FF;
+    CHART_COLOR_2: #00C7FD;
+    CHART_COLOR_3: #0095CA;
+    CHART_COLOR_4: #5B69FF;
+    CHART_COLOR_5: #0068B5;
+    CHART_COLOR_6: #004A86;
+    CHART_COLOR_7: #000964;
+}
+
+#P9999 {
+    CHART_COLOR_1: #000964;
+}
+
+#CONNECTIONS {
+    CHART_COLOR_1: #C81326;
+}
+
+#ONEMINAVG {}
+
+.axis-label {
+    -fx-text-fill: #ffffff;
+}

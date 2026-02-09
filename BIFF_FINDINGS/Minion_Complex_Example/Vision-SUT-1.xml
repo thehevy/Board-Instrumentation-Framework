@@ -1,0 +1,451 @@
+<?xml version="1.0"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 Intel Corporation
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: 
+#    Demonstration collectors.  Uses a mix of built-in collectors and ones
+#    that are launched as external processes
+#
+#     These collectors will run on any system, does not use PSUTIL, is just 
+#     a bunch of random numbers to move widgets in Marvin
+#
+##############################################################################
+-->
+<Minion>
+	<AliasList>
+		<Alias BytesPerSec2MBPS="0.000782"/>
+		<Alias BytesPerSec2GBPS="0.00000000782"/> 
+		<Alias MyFreq="1000"/>
+		<Alias MyNetDevFreq="5000"/>
+		<Alias MyNetDevFreq2="3000"/>
+		<Alias MyNetDevFreq1="2000"/>
+
+		<Alias Eth1="ens1np0"/>
+		<Alias Eth2="ens6np0"/>
+		<Alias Eth3="ens7np0"/>
+		<Alias Eth4="ens28np0"/>
+		<Alias Eth5="ens31np0"/>
+	</AliasList>
+	<Namespace>
+		<Name>SUT</Name>
+		<DefaultFrequency>$(MyFreq)</DefaultFrequency>
+		<TargetConnection IP="10.166.85.54" PORT="54322"/>
+
+
+		<Collector ID="x.$(Eth1).TX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth1)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="x.$(Eth2).TX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth2)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="x.$(Eth3).TX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth3)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="x.$(Eth4).TX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth4)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="x.$(Eth5).TX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth5)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>		
+
+		<Collector ID="yy.$(Eth1).TX.Gbps" Frequency="$(MyNetDevFreq1)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth1)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="yy.$(Eth2).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth2)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="yy.$(Eth3).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth3)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="yy.$(Eth4).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth4)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="yy.$(Eth5).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkTx</Param>
+			<Param>$(Eth5)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>	
+
+		<Collector ID="y.$(Eth1).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors\FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth1)/statistics/tx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="y.$(Eth2).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors\FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth2)/statistics/tx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="y.$(Eth3).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors\FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth3)/statistics/tx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="y.$(Eth4).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors\FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth4)/statistics/tx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="y.$(Eth5).TX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth5)/statistics/tx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="netdev.$(Eth1).tx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth1).TX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth1).TX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth1).TX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector> 
+
+		<Collector ID="netdev.$(Eth2).tx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth2).TX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth2).TX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth2).TX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector>
+
+		<Collector ID="netdev.$(Eth3).tx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth3).TX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth3).TX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth3).TX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector>	
+
+		<Collector ID="netdev.$(Eth4).tx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth4).TX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth4).TX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth4).TX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector>
+
+		<Collector ID="netdev.$(Eth5).tx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth5).TX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth5).TX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth5).TX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector>
+
+		<Collector ID="Tb.TX.Total" Frequency="$(MyFreq)">  
+			<Operator>Addition</Operator> 
+			<Input DefaultValue="0">netdev.$(Eth1).tx_gbps</Input> 
+			<Input DefaultValue="0">netdev.$(Eth2).tx_gbps</Input> 
+			<Input DefaultValue="0">netdev.$(Eth3).tx_gbps</Input>
+			<Input DefaultValue="0">netdev.$(Eth4).tx_gbps</Input>
+			<Input DefaultValue="0">netdev.$(Eth5).tx_gbps</Input>
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector> 
+
+
+<!-- RX Network -->
+		<Collector ID="x.$(Eth1).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth1)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="x.$(Eth2).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth2)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="x.$(Eth3).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth3)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="x.$(Eth4).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth4)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="x.$(Eth5).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth5)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="yy.$(Eth1).RX.Gbps" Frequency="$(MyNetDevFreq1)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth1)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="yy.$(Eth2).RX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth2)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="yy.$(Eth3).RX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth3)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="yy.$(Eth4).RX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth4)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="yy.$(Eth5).RX.Gbps" Frequency="$(MyNetDevFreq2)">
+			<Executable>Collectors/Network.py</Executable>
+			<Param>GetNetworkRx</Param>
+			<Param>$(Eth5)</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="y.$(Eth1).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors\FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth1)/statistics/rx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>	
+		</Collector>
+
+		<Collector ID="y.$(Eth2).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth2)/statistics/rx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="y.$(Eth3).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth3)/statistics/rx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="y.$(Eth4).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth4)/statistics/rx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector>
+
+		<Collector ID="y.$(Eth5).RX.Gbps" Frequency="$(MyNetDevFreq)">
+			<Executable>Collectors/FileCollector.py</Executable>
+			<Param>ReadFromFile</Param>
+			<Param>/sys/class/net/$(Eth5)/statistics/rx_bytes</Param>
+			<Normalize>$(BytesPerSec2GBPS)</Normalize>
+			<Bound Max="196" Min="0" Action="set"/>
+			<Precision>0</Precision>
+		</Collector> 
+
+
+		<Collector ID="netdev.$(Eth1).rx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth1).RX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth1).RX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth1).RX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector> 
+
+		<Collector ID="netdev.$(Eth2).rx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth2).RX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth2).RX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth2).RX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector>
+
+		<Collector ID="netdev.$(Eth3).rx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth3).RX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth3).RX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth3).RX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector>	
+
+		<Collector ID="netdev.$(Eth4).rx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth4).RX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth4).RX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth4).RX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector>
+
+		<Collector ID="netdev.$(Eth5).rx_gbps" Frequency="$(MyFreq)">  
+			<Operator>Greatest</Operator> 
+			<Input DefaultValue="0">x.$(Eth5).RX.Gbps</Input> 
+			<Input DefaultValue="0">y.$(Eth5).RX.Gbps</Input> 
+			<Input DefaultValue="0">yy.$(Eth5).RX.Gbps</Input> 
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector>
+
+		<Collector ID="Tb.RX.Total" Frequency="$(MyNetDevFreq)">  
+			<Operator>Addition</Operator> 
+			<Input DefaultValue="0">netdev.$(Eth1).rx_gbps</Input> 
+			<Input DefaultValue="0">netdev.$(Eth2).rx_gbps</Input> 
+			<Input DefaultValue="0">netdev.$(Eth3).rx_gbps</Input>
+			<Input DefaultValue="0">netdev.$(Eth4).rx_gbps</Input>
+			<Input DefaultValue="0">netdev.$(Eth5).rx_gbps</Input>
+			<Precision>0</Precision>
+			<Bound Max="980" Min="0" Action="set"/>
+		</Collector> 
+
+		<DynamicCollector SendOnlyOnChange="True" Frequency="1000">
+			<Plugin>
+				<PythonFile>Collectors/SystemInfo_Linux.py</PythonFile>
+				<EntryPoint SpawnThread="True">CollectSystemInfo_Linux</EntryPoint>
+				<Param>False</Param>
+				<Param>ShowFrequencyInfo=True</Param>
+			</Plugin>
+			<Precision>0</Precision>
+		</DynamicCollector>	
+
+		<DynamicCollector SendOnlyOnChange="True" Frequency="10000"> 
+			<Plugin> 
+				<PythonFile>Collectors/ipmitoolParser.py</PythonFile> 
+				<EntryPoint SpawnThread="True">CollectIPMI_Info</EntryPoint> 
+			</Plugin> 
+		</DynamicCollector>
+
+	</Namespace>
+</Minion>

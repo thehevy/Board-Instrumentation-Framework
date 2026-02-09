@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2016 by Patrick Kutch https://github.com/PatrickKutch
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+# 
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract: Intel Button
+#    Called by: Grid.Menu.DDP.Demo.xml
+#    Called by: Grid.Menu.Info.Submenu.XML
+#    Called by: Icon.Button.XML
+#
+##############################################################################
+-->
+<MarvinExternalFile>
+	<AliasList>
+		<DefaultAlias Button.Width="280"/>
+		<DefaultAlias Button.Height="40"/>
+		<DefaultAlias BUTTON_TEXT=""/>
+		<DefaultAlias BUTTON_TEXT_LOC="W"/>
+		<DefaultAlias BUTTON_TOP_PAD="4"/>
+		<DefaultAlias BUTTON_BOTTOM_PAD="4"/>
+		<DefaultAlias BUTTON_LEFT_PAD="60"/>
+		<DefaultAlias BUTTON_RIGHT_PAD="12"/>
+		<DefaultAlias BUTTON_NAMESPACE="NA"/>
+		<DefaultAlias BUTTON_ID="NA"/>
+		<DefaultAlias BUTTON_PEEKABOO_NAMESPACE="NA"/>
+		<DefaultAlias BUTTON_PEEKABOO_ID="NA"/>
+		<DefaultAlias BUTTON_PEEKABOO_NAMESPACE2="NA"/>
+		<DefaultAlias BUTTON_PEEKABOO_ID2="NA"/>
+		<DefaultAlias BUTTON_TEXT_FONT="Intel Clear"/>
+		<DefaultAlias BUTTON_TEXT_SIZE="15"/>
+		<DefaultAlias BUTTON_TASK="NA"/>
+		<DefaultAlias BUTTON_PEEKABOO_DEFAULT="Show"/>
+		<DefaultAlias Button.Type="MenuButton"/>
+
+	</AliasList>
+	<Grid>
+		<Grid row="0"
+		      column="0"
+		      hgap="0"
+		      vgap="0"
+		      Align="Center"
+		      Width="282"
+		      Height="42">
+			<StyleOverride>
+				<Item>
+					-fx-background-radius: 2,2,2,2;
+					-fx-border-color: $(Intel_Color11);
+					-fx-border-width: 1pt;
+					-fx-border-radius: 2,2,2,2;
+				</Item></StyleOverride>
+			<Grid row="0"
+			      column="0"
+			      Width="275"
+			      Height="35">
+				<PaddingOverride top="$(BUTTON_TOP_PAD)"
+				                 bottom="$(BUTTON_BOTTOM_PAD)"
+				                 right="$(BUTTON_RIGHT_PAD)"
+				                 left="$(BUTTON_LEFT_PAD)" /> 
+				<StyleOverride>
+					<Item>-fx-background-color:$(Intel_Color1);
+					</Item></StyleOverride>
+			</Grid>
+
+			<Widget File="$(APPDIR)/WIDGET/Button/Button.xml"
+			        row="0"
+			        column="0"
+			        Width="$(Button.Width)"
+			        Height="$(Button.Height)"
+			        Align="$(BUTTON_TEXT_LOC)"
+			        Task="$(BUTTON_TASK)">
+				<InitialValue>$(BUTTON_TEXT)</InitialValue>
+				<MinionSrc Namespace="$(BUTTON_NAMESPACE)"
+				           ID="$(BUTTON_ID)" />
+				<Peekaboo Namespace="$(BUTTON_PEEKABOO_NAMESPACE)"
+				          ID="$(BUTTON_PEEKABOO_ID)" Default="$(BUTTON_PEEKABOO_DEFAULT)"/>
+				<Peekaboo Namespace="$(BUTTON_PEEKABOO_NAMESPACE2)"
+				          ID="$(BUTTON_PEEKABOO_ID2)" />
+				<!-- <Peekaboo Namespace="Icon.Deselect" ID="Deselect" /> -->
+				<Shape>M278,40H2a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0H278a2,2,0,0,1,2,2V38A2,2,0,0,1,278,40Z</Shape>
+				<StyleOverride ID="CompareButton">
+					<Item>-fx-font-size:$(BUTTON_TEXT_SIZE);
+						-fx-font-family:$(BUTTON_TEXT_FONT);
+					</Item>									
+				</StyleOverride>
+				<SelectedStyle ID="CompareSelected">
+					<Item>-fx-font-size:$(BUTTON_TEXT_SIZE);
+						-fx-font-family:$(BUTTON_TEXT_FONT);
+					</Item>
+				</SelectedStyle>
+			</Widget>		
+		</Grid>
+	</Grid>
+</MarvinExternalFile>	
