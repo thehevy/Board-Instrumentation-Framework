@@ -1142,10 +1142,12 @@ def handle_collector_test(args, discovery):
         print()
         if result['error']:
             print_info("Error:")
-            for line in result['error'].strip().split('\n')[:10]:  # Show first 10 lines
+            error_lines = result['error'].strip().split('\n')
+            for line in error_lines[:10]:  # Show first 10 lines
                 print(f"  {line}")
-            if len(result['error'].strip().split('\n')) > 10:
-                print(f"  ... ({len(result['error'].strip().split('\n')) - 10} more lines)")
+            if len(error_lines) > 10:
+                remaining = len(error_lines) - 10
+                print(f"  ... ({remaining} more lines)")
         if result['output']:
             print()
             print_info("Output:")
