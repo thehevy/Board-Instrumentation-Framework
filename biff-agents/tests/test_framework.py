@@ -680,10 +680,10 @@ class TemplateTests:
         # Step 2: Data source type (6 = plugin_framework)
         # Step 3: Function name (or default)
         # Step 4: Discovery mode (2 = static)
-        # Step 5: Number of IDs
-        # Step 6-7: Collector IDs
-        # Step 8: Update config? (n = no)
-        input_data = "Network Queue Stats\n6\ncollect\n2\n2\nqueue.0.tx\nqueue.0.rx\nn\n"
+        # Step 5: Collector IDs (comma-separated)
+        # Step 6: Frequency (2 = 1s)
+        # Step 7: Update config? (n = no)
+        input_data = "Network Queue Stats\n6\ncollect\n2\nqueue.0.tx,queue.0.rx\n2\nn\n"
         
         success, output, duration = self.framework.run_template_wizard(
             'create',
@@ -743,8 +743,9 @@ class TemplateTests:
         # Step 4: Discovery mode (1 = dynamic)
         # Step 5: Item type name
         # Step 6: ID prefix
-        # Step 7: Update config? (n = no)
-        input_data = "Container Stats\n6\ncollect_containers\n1\nDockerContainer\nDocker-\nn\n"
+        # Step 7: Frequency (2 = 1s)
+        # Step 8: Update config? (n = no)
+        input_data = "Container Stats\n6\ncollect_containers\n1\nDockerContainer\nDocker-\n2\nn\n"
         
         success, output, duration = self.framework.run_template_wizard(
             'create',
@@ -760,7 +761,7 @@ class TemplateTests:
                 # Check that file supports dynamic collector registration
                 required_elements = [
                     'def collect_',
-                    'return collectors',
+                    'frameworkInterface',
                     'Container'
                 ]
                 

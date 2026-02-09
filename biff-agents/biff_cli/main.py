@@ -1559,14 +1559,16 @@ def handle_collector_create(args):
             print()
             print_info("Collector Summary:")
             print(f"  • Metric Name: {responses['metric_name']}")
-            print(f"  • Metric ID: {responses.get('metric_id', 'N/A')}")
+            if 'metric_id' in responses:
+                print(f"  • Metric ID: {responses['metric_id']}")
             print(f"  • Source Type: {responses['source_type']}")
             print(f"  • Frequency: {responses['frequency_display']}")
             print(f"  • Template: {responses['template_key']}")
             print(f"  • Output File: {output_file}")
         
-        # Update MinionConfig.xml if requested (only for Python collectors, not for XML-only)
-        if not is_dynamic_collector and not args.no_config_update:
+        # Update MinionConfig.xml if requested (only for collectors with metric_id)
+        # Skip for dynamic_file (XML-only) and plugin_framework (uses <Plugin> instead of <Collector>)
+        if not is_dynamic_collector and not is_plugin_framework and 'metric_id' in responses and not args.no_config_update:
             config_file = args.config if args.config else None
             if not config_file:
                 # Try to find MinionConfig.xml in current directory or parent
@@ -1631,9 +1633,12 @@ def handle_collector_create(args):
                 print()
                 print_info("No MinionConfig.xml found. You can manually add this collector:")
                 print()
-                print(f'''  <Collector ID="{responses['metric_id']}" Frequency="{responses['frequency']}">
+                if 'metric_id' in responses:
+                    print(f'''  <Collector ID="{responses['metric_id']}" Frequency="{responses['frequency']}">
     <Executable>{output_file}</Executable>
   </Collector>''')
+                else:
+                    print("  (Plugin framework collectors use <Plugin> instead of <Collector>)")
         
         # Next steps
         print()
