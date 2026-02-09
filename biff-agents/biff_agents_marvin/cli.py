@@ -126,19 +126,245 @@ def cmd_dashboard(args):
     print(f"Output directory: {output_dir}")
     print()
     
-    saved_paths = composer.save_dashboard(output_dir)
+    result = composer.generate_dashboard(str(output_dir))
     
     print(f"\n{'='*70}")
     print(f"✅ Dashboard generated successfully!")
     print(f"{'='*70}")
-    print(f"\nGenerated {len(saved_paths)} files:")
-    for path in saved_paths:
-        print(f"  • {path.name}")
+    print(f"\nGenerated files in {output_dir}:")
+    for tab in result.get('tabs', []):
+        print(f"  • {tab}")
+    print(f"  • App.Config.xml")
     print(f"\nTo run with Marvin:")
-    print(f"  java -jar BIFF.Marvin.jar -i {output_dir / 'App.Config.xml'}")
+    print(f"  java -jar BIFF.Marvin.jar -i {output_dir}/App.Config.xml")
     print()
     
     return 0
+
+
+def cmd_list_widgets(args):
+    """Handle 'list-widgets' command"""
+    print("\n" + "="*70)
+    print("  Available Widget Types")
+    print("="*70 + "\n")
+    
+    widgets = {
+        'text': 'Simple text display for labels and values',
+        'led': 'Status indicator with conditional colors',
+        'button': 'Interactive control button (tasks, URLs, data)',
+        'gauge': 'Circular/radial gauge with zones',
+        'chart': 'Time-series line chart',
+        'memory': 'Memory monitoring (bar/gauge/text) with smart zones',
+        'network': 'Network throughput visualization',
+        'system': 'Multi-source system information panel',
+    }
+    
+    for widget_type, description in widgets.items():
+        print(f"  {widget_type:12s} - {description}")
+    
+    print(f"\n{'='*70}")
+    print(f"Total: {len(widgets)} widget types available")
+    print(f"{'='*70}\n")
+    print("Usage:")
+    print("  biff-marvin widget <type> -c MinionConfig.xml -o output.xml")
+    print("\nExample:")
+    print("  biff-marvin widget gauge -c MinionConfig.xml -o cpu_gauge.xml")
+    print()
+    
+    return 0
+
+
+def cmd_list_composers(args):
+    """Handle 'list-composers' command"""
+    print("\n" + "="*70)
+    print("  Available Dashboard Composers")
+    print("="*70 + "\n")
+    
+    composers = {
+        'quickstart': {
+            'desc': 'Simple single-tab dashboard with gauges',
+            'best_for': 'Quick setup, basic monitoring',
+            'tabs': '1 (Overview)',
+        },
+        'monitoring': {
+            'desc': 'Comprehensive 3-tab monitoring dashboard',
+            'best_for': 'Server monitoring, infrastructure',
+            'tabs': '3 (Overview, Details, Status)',
+        },
+        'performance': {
+            'desc': 'Performance-focused 2-tab dashboard',
+            'best_for': 'Application performance, network ops',
+            'tabs': '2 (System, Network)',
+        },
+    }
+    
+    for template, info in composers.items():
+        print(f"  {template}:")
+        print(f"    Description: {info['desc']}")
+        print(f"    Best for:    {info['best_for']}")
+        print(f"    Tabs:        {info['tabs']}")
+        print()
+    
+    print(f"{'='*70}")
+    print(f"Total: {len(composers)} dashboard templates available")
+    print(f"{'='*70}\n")
+    print("Usage:")
+    print("  biff-marvin compose <template> -c MinionConfig.xml -o dashboard_dir")
+    print("\nExample:")
+    print("  biff-marvin compose monitoring -c MinionConfig.xml -o my_dashboard")
+    print()
+    
+    return 0
+
+
+def cmd_interactive(args):
+    """Handle 'interactive' command - guided dashboard creation"""
+    print("\n" + "="*70)
+    print("  BIFF Agents - Interactive Dashboard Builder")
+    print("="*70 + "\n")
+    
+    # Step 1: Config file
+    if args.config:
+        config_path = args.config
+    else:
+        config_input = input("Path to MinionConfig.xml (or press Enter for quickstart_configs/MinionConfig.xml): ").strip()
+        config_path = Path(config_input) if config_input else Path("quickstart_configs/MinionConfig.xml")
+    
+    if not config_path.exists():
+        print(f"\n❌ Config file not found: {config_path}")
+        return 1
+    
+    print(f"✅ Using config: {config_path}\n")
+    
+    # Step 2: Dashboard template
+    print("Available dashboard templates:")
+    print("  1. Quickstart  - Simple single-tab with gauges")
+    print("  2. Monitoring  - 3-tab comprehensive monitoring")
+    print("  3. Performance - 2-tab performance focused")
+    
+    template_choice = input("\nSelect template (1-3, default=1): ").strip() or "1"
+    template_map = {'1': 'quickstart', '2': 'monitoring', '3': 'performance'}
+    template = template_map.get(template_choice, 'quickstart')
+    
+    print(f"✅ Template: {template}\n")
+    
+    # Step 3: Output directory
+    if args.output:
+        output_dir = args.output
+    else:
+        output_input = input(f"Output directory (default={template}_dashboard): ").strip()
+        output_dir = Path(output_input) if output_input else Path(f"{template}_dashboard")
+    
+    print(f"✅ Output: {output_dir}\n")
+    
+    # Step 4: Confirm and generate
+    print("="*70)
+    print("Ready to generate dashboard:")
+    print(f"  Config:   {config_path}")
+    print(f"  Template: {template}")
+    print(f"  Output:   {output_dir}")
+    print("="*70)
+    
+    confirm = input("\nProceed? (Y/n): ").strip().lower()
+    if confirm == 'n':
+        print("❌ Cancelled")
+        return 0
+    
+    # Generate
+    composers = {
+        'quickstart': QuickstartDashboardComposer,
+        'monitoring': MonitoringDashboardComposer,
+        'performance': PerformanceDashboardComposer,
+    }
+    
+    composer = composers[template](str(config_path))
+    result = composer.generate_dashboard(str(output_dir))
+    
+    print(f"\n{'='*70}")
+    print(f"✅ Dashboard generated successfully!")
+    print(f"{'='*70}")
+    print(f"\nLocation: {output_dir}")
+    print(f"Files: {len(result.get('tabs', [])) + 1}")
+    print(f"\nTo run with Marvin:")
+    print(f"  java -jar BIFF.Marvin.jar -i {output_dir}/App.Config.xml")
+    print()
+    
+    return 0
+
+
+def cmd_batch(args):
+    """Handle 'batch' command - generate multiple dashboards"""
+    print("\n" + "="*70)
+    print("  BIFF Agents - Batch Dashboard Generator")
+    print("="*70 + "\n")
+    
+    if not args.configs:
+        print("❌ Error: --configs required (comma-separated list)")
+        return 1
+    
+    # Parse config list
+    config_paths = [Path(c.strip()) for c in args.configs.split(',')]
+    
+    # Validate all configs exist
+    for config_path in config_paths:
+        if not config_path.exists():
+            print(f"❌ Config not found: {config_path}")
+            return 1
+    
+    print(f"Found {len(config_paths)} config files:")
+    for path in config_paths:
+        print(f"  • {path}")
+    print()
+    
+    # Determine template
+    template = args.template or 'monitoring'
+    composers_map = {
+        'quickstart': QuickstartDashboardComposer,
+        'monitoring': MonitoringDashboardComposer,
+        'performance': PerformanceDashboardComposer,
+    }
+    
+    if template not in composers_map:
+        print(f"❌ Invalid template: {template}")
+        return 1
+    
+    # Generate dashboards
+    results = []
+    for i, config_path in enumerate(config_paths, 1):
+        print(f"[{i}/{len(config_paths)}] Processing {config_path.name}...")
+        
+        try:
+            # Create output directory based on config name
+            config_name = config_path.stem
+            output_dir = Path(args.output or 'batch_output') / config_name
+            
+            # Generate
+            composer = composers_map[template](str(config_path))
+            result = composer.generate_dashboard(str(output_dir))
+            
+            print(f"  ✅ Generated: {output_dir}")
+            results.append((config_path, output_dir, True))
+            
+        except Exception as e:
+            print(f"  ❌ Failed: {e}")
+            results.append((config_path, None, False))
+    
+    # Summary
+    print(f"\n{'='*70}")
+    print("Batch Generation Summary")
+    print(f"{'='*70}\n")
+    
+    success_count = sum(1 for _, _, success in results if success)
+    for config_path, output_dir, success in results:
+        status = "✅" if success else "❌"
+        location = f" → {output_dir}" if output_dir else ""
+        print(f"  {status} {config_path.name}{location}")
+    
+    print(f"\n{'='*70}")
+    print(f"Completed: {success_count}/{len(config_paths)} dashboards")
+    print(f"{'='*70}\n")
+    
+    return 0 if success_count == len(config_paths) else 1
 
 
 def main():
@@ -150,20 +376,31 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  # List available widgets and composers
+  biff-marvin list-widgets
+  biff-marvin list-composers
+  
   # List available data sources
   biff-marvin sources -c MinionConfig.xml
   
   # Search for specific data sources
   biff-marvin sources -c MinionConfig.xml --search cpu
   
-  # Create a text widget interactively
-  biff-marvin widget text -c MinionConfig.xml -o my_text.xml
+  # Create individual widgets
+  biff-marvin widget gauge -c MinionConfig.xml -o cpu_gauge.xml
+  biff-marvin widget button -c MinionConfig.xml -o control_button.xml
+  biff-marvin widget memory -c MinionConfig.xml -o memory_monitor.xml
   
-  # Create an LED indicator
-  biff-marvin widget led -c MinionConfig.xml -o status_led.xml
-  
-  # Create a complete dashboard (Week 9)
+  # Create complete dashboards
   biff-marvin dashboard quickstart -c MinionConfig.xml
+  biff-marvin dashboard monitoring -c MinionConfig.xml -o my_dashboard
+  
+  # Interactive mode (guided wizard)
+  biff-marvin interactive
+  biff-marvin wizard -c MinionConfig.xml
+  
+  # Batch generation for multiple configs
+  biff-marvin batch --configs cfg1.xml,cfg2.xml,cfg3.xml --template monitoring
 """
     )
     
@@ -183,7 +420,7 @@ Examples:
     )
     widget_parser.add_argument(
         'type',
-        choices=['text', 'led', 'gauge', 'chart'],
+        choices=['text', 'led', 'button', 'gauge', 'chart', 'memory', 'network', 'system'],
         help='Widget type to create'
     )
     widget_parser.add_argument(
@@ -196,6 +433,7 @@ Examples:
         type=Path,
         help='Output file path for widget XML'
     )
+    widget_parser.set_defaults(func=cmd_widget)
     
     # Sources command
     sources_parser = subparsers.add_parser(
@@ -212,6 +450,7 @@ Examples:
         '--search',
         help='Search for data sources matching keyword'
     )
+    sources_parser.set_defaults(func=cmd_sources)
     
     # Dashboard command
     dashboard_parser = subparsers.add_parser(
@@ -232,8 +471,64 @@ Examples:
     dashboard_parser.add_argument(
         '-o', '--output',
         type=Path,
-        help='Output directory for dashboard files (default: <template>_dashboard)'
+        help='Output directory (default: <template>_dashboard)'
     )
+    dashboard_parser.set_defaults(func=cmd_dashboard)
+    
+    # List widgets command
+    list_widgets_parser = subparsers.add_parser(
+        'list-widgets',
+        help='Show all available widget types with descriptions'
+    )
+    list_widgets_parser.set_defaults(func=cmd_list_widgets)
+    
+    # List composers command
+    list_composers_parser = subparsers.add_parser(
+        'list-composers',
+        help='Show all available dashboard templates'
+    )
+    list_composers_parser.set_defaults(func=cmd_list_composers)
+    
+    # Interactive command
+    interactive_parser = subparsers.add_parser(
+        'interactive',
+        aliases=['wizard'],
+        help='Interactive dashboard builder with guided prompts'
+    )
+    interactive_parser.add_argument(
+        '-c', '--config',
+        type=Path,
+        help='Path to MinionConfig.xml (optional, will prompt if not provided)'
+    )
+    interactive_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Output directory (optional, will prompt if not provided)'
+    )
+    interactive_parser.set_defaults(func=cmd_interactive)
+    
+    # Batch command
+    batch_parser = subparsers.add_parser(
+        'batch',
+        help='Generate multiple dashboards from config list'
+    )
+    batch_parser.add_argument(
+        '--configs',
+        required=True,
+        help='Comma-separated list of MinionConfig.xml files'
+    )
+    batch_parser.add_argument(
+        '--template',
+        choices=['quickstart', 'monitoring', 'performance'],
+        default='monitoring',
+        help='Template to use for all dashboards (default: monitoring)'
+    )
+    batch_parser.add_argument(
+        '-o', '--output',
+        type=Path,
+        help='Base output directory (default: batch_output)'
+    )
+    batch_parser.set_defaults(func=cmd_batch)
     
     # Parse arguments
     args = parser.parse_args()
@@ -243,13 +538,9 @@ Examples:
         parser.print_help()
         return 0
     
-    # Dispatch to command handler
-    if args.command == 'widget':
-        return cmd_widget(args)
-    elif args.command == 'sources':
-        return cmd_sources(args)
-    elif args.command == 'dashboard':
-        return cmd_dashboard(args)
+    # Dispatch to command handler via set_defaults(func=...)
+    if hasattr(args, 'func'):
+        return args.func(args)
     else:
         parser.print_help()
         return 1
