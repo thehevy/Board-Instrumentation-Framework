@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from biff_agents_marvin.utils.minion_discovery import MinionDataSourceDiscovery, DataSource
 from biff_agents_marvin.builders.text_widget_builder import TextWidgetBuilder
 from biff_agents_marvin.builders.led_widget_builder import LEDWidgetBuilder
+from biff_agents_marvin.builders.button_widget_builder import ButtonWidgetBuilder
 from biff_agents_marvin.builders.gauge_widget_builder import GaugeWidgetBuilder
 from biff_agents_marvin.builders.chart_widget_builder import ChartWidgetBuilder
 from biff_agents_marvin.builders.memory_widget_builder import MemoryWidgetBuilder
@@ -175,6 +176,64 @@ def test_led_widget_builder():
         print("✅ Condition properly escaped (&gt; for >)")
         
         print("✅ PASS: LED widget builder working")
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAIL: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+def test_button_widget_builder():
+    """Test button widget builder XML generation"""
+    print("\n" + "=" * 70)
+    print("TEST 4: Button Widget Builder")
+    print("=" * 70)
+    
+    config_path = Path("quickstart_configs/MinionConfig.xml")
+    if not config_path.exists():
+        print(f"❌ SKIP: Config not found at {config_path}")
+        return False
+    
+    try:
+        builder = ButtonWidgetBuilder(str(config_path))
+        
+        # Simulate user input: label, style=1 (standard), action=1 (minion task), 
+        # custom actor, params, no custom colors, width/height, position
+        # Button label, style, action, namespace, actor_id, params, width, height, colors, row, col
+        inputs = "Restart\n1\n1\nMyNamespace\nrestart\nforce=true\n2\n1\nn\n0\n0\n"
+        sys.stdin = StringIO(inputs)
+        
+        xml = builder.build_widget()
+        sys.stdin = sys.__stdin__
+        
+        if not xml:
+            print("❌ FAIL: No XML generated")
+            return False
+        
+        print(f"✅ Generated valid button widget XML")
+        print(f"   Lines: {len(xml.splitlines())}")
+        
+        # Validate XML structure
+        if '<Widget File="Button/' not in xml:
+            print("❌ FAIL: Missing Widget element")
+            return False
+        
+        if '<Title>Restart</Title>' not in xml:
+            print("❌ FAIL: Missing title")
+            return False
+        
+        if '<Task Type="MinionTaskLauncher"' not in xml:
+            print("❌ FAIL: Missing task element")
+            return False
+        
+        if '<Namespace>MyNamespace</Namespace>' not in xml:
+            print("❌ FAIL: Missing namespace")
+            return False
+        
+        print("✅ Task configuration present")
+        print("✅ PASS: Button widget builder working")
         return True
         
     except Exception as e:
@@ -763,7 +822,7 @@ def main():
     """Run all tests"""
     print("=" * 70)
     print("BIFF Agents - Marvin GUI Composer Test Suite")
-    print("Phase 3 Week 8 Day 4")
+    print("Phase 3 Week 8 Day 5")
     print("=" * 70)
     
     results = []
@@ -772,6 +831,7 @@ def main():
     results.append(("Data Source Discovery", test_data_source_discovery()))
     results.append(("Text Widget Builder", test_text_widget_builder()))
     results.append(("LED Widget Builder", test_led_widget_builder()))
+    results.append(("Button Widget Builder", test_button_widget_builder()))
     results.append(("Gauge Widget Builder", test_gauge_widget_builder()))
     results.append(("Chart Widget Builder", test_chart_widget_builder()))
     results.append(("Memory Widget Builder", test_memory_widget_builder()))

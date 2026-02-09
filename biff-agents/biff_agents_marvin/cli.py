@@ -11,6 +11,7 @@ from pathlib import Path
 
 from .builders.text_widget_builder import TextWidgetBuilder
 from .builders.led_widget_builder import LEDWidgetBuilder
+from .builders.button_widget_builder import ButtonWidgetBuilder
 from .builders.gauge_widget_builder import GaugeWidgetBuilder
 from .builders.chart_widget_builder import ChartWidgetBuilder
 from .builders.memory_widget_builder import MemoryWidgetBuilder
@@ -29,6 +30,7 @@ def cmd_widget(args):
     builders = {
         'text': TextWidgetBuilder,
         'led': LEDWidgetBuilder,
+        'button': ButtonWidgetBuilder,
         'gauge': GaugeWidgetBuilder,
         'chart': ChartWidgetBuilder,
         'memory': MemoryWidgetBuilder,
