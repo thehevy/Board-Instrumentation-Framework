@@ -6,6 +6,7 @@ Command-line interface for BIFF AI agents.
 
 import sys
 import os
+import platform
 import argparse
 from pathlib import Path
 
