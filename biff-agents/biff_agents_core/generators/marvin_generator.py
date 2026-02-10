@@ -120,9 +120,18 @@ class MarvinApplicationGenerator(BaseGenerator):
         # Tabs
         tabs = ET.SubElement(app, "Tabs")
         
-        # Add Quick Start tab
-        tab = ET.SubElement(tabs, "Tab")
-        tab.set("ID", "Tab.QuickStart")
+        # Add Quick Start tab reference
+        tab_ref = ET.SubElement(tabs, "Tab")
+        tab_ref.set("ID", "Tab.QuickStart")
+        
+        # Add Tab definition outside Application (required by Marvin)
+        tab_def = ET.SubElement(root, "Tab")
+        tab_def.set("ID", "Tab.QuickStart")
+        tab_def.set("hgap", "5")
+        tab_def.set("vgap", "5")
+        tab_def.set("Align", "N")
+        tab_def.set("TabTitle", f"{config.get('minion_namespace', 'QuickStart')} Dashboard")
+        tab_def.set("File", "Tab.QuickStart.xml")
         
         return self._prettify(root)
     
