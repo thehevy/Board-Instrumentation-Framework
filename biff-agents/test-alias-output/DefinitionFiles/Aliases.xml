@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<AliasList>
+  <!-- Configuration Aliases - Modify these values to customize your dashboard -->
+  <!-- Namespace Configuration -->
+  <Alias MinionNamespace="TestNamespace"/>
+  <!-- Network Configuration -->
+  <Alias MarvinPort="52001"/>
+  <Alias OscarIP="192.168.1.100"/>
+  <Alias OscarPort="1100"/>
+  <!-- Window Dimensions -->
+  <Alias WindowWidth="1920"/>
+  <Alias WindowHeight="1050"/>
+  <!-- Layout Configuration -->
+  <Alias Padding="5"/>
+  <Alias GridHGap="5"/>
+  <Alias GridVGap="5"/>
+  <Alias HeartbeatRate="10"/>
+  <!-- Widget Dimensions -->
+  <Alias WidgetHeight="300"/>
+  <Alias WidgetWidth="400"/>
+  <!-- Color Palette - Customize widget colors -->
+  <Alias ColorPrimary="#2196F3"/>
+  <Alias ColorSuccess="#4CAF50"/>
+  <Alias ColorWarning="#FF9800"/>
+  <Alias ColorDanger="#F44336"/>
+</AliasList>

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<MarvinExternalFile>
+  <Grid Align="N" hgap="10" vgap="10">
+    <Widget row="1" column="1" Height="$(WidgetHeight)" Width="$(WidgetWidth)" File="Gauge/GaugeSimple.xml">
+      <Title>Random Value</Title>
+      <MinionSrc Namespace="$(MinionNamespace)" ID="randomval.value"/>
+    </Widget>
+    <Widget row="1" column="2" Height="$(WidgetHeight)" Width="$(WidgetWidth)" File="Gauge/GaugeRadial.xml">
+      <Title>CPU Usage</Title>
+      <MinionSrc Namespace="$(MinionNamespace)" ID="cpu.value"/>
+    </Widget>
+  </Grid>
+</MarvinExternalFile>

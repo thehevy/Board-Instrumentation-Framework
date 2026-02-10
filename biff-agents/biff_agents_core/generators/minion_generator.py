@@ -82,21 +82,39 @@ class MinionConfigGenerator(BaseGenerator):
         # Add single threading option (recommended for simple setups)
         root.set("SingleThreading", "false")
         
+        # Add AliasList at the top for easy configuration
+        alias_list = ET.SubElement(root, "AliasList")
+        alias_list.append(ET.Comment(" Configuration Aliases - Modify these values to customize your setup "))
+        
+        # Add common aliases
+        self._add_alias(alias_list, "MinionNamespace", config.get("minion_namespace", "QuickStart"))
+        self._add_alias(alias_list, "OscarIP", config.get("oscar_ip", "localhost"))
+        self._add_alias(alias_list, "OscarPort", str(config.get("oscar_port", 1100)))
+        self._add_alias(alias_list, "DefaultFrequency", "1000")
+        self._add_alias(alias_list, "FastFrequency", "500")
+        self._add_alias(alias_list, "SlowFrequency", "2000")
+        
+        # Add collector path aliases if using existing BIFF installation
+        if config.get("use_existing") and config.get("biff_root"):
+            biff_root = Path(config["biff_root"])
+            collectors_path = str(biff_root / "Minion" / "Collectors")
+            self._add_alias(alias_list, "CollectorsPath", collectors_path)
+        
         # Create namespace
         namespace = ET.SubElement(root, "Namespace")
         
-        # Namespace name
+        # Namespace name (use alias)
         name = ET.SubElement(namespace, "Name")
-        name.text = config.get("minion_namespace", "QuickStart")
+        name.text = "$(MinionNamespace)"
         
-        # Default frequency (1000ms = 1 second)
+        # Default frequency (use alias)
         freq = ET.SubElement(namespace, "DefaultFrequency")
-        freq.text = "1000"
+        freq.text = "$(DefaultFrequency)"
         
-        # Target connection (Oscar)
+        # Target connection (use aliases)
         target = ET.SubElement(namespace, "TargetConnection")
-        target.set("IP", config.get("oscar_ip", "localhost"))
-        target.set("PORT", str(config.get("oscar_port", 1100)))
+        target.set("IP", "$(OscarIP)")
+        target.set("PORT", "$(OscarPort)")
         
         # Add collectors
         for collector_name in config.get("collectors", ["RandomVal"]):
@@ -104,6 +122,17 @@ class MinionConfigGenerator(BaseGenerator):
         
         # Convert to pretty-printed XML
         return self._prettify(root)
+    
+    def _add_alias(self, alias_list: ET.Element, name: str, value: str):
+        """Add an alias to the AliasList
+        
+        Args:
+            alias_list: Parent AliasList element
+            name: Alias name
+            value: Alias value
+        """
+        alias = ET.SubElement(alias_list, "Alias")
+        alias.set(name, value)
     
     def _add_collector(self, namespace: ET.Element, collector_name: str, config: Dict):
         """Add a collector to the namespace
@@ -133,14 +162,13 @@ class MinionConfigGenerator(BaseGenerator):
         collector = ET.SubElement(namespace, "Collector")
         collector.set("ID", f"{collector_name.lower()}.value")
         
-        # Add executable path
+        # Add executable path (use alias if available)
         executable = ET.SubElement(collector, "Executable")
         
         if config.get("use_existing") and config.get("biff_root"):
-            # Use existing BIFF installation paths
-            biff_root = Path(config["biff_root"])
-            exec_path = biff_root / "Minion" / template["executable"]
-            executable.text = str(exec_path)
+            # Use alias for collectors path
+            exec_path = template["executable"].replace("Collectors/", "$(CollectorsPath)/")
+            executable.text = exec_path
         else:
             # Relative path (assumes running from Minion directory)
             executable.text = template["executable"]

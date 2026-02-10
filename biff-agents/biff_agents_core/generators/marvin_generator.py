@@ -77,37 +77,43 @@ class MarvinApplicationGenerator(BaseGenerator):
         """
         root = ET.Element("Marvin")
         
+        # Add AliasList at the top with import for DefinitionFiles
+        alias_list = ET.SubElement(root, "AliasList")
+        alias_list.append(ET.Comment(" Import alias definitions from DefinitionFiles folder "))
+        import_elem = ET.SubElement(alias_list, "Import")
+        import_elem.text = "DefinitionFiles/Aliases.xml"
+        
         # Application element
         app = ET.SubElement(root, "Application")
         app.set("Scale", "auto")
         
-        # Creation size
+        # Creation size (use aliases)
         size = ET.SubElement(app, "CreationSize")
-        size.set("Width", "1920")
-        size.set("Height", "1050")
+        size.set("Width", "$(WindowWidth)")
+        size.set("Height", "$(WindowHeight)")
         
-        # Network port
+        # Network port (use alias)
         network = ET.SubElement(app, "Network")
-        network.set("Port", str(config.get("marvin_port", 52001)))
+        network.set("Port", "$(MarvinPort)")
         
-        # Title
+        # Title (use alias for namespace)
         title = ET.SubElement(app, "Title")
-        title.text = f"BIFF Quick Start - {config.get('minion_namespace', 'QuickStart')}"
+        title.text = f"BIFF Quick Start - $(MinionNamespace)"
         
-        # Padding
+        # Padding (use aliases)
         padding = ET.SubElement(app, "Padding")
-        padding.set("top", "5")
-        padding.set("bottom", "5")
-        padding.set("right", "5")
-        padding.set("left", "5")
+        padding.set("top", "$(Padding)")
+        padding.set("bottom", "$(Padding)")
+        padding.set("right", "$(Padding)")
+        padding.set("left", "$(Padding)")
         
         # Stylesheet
         stylesheet = ET.SubElement(app, "StyleSheet")
         stylesheet.text = "Widget/Modena-BIFF.css"
         
-        # Heartbeat
+        # Heartbeat (use alias)
         heartbeat = ET.SubElement(app, "Heartbeat")
-        heartbeat.set("Rate", "10")
+        heartbeat.set("Rate", "$(HeartbeatRate)")
         
         # Tasks
         tasks = ET.SubElement(app, "Tasks")
@@ -127,10 +133,10 @@ class MarvinApplicationGenerator(BaseGenerator):
         # Add Tab definition outside Application (required by Marvin)
         tab_def = ET.SubElement(root, "Tab")
         tab_def.set("ID", "Tab.QuickStart")
-        tab_def.set("hgap", "5")
-        tab_def.set("vgap", "5")
+        tab_def.set("hgap", "$(GridHGap)")
+        tab_def.set("vgap", "$(GridVGap)")
         tab_def.set("Align", "N")
-        tab_def.set("TabTitle", f"{config.get('minion_namespace', 'QuickStart')} Dashboard")
+        tab_def.set("TabTitle", "$(MinionNamespace) Dashboard")
         tab_def.set("File", "Tab.QuickStart.xml")
         
         return self._prettify(root)
@@ -149,9 +155,9 @@ class MarvinApplicationGenerator(BaseGenerator):
         # Tab element
         tab = ET.SubElement(root, "Tab")
         
-        # Title
+        # Title (use alias)
         title = ET.SubElement(tab, "Title")
-        title.text = f"{config.get('minion_namespace', 'QuickStart')} Dashboard"
+        title.text = "$(MinionNamespace) Dashboard"
         
         # Grid reference
         grid = ET.SubElement(tab, "Grid")
@@ -220,8 +226,8 @@ class MarvinApplicationGenerator(BaseGenerator):
         widget = ET.SubElement(grid, "Widget")
         widget.set("row", str(row))
         widget.set("column", str(col))
-        widget.set("Height", "300")
-        widget.set("Width", "400")
+        widget.set("Height", "$(WidgetHeight)")  # Use alias
+        widget.set("Width", "$(WidgetWidth)")    # Use alias
         
         # Widget file reference (for reusable widgets)
         widget.set("File", template["file"])
@@ -230,9 +236,9 @@ class MarvinApplicationGenerator(BaseGenerator):
         title_elem = ET.SubElement(widget, "Title")
         title_elem.text = template["title"]
         
-        # Minion data source
+        # Minion data source (use alias for namespace)
         minion_src = ET.SubElement(widget, "MinionSrc")
-        minion_src.set("Namespace", namespace)
+        minion_src.set("Namespace", "$(MinionNamespace)")
         minion_src.set("ID", f"{collector_name.lower()}.value")
         
         # Widget-specific settings
@@ -243,6 +249,60 @@ class MarvinApplicationGenerator(BaseGenerator):
             # Text widget initial value
             initial = ET.SubElement(widget, "InitialValue")
             initial.text = "Waiting for data..."
+    
+    def generate_aliases(self, config: Dict) -> str:
+        """Generate DefinitionFiles/Aliases.xml
+        
+        Args:
+            config: Configuration dict
+        
+        Returns:
+            XML string with alias definitions
+        """
+        root = ET.Element("AliasList")
+        root.append(ET.Comment(" Configuration Aliases - Modify these values to customize your dashboard "))
+        
+        # Add configuration comment sections
+        root.append(ET.Comment(" Namespace Configuration "))
+        self._add_alias(root, "MinionNamespace", config.get("minion_namespace", "QuickStart"))
+        
+        root.append(ET.Comment(" Network Configuration "))
+        self._add_alias(root, "MarvinPort", str(config.get("marvin_port", 52001)))
+        self._add_alias(root, "OscarIP", config.get("oscar_ip", "localhost"))
+        self._add_alias(root, "OscarPort", str(config.get("oscar_port", 1100)))
+        
+        root.append(ET.Comment(" Window Dimensions "))
+        self._add_alias(root, "WindowWidth", "1920")
+        self._add_alias(root, "WindowHeight", "1050")
+        
+        root.append(ET.Comment(" Layout Configuration "))
+        self._add_alias(root, "Padding", "5")
+        self._add_alias(root, "GridHGap", "5")
+        self._add_alias(root, "GridVGap", "5")
+        self._add_alias(root, "HeartbeatRate", "10")
+        
+        root.append(ET.Comment(" Widget Dimensions "))
+        self._add_alias(root, "WidgetHeight", "300")
+        self._add_alias(root, "WidgetWidth", "400")
+        
+        root.append(ET.Comment(" Color Palette - Customize widget colors "))
+        self._add_alias(root, "ColorPrimary", "#2196F3")
+        self._add_alias(root, "ColorSuccess", "#4CAF50")
+        self._add_alias(root, "ColorWarning", "#FF9800")
+        self._add_alias(root, "ColorDanger", "#F44336")
+        
+        return self._prettify(root)
+    
+    def _add_alias(self, parent: ET.Element, name: str, value: str):
+        """Add an alias element
+        
+        Args:
+            parent: Parent element (AliasList or root)
+            name: Alias name
+            value: Alias value
+        """
+        alias = ET.SubElement(parent, "Alias")
+        alias.set(name, value)
     
     def _prettify(self, elem: ET.Element) -> str:
         """Return pretty-printed XML string
@@ -269,7 +329,18 @@ class MarvinApplicationGenerator(BaseGenerator):
         """
         output_dir.mkdir(parents=True, exist_ok=True)
         
+        # Create DefinitionFiles directory
+        def_files_dir = output_dir / "DefinitionFiles"
+        def_files_dir.mkdir(parents=True, exist_ok=True)
+        
         files = {}
+        
+        # Generate DefinitionFiles/Aliases.xml
+        aliases_xml = self.generate_aliases(config)
+        aliases_file = def_files_dir / "Aliases.xml"
+        with open(aliases_file, 'w', encoding='utf-8') as f:
+            f.write(aliases_xml)
+        files['aliases'] = aliases_file
         
         # Generate Application.xml
         app_xml = self.generate_application(config)

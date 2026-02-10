@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<Marvin>
+  <AliasList>
+    <!-- Import alias definitions from DefinitionFiles folder -->
+    <Import>DefinitionFiles/Aliases.xml</Import>
+  </AliasList>
+  <Application Scale="auto">
+    <CreationSize Width="$(WindowWidth)" Height="$(WindowHeight)"/>
+    <Network Port="$(MarvinPort)"/>
+    <Title>BIFF Quick Start - $(MinionNamespace)</Title>
+    <Padding top="$(Padding)" bottom="$(Padding)" right="$(Padding)" left="$(Padding)"/>
+    <StyleSheet>Widget/Modena-BIFF.css</StyleSheet>
+    <Heartbeat Rate="$(HeartbeatRate)"/>
+    <Tasks Enabled="True"/>
+    <MainMenu Show="True"/>
+    <Tabs>
+      <Tab ID="Tab.QuickStart"/>
+    </Tabs>
+  </Application>
+  <Tab ID="Tab.QuickStart" hgap="$(GridHGap)" vgap="$(GridVGap)" Align="N" TabTitle="$(MinionNamespace) Dashboard" File="Tab.QuickStart.xml"/>
+</Marvin>
