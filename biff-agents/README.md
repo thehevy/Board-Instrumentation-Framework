@@ -29,12 +29,12 @@ BIFF Agents automates the creation of **Minion collector configurations** (Phase
 
 ```powershell
 # Windows (PowerShell)
-$env:HTTP_PROXY = 'http://proxy-dmz.intel.com:912'
-$env:HTTPS_PROXY = 'http://proxy-dmz.intel.com:912'
+$env:HTTP_PROXY = 'http://proxy.company.com:8080'
+$env:HTTPS_PROXY = 'http://proxy.company.com:8080'
 
 # Or permanently (restart shell after):
-[System.Environment]::SetEnvironmentVariable('HTTP_PROXY', 'http://proxy-dmz.intel.com:912', 'User')
-[System.Environment]::SetEnvironmentVariable('HTTPS_PROXY', 'http://proxy-dmz.intel.com:912', 'User')
+[System.Environment]::SetEnvironmentVariable('HTTP_PROXY', 'http://proxy.company.com:8080', 'User')
+[System.Environment]::SetEnvironmentVariable('HTTPS_PROXY', 'http://proxy.company.com:8080', 'User')
 ```
 
 ```bash
@@ -42,6 +42,8 @@ $env:HTTPS_PROXY = 'http://proxy-dmz.intel.com:912'
 export HTTP_PROXY='http://proxy.company.com:8080'
 export HTTPS_PROXY='http://proxy.company.com:8080'
 ```
+
+**Gradle proxy** (for Marvin builds): Edit `Marvin/gradle.properties` and uncomment the proxy settings.
 
 ### 2. Build Marvin (First Time Only)
 
