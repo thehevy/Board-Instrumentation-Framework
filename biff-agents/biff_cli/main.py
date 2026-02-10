@@ -753,9 +753,92 @@ def handle_quickstart(args):
                         else:
                             print_info("Marvin JAR already up-to-date - skipping build")
                             print_success("✓ Marvin ready")
+                            marvin_built = True
+            
+            # Step 4: Create portable deployment package
+            package_created = False
+            if marvin_built and config.get("use_existing") and config.get("biff_root"):
+                print()
+                if confirm_action("Create portable deployment package?", default=True):
+                    print()
+                    print_header("Creating Portable Deployment Package")
+                    print()
+                    
+                    # Build the package using build_package.py
+                    try:
+                        build_package_script = Path(__file__).parent.parent / "build_package.py"
+                        if build_package_script.exists():
+                            print_info(f"Building package from configs in: {output_dir}")
+                            
+                            import subprocess
+                            result = subprocess.run(
+                                [sys.executable, str(build_package_script), 
+                                 "--skip-build",  # Marvin already built
+                                 "--config-source", str(output_dir),
+                                 "--output-dir", "BIFF-QuickStart"],
+                                capture_output=False  # Show progress
+                            )
+                            
+                            if result.returncode == 0:
+                                print()
+                                print_success("✓ Portable package created successfully!")
+                                print()
+                                
+                                # Find the created package directory
+                                parent_dir = Path(config["biff_root"])
+                                package_dirs = list(parent_dir.glob("BIFF-QuickStart-*"))
+                                if package_dirs:
+                                    package_dir = sorted(package_dirs)[-1]  # Get most recent
+                                    print_info(f"Package location: {package_dir}")
+                                    print()
+                                    print_info("Package contains:")
+                                    print("  • Marvin/ - GUI with JAR and widgets")
+                                    print("  • Oscar/ - Data broker")
+                                    print("  • Minion/ - Data collectors")
+                                    print("  • Configs/ - Your XML configurations")
+                                    print("  • start_all scripts - Easy launcher")
+                                    print()
+                                    package_created = True
+                            else:
+                                print_error("✗ Package creation failed")
+                        else:
+                            print_warning("⚠ build_package.py not found - skipping package creation")
+                    except Exception as e:
+                        print_error(f"✗ Package creation failed: {e}")
             
             # Step 5: Offer to launch components
-            if build_marvin or (config.get("use_existing") and config.get("biff_root")):
+            if package_created:
+                print()
+                if confirm_action("Start all components now?", default=True):
+                    # Find the package directory
+                    parent_dir = Path(config["biff_root"])
+                    package_dirs = list(parent_dir.glob("BIFF-QuickStart-*"))
+                    if package_dirs:
+                        package_dir = sorted(package_dirs)[-1]
+                        
+                        print()
+                        print_header("Starting BIFF Components")
+                        print()
+                        print_info(f"Launching from: {package_dir.name}")
+                        print()
+                        
+                        # Use the start_all script in the package
+                        start_script = package_dir / ("start_all.bat" if platform.system() == "Windows" else "start_all.sh")
+                        if start_script.exists():
+                            try:
+                                subprocess.Popen([str(start_script)], cwd=str(package_dir))
+                                print_success("✓ All components starting...")
+                                print()
+                                print_info("Monitor:")
+                                print(f"  • Oscar: Check {package_dir}/Oscar/OscarLog.txt")
+                                print(f"  • Minion: Check terminal output")
+                                print(f"  • Marvin: GUI should open automatically")
+                                print()
+                                print_success("✓ Quick start complete!")
+                                return 0
+                            except Exception as e:
+                                print_error(f"✗ Could not start components: {e}")
+            elif build_marvin or (config.get("use_existing") and config.get("biff_root")):
                 print()
                 if confirm_action("Start all components now?", default=True):
                     print()
