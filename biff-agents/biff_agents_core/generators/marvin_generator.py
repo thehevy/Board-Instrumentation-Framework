@@ -236,22 +236,11 @@ class MarvinApplicationGenerator(BaseGenerator):
         minion_src.set("ID", f"{collector_name.lower()}.value")
         
         # Widget-specific settings
-        if template["type"].endswith("Gauge"):
-            # Gauge settings
-            min_val = ET.SubElement(widget, "MinValue")
-            min_val.text = str(template["min"])
-            
-            max_val = ET.SubElement(widget, "MaxValue")
-            max_val.text = str(template["max"])
-            
-            decimals = ET.SubElement(widget, "Decimals")
-            decimals.text = str(template["decimals"])
-            
-            unit = ET.SubElement(widget, "UnitText")
-            unit.text = template["unit"]
-        
-        elif template["type"] == "Text":
-            # Text widget settings
+        # Note: Properties like MinValue, MaxValue, Decimals, UnitText are widget 
+        # definition properties and belong in the widget definition files 
+        # (Widget/Gauge/*.xml), not in the grid instantiation.
+        if template["type"] == "Text":
+            # Text widget initial value
             initial = ET.SubElement(widget, "InitialValue")
             initial.text = "Waiting for data..."
     

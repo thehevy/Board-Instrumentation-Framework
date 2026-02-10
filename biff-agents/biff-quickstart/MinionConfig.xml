@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<Minion SingleThreading="false">
+  <Namespace>
+    <Name>QuickStart</Name>
+    <DefaultFrequency>1000</DefaultFrequency>
+    <TargetConnection IP="localhost" PORT="1100"/>
+    <Collector ID="cpu.value">
+      <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\CPU.py</Executable>
+      <Param>GetCPU_Percentage</Param>
+    </Collector>
+    <!-- Unknown collector: Memory - add manually -->
+    <Collector ID="network.value">
+      <Executable>D:\github\Board-Instrumentation-Framework\Minion\Collectors\Network.py</Executable>
+      <Param>GetBytesRecv</Param>
+    </Collector>
+    <!-- Unknown collector: Storage - add manually -->
+  </Namespace>
+</Minion>
