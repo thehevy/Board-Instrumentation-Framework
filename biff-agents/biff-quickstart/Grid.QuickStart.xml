@@ -4,10 +4,6 @@
     <Widget row="1" column="1" Height="300" Width="400" File="Gauge/GaugeRadial.xml">
       <Title>CPU Usage</Title>
       <MinionSrc Namespace="QuickStart" ID="cpu.value"/>
-      <MinValue>0</MinValue>
-      <MaxValue>100</MaxValue>
-      <Decimals>1</Decimals>
-      <UnitText>%</UnitText>
     </Widget>
     <Widget row="1" column="2" Height="300" Width="400" File="Text/Text.xml">
       <Title>Memory</Title>
@@ -22,10 +18,6 @@
     <Widget row="2" column="1" Height="300" Width="400" File="Gauge/GaugeRadial.xml">
       <Title>Disk Usage</Title>
       <MinionSrc Namespace="QuickStart" ID="storage.value"/>
-      <MinValue>0</MinValue>
-      <MaxValue>100</MaxValue>
-      <Decimals>1</Decimals>
-      <UnitText>%</UnitText>
     </Widget>
   </Grid>
 </MarvinExternalFile>

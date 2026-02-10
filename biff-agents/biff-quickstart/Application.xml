@@ -13,4 +13,5 @@
       <Tab ID="Tab.QuickStart"/>
     </Tabs>
   </Application>
+  <Tab ID="Tab.QuickStart" hgap="5" vgap="5" Align="N" TabTitle="QuickStart Dashboard" File="Tab.QuickStart.xml"/>
 </Marvin>

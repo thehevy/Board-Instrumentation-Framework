@@ -4,6 +4,7 @@ Interactive setup wizard for BIFF Quick Start.
 Guides users through deployment configuration based on validated environment.
 """
 
+import platform
 from typing import Dict, Optional
 from pathlib import Path
 from .cli_helpers import (
@@ -187,24 +188,30 @@ class SetupWizard:
         print_info("Select collectors to include:")
         print()
         
-        # Pre-defined collector presets
+        # Pre-defined collector presets (OS-aware)
         # Note: Timer removed from defaults due to complex state management requirements
+        # Note: Memory, Network, Storage removed - not in COLLECTOR_TEMPLATES
+        current_os = platform.system()  # 'Windows', 'Linux', or 'Darwin'
+        
         if deployment_type == "local":
             presets = {
                 "demo": ["RandomVal", "CPU"],
-                "monitoring": ["CPU", "Memory", "Network", "Storage"],
+                "monitoring": ["CPU"],  # Only cross-platform collectors
                 "minimal": ["RandomVal"]
             }
         else:
             presets = {
                 "demo": ["RandomVal"],
-                "monitoring": ["CPU", "Memory", "Network"],
+                "monitoring": ["CPU"],  # Only cross-platform collectors  
                 "minimal": ["RandomVal"]
             }
         
-        print("Available presets:")
+        print(f"Available presets (for {current_os}):")
         for name, collectors in presets.items():
             print(f"  - {name}: {', '.join(collectors)}")
+        print()
+        print_info("Note: Only cross-platform collectors (RandomVal, CPU) are currently available in quickstart")
+        print_info("Advanced collectors (Network, Memory, Docker, etc.) require manual configuration")
         print()
         
         preset = select_from_menu(

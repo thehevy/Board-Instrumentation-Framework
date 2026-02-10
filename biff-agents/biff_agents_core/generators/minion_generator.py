@@ -4,6 +4,7 @@ Generator for Minion configuration files.
 Creates MinionConfig.xml with collectors, namespaces, and target connections.
 """
 
+import platform
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from pathlib import Path
@@ -34,33 +35,31 @@ class MinionConfigGenerator(BaseGenerator):
                 pass  # Discovery not available
         return self._discovery
     
-    # Collector definitions with their parameters
+    # Collector definitions with their parameters and OS compatibility
     COLLECTOR_TEMPLATES = {
         "RandomVal": {
             "executable": "Collectors/RandomVal.py",
-            "params": ["GetBoundedRandomValue", "0", "100"],  # Function name + parameters
-            "description": "Random value between 0-100"
+            "params": ["GetBoundedRandomValue", "0", "100"],
+            "description": "Random value between 0-100",
+            "os": ["Windows", "Linux", "Darwin"],  # Cross-platform
+            "dependencies": []
         },
-        # Note: Timer.py has complex state management requirements
-        # Requires specific action sequences (create, start, get)
-        # Consider using RandomVal for simple testing instead
-        # "Timer": {
-        #     "executable": "Collectors/Timer.py",
-        #     "params": ["Timer", "timer_id", "get_auto_create"],
-        #     "description": "Elapsed time (requires state management)"
-        # },
         "CPU": {
             "executable": "Collectors/CPU.py",
-            "params": ["GetCPU_Percentage"],  # Correct function name
-            "description": "CPU utilization percentage"
-        },
-        "Network": {
-            "executable": "Collectors/Network.py",
-            "params": ["GetBytesRecv"],
-            "description": "Network bytes received"
+            "params": ["GetCPU_Percentage"],
+            "description": "CPU utilization percentage",
+            "os": ["Windows", "Linux", "Darwin"],  # Cross-platform (uses psutil)
+            "dependencies": ["psutil"]
         }
-        # Note: Memory and Storage functions do not exist in CPU.py
-        # Remove these templates - they reference non-existent functions
+        # Note: Network collector commented out - requires device parameter which is OS-specific
+        # Linux uses 'eth0', Windows uses long interface names
+        # "Network": {
+        #     "executable": "Collectors/Network.py",
+        #     "params": ["GetNetworkRx", "eth0"],  # Requires device name
+        #     "description": "Network bytes received",
+        #     "os": ["Windows", "Linux", "Darwin"],
+        #     "dependencies": ["psutil"]
+        # }
     }
     
     def generate(self, config: Dict) -> str:
@@ -121,6 +120,14 @@ class MinionConfigGenerator(BaseGenerator):
             return
         
         template = self.COLLECTOR_TEMPLATES[collector_name]
+        
+        # Check OS compatibility
+        current_os = platform.system()  # Returns 'Windows', 'Linux', or 'Darwin'
+        if current_os not in template.get("os", ["Windows", "Linux", "Darwin"]):
+            # Collector not supported on this OS - add comment
+            comment = ET.Comment(f" {collector_name} collector is not supported on {current_os} ")
+            namespace.append(comment)
+            return
         
         # Create collector element
         collector = ET.SubElement(namespace, "Collector")
