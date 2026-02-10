@@ -530,13 +530,14 @@ def handle_quickstart(args):
         if confirm_action("Install missing packages now?", default=True):
             package_names = " ".join(pkg["name"] for pkg in missing)
             print_info(f"Installing: {package_names}")
+            print()
             try:
                 import subprocess
+                # Don't capture output - let pip show progress
                 result = subprocess.run(
-                    [sys.executable, "-m", "pip", "install"] + [pkg["name"] for pkg in missing],
-                    capture_output=True,
-                    text=True
+                    [sys.executable, "-m", "pip", "install"] + [pkg["name"] for pkg in missing]
                 )
+                print()
                 if result.returncode == 0:
                     print_success("✓ Packages installed successfully")
                 else:
