@@ -390,6 +390,74 @@ class EnvironmentValidator:
         
         return results
     
+    def check_pypi_access(self) -> Dict[str, any]:
+        """Check if PyPI (Python Package Index) is accessible
+        
+        Tests connectivity to PyPI to ensure pip install will work.
+        Also checks for common proxy configuration issues.
+        
+        Returns:
+            Dict with PyPI access status and proxy detection
+        """
+        results = {
+            "accessible": False,
+            "https_works": False,
+            "proxy_configured": False,
+            "proxy_env_vars": {},
+            "error": None
+        }
+        
+        # Check for proxy environment variables
+        import os
+        proxy_vars = ["HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy", "NO_PROXY", "no_proxy"]
+        for var in proxy_vars:
+            if var in os.environ:
+                results["proxy_env_vars"][var] = os.environ[var]
+                results["proxy_configured"] = True
+        
+        # Test PyPI connectivity
+        try:
+            import urllib.request
+            
+            # Try to access PyPI simple index
+            req = urllib.request.Request("https://pypi.org/simple/", method="HEAD")
+            response = urllib.request.urlopen(req, timeout=5)
+            
+            if response.status == 200:
+                results["accessible"] = True
+                results["https_works"] = True
+                self.info.append("✓ PyPI (pypi.org) is accessible")
+                return results
+            
+        except urllib.error.HTTPError as e:
+            results["error"] = f"HTTP {e.code}: {e.reason}"
+            if e.code == 407:  # Proxy Authentication Required
+                self.issues.append("✗ Proxy authentication required but not configured")
+                self.info.append("  ℹ Configure proxy in environment variables or pip config")
+            else:
+                self.warnings.append(f"⚠ PyPI returned HTTP {e.code}: {e.reason}")
+        except urllib.error.URLError as e:
+            results["error"] = str(e.reason)
+            if "Tunnel connection failed" in str(e.reason):
+                self.issues.append("✗ Proxy tunnel connection failed")
+                self.info.append("  ℹ Check proxy configuration: HTTP_PROXY, HTTPS_PROXY")
+            elif results["proxy_configured"]:
+                self.warnings.append("⚠ PyPI not accessible - proxy may be misconfigured")
+                self.info.append(f"  ℹ Current proxy: {results['proxy_env_vars'].get('HTTPS_PROXY') or results['proxy_env_vars'].get('HTTP_PROXY')}")
+            else:
+                self.issues.append("✗ PyPI not accessible and no proxy configured")
+                self.info.append("  ℹ If behind a corporate firewall, configure HTTP_PROXY and HTTPS_PROXY")
+        except socket.timeout:
+            results["error"] = "Connection timeout"
+            self.warnings.append("⚠ PyPI connection timed out")
+            if not results["proxy_configured"]:
+                self.info.append("  ℹ If behind a firewall, you may need to configure a proxy")
+        except Exception as e:
+            results["error"] = str(e)
+            self.warnings.append(f"⚠ Could not verify PyPI access: {e}")
+        
+        return results
+    
     def suggest_fixes(self) -> List[str]:
         """Generate fix suggestions for detected issues"""
         fixes = []

@@ -528,24 +528,76 @@ def handle_quickstart(args):
         print()
         
         if confirm_action("Install missing packages now?", default=True):
-            package_names = " ".join(pkg["name"] for pkg in missing)
-            print_info(f"Installing: {package_names}")
+            # Check PyPI accessibility before attempting installation
+            print_info("Checking PyPI connectivity...")
+            pypi_check = validator.check_pypi_access()
             print()
-            try:
-                import subprocess
-                # Don't capture output - let pip show progress
-                result = subprocess.run(
-                    [sys.executable, "-m", "pip", "install"] + [pkg["name"] for pkg in missing]
-                )
+            
+            if not pypi_check["accessible"]:
+                print_error("✗ Cannot access PyPI - package installation will likely fail")
                 print()
-                if result.returncode == 0:
-                    print_success("✓ Packages installed successfully")
+                
+                if pypi_check["proxy_configured"]:
+                    print_info("Proxy environment variables detected:")
+                    for var, value in pypi_check["proxy_env_vars"].items():
+                        print(f"  {var} = {value}")
+                    print()
+                    print_warning("Proxy is configured but PyPI is still not accessible.")
+                    print_info("Possible issues:")
+                    print("  • Proxy requires authentication (username/password in URL)")
+                    print("  • Proxy URL is incorrect")
+                    print("  • SSL certificate verification issues")
+                    print()
+                    print_info("Example proxy configuration:")
+                    print("  $env:HTTP_PROXY = 'http://username:password@proxy.company.com:8080'")
+                    print("  $env:HTTPS_PROXY = 'http://username:password@proxy.company.com:8080'")
+                    print("  $env:NO_PROXY = 'localhost,127.0.0.1'")
                 else:
-                    print_warning("⚠ Some packages may have failed to install")
-                    print_info(f"You can install them manually: pip install {package_names}")
-            except Exception as e:
-                print_error(f"✗ Installation failed: {e}")
-                print_info(f"Install manually: pip install {package_names}")
+                    print_warning("No proxy configuration detected.")
+                    print_info("If you are behind a corporate firewall, you need to configure proxy:")
+                    print()
+                    print_info("Windows (PowerShell):")
+                    print("  $env:HTTP_PROXY = 'http://proxy.company.com:8080'")
+                    print("  $env:HTTPS_PROXY = 'http://proxy.company.com:8080'")
+                    print()
+                    print_info("Linux/Mac:")
+                    print("  export HTTP_PROXY='http://proxy.company.com:8080'")
+                    print("  export HTTPS_PROXY='http://proxy.company.com:8080'")
+                print()
+                
+                if not confirm_action("Try to install packages anyway?", default=False):
+                    print_info("Skipping package installation.")
+                    print_info(f"Install manually when connectivity is available: pip install {' '.join(pkg['name'] for pkg in missing)}")
+                    print()
+                    # Skip installation - user chose not to proceed
+                    skip_install = True
+                else:
+                    print_warning("Attempting installation despite connectivity issues...")
+                    print()
+                    skip_install = False
+            else:
+                skip_install = False
+            
+            # Proceed with installation if not skipped
+            if not skip_install:
+                package_names = " ".join(pkg["name"] for pkg in missing)
+                print_info(f"Installing: {package_names}")
+                print()
+                try:
+                    import subprocess
+                    # Don't capture output - let pip show progress
+                    result = subprocess.run(
+                        [sys.executable, "-m", "pip", "install"] + [pkg["name"] for pkg in missing]
+                    )
+                    print()
+                    if result.returncode == 0:
+                        print_success("✓ Packages installed successfully")
+                    else:
+                        print_warning("⚠ Some packages may have failed to install")
+                        print_info(f"You can install them manually: pip install {package_names}")
+                except Exception as e:
+                    print_error(f"✗ Installation failed: {e}")
+                    print_info(f"Install manually: pip install {package_names}")
         else:
             print_info("Skipping package installation. Some collectors may not work.")
         print()
