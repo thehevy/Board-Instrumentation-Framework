@@ -621,7 +621,58 @@ def handle_quickstart(args):
     print_success("✓ Environment validation passed!")
     print()
     
-    # Step 2: Run interactive setup wizard
+    # Step 2: Build Marvin first (if Java and Gradle available)
+    marvin_built = False
+    if results.get("java") and results["java"]["sufficient"] and results.get("gradle") and results["gradle"]["installed"]:
+        marvin_dir = biff_root / "Marvin"
+        if marvin_dir.exists():
+            orchestrator = BuildOrchestrator(str(biff_root))
+            
+            if orchestrator.is_build_needed():
+                print_header("Building Marvin (Required for demo)")
+                print()
+                print_info("This will take 2-3 minutes on first build...")
+                print()
+                
+                if confirm_action("Build Marvin now?", default=True):
+                    result = orchestrator.execute(verbose=True)
+                    print()
+                    
+                    if result.success:
+                        jar_path = orchestrator.get_marvin_jar_path()
+                        print_success(f"✓ Marvin built successfully!")
+                        print_info(f"  JAR: {jar_path}")
+                        marvin_built = True
+                    else:
+                        print_error(f"✗ Marvin build failed: {result.message}")
+                        print()
+                        print_warning("You can still generate configs, but won't be able to run Marvin")
+                        if not confirm_action("Continue without Marvin?", default=True):
+                            return 1
+                else:
+                    print_info("Skipping Marvin build - you'll need to build it manually later")
+                print()
+            else:
+                print_info("ℹ Marvin JAR already exists - skipping build")
+                print_success(f"  ✓ {orchestrator.get_marvin_jar_path()}")
+                print()
+                marvin_built = True
+        else:
+            print_warning("⚠ Marvin directory not found - skipping build")
+            print_info(f"  Expected: {marvin_dir}")
+            print()
+    else:
+        reasons = []
+        if not results.get("java") or not results["java"]["sufficient"]:
+            reasons.append("Java 10+ not available")
+        if not results.get("gradle") or not results["gradle"]["installed"]:
+            reasons.append("Gradle not found")
+        
+        print_warning(f"⚠ Cannot build Marvin: {', '.join(reasons)}")
+        print_info("  You can generate configs now and build Marvin later")
+        print()
+    
+    # Step 3: Run interactive setup wizard
     wizard = SetupWizard(results)
     
     try:

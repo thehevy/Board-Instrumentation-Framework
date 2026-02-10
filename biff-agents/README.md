@@ -25,49 +25,69 @@ BIFF Agents automates the creation of **Minion collector configurations** (Phase
 
 ## ⚡ Quick Start
 
-### Installation
+### 1. Configure Proxy (If Behind Corporate Firewall)
 
-```bash
-cd biff-agents
-# No pip install required - run directly from source
+```powershell
+# Windows (PowerShell)
+$env:HTTP_PROXY = 'http://proxy-dmz.intel.com:912'
+$env:HTTPS_PROXY = 'http://proxy-dmz.intel.com:912'
+
+# Or permanently (restart shell after):
+[System.Environment]::SetEnvironmentVariable('HTTP_PROXY', 'http://proxy-dmz.intel.com:912', 'User')
+[System.Environment]::SetEnvironmentVariable('HTTPS_PROXY', 'http://proxy-dmz.intel.com:912', 'User')
 ```
 
-### Generate Minion Configuration (Phase 2)
+```bash
+# Linux/Mac
+export HTTP_PROXY='http://proxy.company.com:8080'
+export HTTPS_PROXY='http://proxy.company.com:8080'
+```
+
+### 2. Build Marvin (First Time Only)
 
 ```bash
-# Interactive collector creation
+cd Marvin
+
+# Windows
+.\gradlew.bat buildDeps
+.\gradlew.bat build
+
+# Linux/Mac
+./gradlew buildDeps
+./gradlew build
+
+# Result: Marvin/build/libs/BIFF.Marvin.jar
+```
+
+### 3. Create Complete Demo Setup
+
+```bash
+cd ../biff-agents
+
+# Automated setup (builds Marvin + creates demo)
+python -m biff_cli quickstart
+
+# This will:
+# - Check PyPI connectivity (install packages if needed)
+# - Generate Minion/Oscar/Marvin configs
+# - Create demo deployment folder
+# - Offer to start all components
+```
+
+### 4. Manual Component Usage (Optional)
+
+```bash
+# Generate just Minion config
 python -m biff_cli collector create
 
-# List available collector types
-python -m biff_cli collector list
-
-# Generate quickstart config
-python -m biff_cli config generate quickstart -o quickstart_configs
-```
-
-### Generate Marvin Dashboard (Phase 3)
-
-```bash
-# List available widgets and dashboard templates
-python -m biff_agents_marvin.cli list-widgets
-python -m biff_agents_marvin.cli list-composers
-
-# Quickstart dashboard (1 tab, auto-layout)
+# Generate just Marvin dashboard  
 python -m biff_agents_marvin.cli dashboard quickstart \
-  -c quickstart_configs/MinionConfig.xml \
+  -c MinionConfig.xml \
   -o my_dashboard
 
-# Monitoring dashboard (3 tabs: Overview/Details/Status)
-python -m biff_agents_marvin.cli dashboard monitoring \
-  -c quickstart_configs/MinionConfig.xml \
-  -o monitoring_dashboard
-
-# Interactive mode (guided wizard)
-python -m biff_agents_marvin.cli interactive
-
-# Run generated dashboard
-cd my_dashboard
-java -jar ../Marvin/build/libs/BIFF.Marvin.jar -i App.Config.xml
+# List available templates
+python -m biff_cli collector list
+python -m biff_agents_marvin.cli list-widgets
 ```
 
 ---
