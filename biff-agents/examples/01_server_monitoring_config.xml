@@ -1,81 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Example 1: Server Monitoring Configuration -->
 <Minion>
+    <AliasList>
+        <!-- Import alias definitions -->
+        <Import>DefinitionFiles/01_server_monitoring_aliases.xml</Import>
+    </AliasList>
+    
     <Namespace>
-        <Name>ServerMonitoring</Name>
-        <DefaultFrequency>1000</DefaultFrequency>
+        <Name>$(MinionNamespace)</Name>
+        <DefaultFrequency>$(DefaultFrequency)</DefaultFrequency>
         
         <!-- CPU Metrics -->
-        <Collector ID="cpu.usage" Frequency="500">
-            <Executable>Collectors/CPU.py</Executable>
+        <Collector ID="cpu.usage" Frequency="$(FastFrequency)">
+            <Executable>$(CollectorsPath)/CPU.py</Executable>
             <Param>GetUsage</Param>
         </Collector>
         
         <Collector ID="cpu.load1">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>LoadAverage1</Param>
         </Collector>
         
         <Collector ID="cpu.load5">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>LoadAverage5</Param>
         </Collector>
         
         <!-- Memory Metrics -->
         <Collector ID="memory.used">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>MemoryUsed</Param>
         </Collector>
         
         <Collector ID="memory.percent">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>MemoryPercent</Param>
         </Collector>
         
         <Collector ID="memory.available">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>MemoryAvailable</Param>
         </Collector>
         
         <!-- Network Metrics -->
         <Collector ID="network.eth0.rx">
-            <Executable>Collectors/LinuxNetwork.py</Executable>
-            <Param>eth0</Param>
+            <Executable>$(CollectorsPath)/LinuxNetwork.py</Executable>
+            <Param>$(NetworkInterface)</Param>
             <Param>rx_bytes</Param>
         </Collector>
         
         <Collector ID="network.eth0.tx">
-            <Executable>Collectors/LinuxNetwork.py</Executable>
-            <Param>eth0</Param>
+            <Executable>$(CollectorsPath)/LinuxNetwork.py</Executable>
+            <Param>$(NetworkInterface)</Param>
             <Param>tx_bytes</Param>
         </Collector>
         
         <!-- Disk Metrics -->
         <Collector ID="disk.root.used">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>DiskUsedPercent</Param>
             <Param>/</Param>
         </Collector>
         
         <Collector ID="disk.home.used">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>DiskUsedPercent</Param>
             <Param>/home</Param>
         </Collector>
         
         <!-- System Info -->
         <Collector ID="system.hostname">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>Hostname</Param>
         </Collector>
         
         <Collector ID="system.uptime">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>Uptime</Param>
         </Collector>
         
         <Collector ID="system.temperature">
-            <Executable>Collectors/SystemInfo_Linux.py</Executable>
+            <Executable>$(CollectorsPath)/SystemInfo_Linux.py</Executable>
             <Param>CPUTemp</Param>
         </Collector>
         
@@ -88,6 +93,6 @@
             <Executable>rm -rf /var/cache/myapp/*</Executable>
         </Actor>
         
-        <TargetConnection IP="localhost" PORT="5100"/>
+        <TargetConnection IP="$(OscarIP)" PORT="$(OscarPort)"/>
     </Namespace>
 </Minion>

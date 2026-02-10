@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Alias definitions for Network Operations Example -->
+<AliasList>
+    <!-- Configuration Aliases - Modify these values to customize your setup -->
+    
+    <!-- Namespace Configuration -->
+    <Alias MinionNamespace="NetworkOps"/>
+    
+    <!-- Network Configuration -->
+    <Alias OscarIP="localhost"/>
+    <Alias OscarPort="5100"/>
+    <Alias MarvinPort="52002"/>
+    
+    <!-- Collection Frequencies -->
+    <Alias DefaultFrequency="1000"/>
+    <Alias FastFrequency="100"/>
+    
+    <!-- Network Interfaces -->
+    <Alias Interface1="eth0"/>
+    <Alias Interface2="eth1"/>
+    
+    <!-- Window Dimensions -->
+    <Alias WindowWidth="1920"/>
+    <Alias WindowHeight="1080"/>
+    
+    <!-- Widget Dimensions -->
+    <Alias WidgetHeight="300"/>
+    <Alias WidgetWidth="450"/>
+    <Alias ChartHeight="400"/>
+    
+    <!-- Layout Configuration -->
+    <Alias Padding="5"/>
+    <Alias GridHGap="10"/>
+    <Alias GridVGap="10"/>
+    
+    <!-- Thresholds -->
+    <Alias BandwidthThreshold="70"/>
+    <Alias PacketThreshold="1000"/>
+    
+    <!-- Collector Paths -->
+    <Alias CollectorsPath="Collectors"/>
+</AliasList>

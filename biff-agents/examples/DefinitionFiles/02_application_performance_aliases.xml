@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Alias definitions for Application Performance Example -->
+<AliasList>
+    <!-- Configuration Aliases - Modify these values to customize your setup -->
+    
+    <!-- Namespace Configuration -->
+    <Alias MinionNamespace="AppPerformance"/>
+    
+    <!-- Network Configuration -->
+    <Alias OscarIP="localhost"/>
+    <Alias OscarPort="5100"/>
+    <Alias MarvinPort="52001"/>
+    
+    <!-- Collection Frequencies -->
+    <Alias DefaultFrequency="1000"/>
+    <Alias FastFrequency="500"/>
+    <Alias SlowFrequency="5000"/>
+    
+    <!-- Application Configuration -->
+    <Alias AppName="MyApplication"/>
+    <Alias LogPath="/var/log/myapp"/>
+    
+    <!-- Window Dimensions -->
+    <Alias WindowWidth="1600"/>
+    <Alias WindowHeight="900"/>
+    
+    <!-- Widget Dimensions -->
+    <Alias WidgetHeight="300"/>
+    <Alias WidgetWidth="400"/>
+    
+    <!-- Layout Configuration -->
+    <Alias Padding="5"/>
+    <Alias GridHGap="10"/>
+    <Alias GridVGap="10"/>
+    
+    <!-- Collector Paths -->
+    <Alias CollectorsPath="Collectors"/>
+</AliasList>

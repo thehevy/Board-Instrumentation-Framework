@@ -2,6 +2,31 @@
 
 This directory contains 5 complete example dashboard configurations showcasing different use cases and widget combinations for the BIFF Agents Marvin GUI Composer.
 
+## Configuration Structure
+
+All examples follow BIFF best practices using the **DefinitionFiles pattern** with aliases for easy customization:
+
+```
+examples/
+  ├── DefinitionFiles/              # Centralized alias definitions
+  │   ├── 01_server_monitoring_aliases.xml
+  │   ├── 02_application_performance_aliases.xml
+  │   └── 04_network_operations_aliases.xml
+  ├── 01_server_monitoring_config.xml    # Minion configs (import aliases)
+  ├── 02_application_performance_config.xml
+  └── dashboards/                   # Marvin dashboards (import aliases)
+      └── 04_network_operations/
+          ├── App.Config.xml
+          └── Tab.Network.xml
+```
+
+### Alias Benefits
+
+- **Easy Customization**: Change IPs, ports, frequencies in one file
+- **Environment Flexibility**: Swap alias files for dev/staging/prod
+- **Maintainability**: No scattered magic numbers
+- **Professional Structure**: Matches production BIFF deployments
+
 ## Examples Overview
 
 ### 1. Server Monitoring Dashboard

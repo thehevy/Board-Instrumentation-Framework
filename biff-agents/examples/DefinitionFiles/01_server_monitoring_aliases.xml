@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Alias definitions for Server Monitoring Example -->
+<AliasList>
+    <!-- Configuration Aliases - Modify these values to customize your setup -->
+    
+    <!-- Namespace Configuration -->
+    <Alias MinionNamespace="ServerMonitoring"/>
+    
+    <!-- Network Configuration -->
+    <Alias OscarIP="localhost"/>
+    <Alias OscarPort="5100"/>
+    
+    <!-- Collection Frequencies -->
+    <Alias DefaultFrequency="1000"/>
+    <Alias FastFrequency="500"/>
+    
+    <!-- Network Interface -->
+    <Alias NetworkInterface="eth0"/>
+    
+    <!-- Collector Paths -->
+    <Alias CollectorsPath="Collectors"/>
+</AliasList>
