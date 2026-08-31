@@ -248,7 +248,16 @@ public class VideoWallWidget extends BaseWidget {
     private void StartStream(ImageView imageView, String uri) {
         try {
             if (_mediaPlayerFactory == null) {
-                _mediaPlayerFactory = new uk.co.caprica.vlcj.factory.MediaPlayerFactory();
+                // Create libVLC quietly: the VideoWall renders into off-screen
+                // JavaFX callback surfaces, so native video-output features like
+                // "always on top" don't apply and only produce log noise.
+                //   --quiet             : suppress libVLC info/error console spam
+                //   --no-video-title-show : never overlay the media title
+                //   --no-video-on-top   : don't try to force the vout on top
+                _mediaPlayerFactory = new uk.co.caprica.vlcj.factory.MediaPlayerFactory(
+                        "--quiet",
+                        "--no-video-title-show",
+                        "--no-video-on-top");
             }
             uk.co.caprica.vlcj.factory.MediaPlayerFactory factory =
                     (uk.co.caprica.vlcj.factory.MediaPlayerFactory) _mediaPlayerFactory;

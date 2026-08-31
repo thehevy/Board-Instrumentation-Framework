@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Marvin>
+<!--
+##############################################################################
+#  Copyright (c) 2026 Board Instrumentation Framework contributors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract:
+#    Marvin application that displays an 8-screen VideoWall using the default
+#    settings from the original nuc_video_wall.py reference script.
+#
+#    Run from the Marvin directory (the one containing BIFF.Marvin.jar):
+#        java -jar build\libs\BIFF.Marvin.jar -i VideoWall_Demo\VideoWallDemo.xml
+#
+#    Prerequisite: VLC (libVLC) must be installed on this host.
+#    Streams expected on UDP ports 5000..5007 (udp://@0.0.0.0:500N).
+##############################################################################
+-->
+    <Application Scale="auto" mode="debugg"> <!-- debug or kiosk -->
+        <CreationSize Width="1600" Height="900"/>
+        <Network Port="5200"/>
+        <Title>Intel E835 RDMA LAG Demo - NUC Video Wall</Title>
+        <Padding top="2" bottom="2" right="2" left="5"/>
+        <StyleSheet>Widget/Modena-BIFF.css</StyleSheet>
+        <Heartbeat Rate="10"/>
+
+        <Tasks Enabled="True"/>
+        <MainMenu Show="True"></MainMenu>
+
+        <Tabs>
+            <Tab ID="Tab.VideoWall" />
+        </Tabs>
+    </Application>
+
+    <Tab ID="Tab.VideoWall" hgap="5" vgap="5" Align="N"
+         TabTitle="Intel E835 RDMA LAG Demo - NUC Video Wall"
+         File="$(AppDir)\Tab.VideoWall.xml"/>
+
+    <AliasList>
+        <Alias AppDir = "VideoWall_Demo"/>
+    </AliasList>
+</Marvin>

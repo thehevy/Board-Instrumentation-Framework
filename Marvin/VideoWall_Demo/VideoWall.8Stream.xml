@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+##############################################################################
+#  Copyright (c) 2026 Board Instrumentation Framework contributors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+##############################################################################
+#    File Abstract:
+#    8-stream VideoWall widget definition matching the defaults of the
+#    original nuc_video_wall.py reference script:
+#        base_port      = 5000  (streams on 5000..5007)
+#        net_caching    = 300 ms
+#        title          = "Intel E835 RDMA LAG Demo - NUC Video Wall"
+#        per-stream     = "LAG Stream N"
+#
+#    Columns is omitted so the widget auto-arranges the 8 cells into a
+#    ceil(sqrt(8)) = 3-column grid (3x3, last cell empty), matching the
+#    auto-layout behavior of the Python script.
+#
+#    Requires VLC (libVLC) installed on the host running Marvin.
+##############################################################################
+-->
+<Widget Type = "VideoWall">
+    <NetworkCaching>300</NetworkCaching>
+    <Gap>6</Gap>
+    <ShowTitles>True</ShowTitles>
+
+    <Stream Title="LAG Stream 1">udp://@0.0.0.0:5000</Stream>
+    <Stream Title="LAG Stream 2">udp://@0.0.0.0:5001</Stream>
+    <Stream Title="LAG Stream 3">udp://@0.0.0.0:5002</Stream>
+    <Stream Title="LAG Stream 4">udp://@0.0.0.0:5003</Stream>
+    <Stream Title="LAG Stream 5">udp://@0.0.0.0:5004</Stream>
+    <Stream Title="LAG Stream 6">udp://@0.0.0.0:5005</Stream>
+    <Stream Title="LAG Stream 7">udp://@0.0.0.0:5006</Stream>
+    <Stream Title="LAG Stream 8">udp://@0.0.0.0:5007</Stream>
+</Widget>

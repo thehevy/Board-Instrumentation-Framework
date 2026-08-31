@@ -42,7 +42,10 @@ repositories {
 }
 
 javafx {
-    version = "12"
+    // JavaFX 17 (LTS): required for javafx.scene.image.PixelBuffer, which
+    // vlcj-javafx's ImageViewVideoSurface uses to render the VideoWall streams.
+    // PixelBuffer was introduced in JavaFX 13, so 12 fails at runtime.
+    version = "17"
     modules = [ 'javafx.controls', 'javafx.web', 'javafx.media', 'javafx.swing', 'javafx.graphics', 'javafx.base']
 }
 
