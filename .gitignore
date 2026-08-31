@@ -21,6 +21,12 @@ bin/
 .idea
 out
 
+# Marvin runtime files
+Marvin/MarvinLog.html
+Marvin/MarvinLog.html.lck
+Marvin/MarvinLog*.html
+Marvin/MarvinLog*.html.lck
+
 # Oscar runtime files
 Oscar/.oscar.pid
 Oscar/OscarLog.txt
