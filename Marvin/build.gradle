@@ -48,6 +48,12 @@ javafx {
 
 dependencies {
     implementation files('Dependencies/Enzo-0.3.6a.jar') // Using the Enzo JAR from the Dependencies folder
+
+    // vlcj + native libVLC bindings, used by the VideoWall widget to render
+    // UDP/RTP (and other) network video streams that JavaFX Media cannot decode.
+    // Requires VLC media player to be installed on the host running Marvin.
+    implementation 'uk.co.caprica:vlcj:4.8.2'
+    implementation 'uk.co.caprica:vlcj-javafx:1.2.0'
 }
 mainClassName = 'kutch.biff.marvin.Launcher'
 

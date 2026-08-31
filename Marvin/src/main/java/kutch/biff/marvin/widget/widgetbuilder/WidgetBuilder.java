@@ -961,6 +961,8 @@ public class WidgetBuilder {
                 retWidget = AudioPlayerWidgetBuilder.Build(baseNode, Filename);
             } else if (strWidget.equalsIgnoreCase("VideoPlayer")) {
                 retWidget = VideoPlayerWidgetBuilder.Build(baseNode, Filename);
+            } else if (strWidget.equalsIgnoreCase("VideoWall")) {
+                retWidget = VideoWallWidgetBuilder.Build(baseNode, Filename);
             } else if (strWidget.equalsIgnoreCase("Web")) {
                 retWidget = WebWidgetBuilder.Build(baseNode, Filename);
             } else if (strWidget.equalsIgnoreCase("QuickView")) {
