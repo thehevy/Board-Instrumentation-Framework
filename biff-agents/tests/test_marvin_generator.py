@@ -45,17 +45,17 @@ class TestMarvinApplicationGenerator(unittest.TestCase):
         # Check creation size
         size = app.find("CreationSize")
         self.assertIsNotNone(size)
-        self.assertEqual(size.get("Width"), "1920")
-        self.assertEqual(size.get("Height"), "1050")
+        self.assertEqual(size.get("Width"), "$(WindowWidth)")
+        self.assertEqual(size.get("Height"), "$(WindowHeight)")
         
         # Check network port
         network = app.find("Network")
         self.assertIsNotNone(network)
-        self.assertEqual(network.get("Port"), "52001")
+        self.assertEqual(network.get("Port"), "$(MarvinPort)")
         
         # Check title
         title = app.find("Title")
-        self.assertIn("TestNamespace", title.text)
+        self.assertIn("$(MinionNamespace)", title.text)
         
         # Check tabs
         tabs = app.find("Tabs")
@@ -79,7 +79,7 @@ class TestMarvinApplicationGenerator(unittest.TestCase):
         
         # Check title
         title = tab.find("Title")
-        self.assertIn("TestNamespace", title.text)
+        self.assertIn("$(MinionNamespace)", title.text)
         
         # Check grid reference
         grid = tab.find("Grid")
@@ -113,7 +113,7 @@ class TestMarvinApplicationGenerator(unittest.TestCase):
             # Check MinionSrc
             minion_src = widget.find("MinionSrc")
             self.assertIsNotNone(minion_src)
-            self.assertEqual(minion_src.get("Namespace"), "TestNamespace")
+            self.assertEqual(minion_src.get("Namespace"), "$(MinionNamespace)")
             self.assertIsNotNone(minion_src.get("ID"))
     
     def test_widget_layout(self):
@@ -137,7 +137,11 @@ class TestMarvinApplicationGenerator(unittest.TestCase):
         self.assertEqual(positions, expected)
     
     def test_gauge_widget_properties(self):
-        """Test gauge widgets have proper min/max/decimals"""
+        """Test gauge widgets reference the correct definition file
+
+        Gauge properties (min/max/decimals/unit) now live in the widget
+        definition files (Widget/Gauge/*.xml), not inline in the grid.
+        """
         config = self.test_config.copy()
         config["collectors"] = ["CPU"]
         
@@ -146,18 +150,18 @@ class TestMarvinApplicationGenerator(unittest.TestCase):
         
         widget = root.find(".//Widget")
         
-        # CPU gauge should have these properties
-        min_val = widget.find("MinValue")
-        self.assertEqual(min_val.text, "0")
+        # CPU gauge references the radial gauge definition file
+        self.assertEqual(widget.get("File"), "Gauge/GaugeRadial.xml")
         
-        max_val = widget.find("MaxValue")
-        self.assertEqual(max_val.text, "100")
+        # Data source binds to the CPU collector
+        minion_src = widget.find("MinionSrc")
+        self.assertEqual(minion_src.get("ID"), "cpu.value")
         
-        decimals = widget.find("Decimals")
-        self.assertEqual(decimals.text, "1")
-        
-        unit = widget.find("UnitText")
-        self.assertEqual(unit.text, "%")
+        # Inline gauge properties are no longer emitted in the grid
+        self.assertIsNone(widget.find("MinValue"))
+        self.assertIsNone(widget.find("MaxValue"))
+        self.assertIsNone(widget.find("Decimals"))
+        self.assertIsNone(widget.find("UnitText"))
     
     def test_text_widget_properties(self):
         """Test text widgets have initial value"""
@@ -187,13 +191,15 @@ class TestMarvinApplicationGenerator(unittest.TestCase):
         """Test generating all files at once"""
         files = self.generator.generate_all(self.test_config, self.temp_dir)
         
-        # Should return dict with 3 files
-        self.assertEqual(len(files), 3)
+        # Should return dict with 4 files (aliases + application + tab + grid)
+        self.assertEqual(len(files), 4)
+        self.assertIn('aliases', files)
         self.assertIn('application', files)
         self.assertIn('tab', files)
         self.assertIn('grid', files)
         
         # All files should exist
+        self.assertTrue(files['aliases'].exists())
         self.assertTrue(files['application'].exists())
         self.assertTrue(files['tab'].exists())
         self.assertTrue(files['grid'].exists())
@@ -204,15 +210,23 @@ class TestMarvinApplicationGenerator(unittest.TestCase):
         self.assertEqual(files['grid'].name, "Grid.QuickStart.xml")
     
     def test_application_custom_port(self):
-        """Test application with custom Marvin port"""
+        """Test custom Marvin port is captured in the alias definitions"""
         config = self.test_config.copy()
         config["marvin_port"] = 53001
         
-        xml_string = self.generator.generate_application(config)
-        root = ET.fromstring(xml_string)
+        # Application references the port via an alias placeholder
+        app_xml = self.generator.generate_application(config)
+        app_root = ET.fromstring(app_xml)
+        network = app_root.find(".//Network")
+        self.assertEqual(network.get("Port"), "$(MarvinPort)")
         
-        network = root.find(".//Network")
-        self.assertEqual(network.get("Port"), "53001")
+        # The actual port value lives in the generated Aliases.xml
+        aliases_xml = self.generator.generate_aliases(config)
+        aliases_root = ET.fromstring(aliases_xml)
+        aliases = {}
+        for alias in aliases_root.findall("Alias"):
+            aliases.update(alias.attrib)
+        self.assertEqual(aliases.get("MarvinPort"), "53001")
     
     def test_collector_id_format(self):
         """Test collector IDs are lowercase with .value suffix"""

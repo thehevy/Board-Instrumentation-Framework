@@ -34,3 +34,19 @@ BIFF-QuickStart-*/
 *.tar.gz
 test_on_linux.sh
 biff-agents/biff-*-test/
+
+# biff-agents generated/scratch output (should not be committed)
+biff-agents/test_outputs/
+biff-agents/test-alias-output/
+biff-agents/test_debug/
+biff-agents/monitoring_test/
+biff-agents/my_dashboard/
+biff-agents/tests/temp/
+biff-agents/**/__pycache__/
+biff-agents/.pytest_cache/
+biff-agents/**/*.pyc
+
+# Coverage output (pytest.ini enables --cov)
+biff-agents/htmlcov/
+biff-agents/.coverage
+biff-agents/.coverage.*

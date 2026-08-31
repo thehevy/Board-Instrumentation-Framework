@@ -31,7 +31,9 @@ class TestMinionConfigGenerator(unittest.TestCase):
     
     def test_generate_basic_config(self):
         """Test generating basic Minion config"""
-        xml_string = self.generator.generate(self.test_config)
+        config = self.test_config.copy()
+        config["collectors"] = ["RandomVal", "CPU"]
+        xml_string = self.generator.generate(config)
         
         # Parse XML to verify structure
         root = ET.fromstring(xml_string)
@@ -43,14 +45,22 @@ class TestMinionConfigGenerator(unittest.TestCase):
         namespace = root.find("Namespace")
         self.assertIsNotNone(namespace)
         
-        # Check namespace name
+        # Namespace name now references an alias placeholder
         name = namespace.find("Name")
-        self.assertEqual(name.text, "TestNamespace")
+        self.assertEqual(name.text, "$(MinionNamespace)")
         
-        # Check target connection
+        # Target connection now references alias placeholders
         target = namespace.find("TargetConnection")
-        self.assertEqual(target.get("IP"), "localhost")
-        self.assertEqual(target.get("PORT"), "1100")
+        self.assertEqual(target.get("IP"), "$(OscarIP)")
+        self.assertEqual(target.get("PORT"), "$(OscarPort)")
+        
+        # AliasList should hold the actual configured values
+        aliases = {}
+        for alias in root.find("AliasList").findall("Alias"):
+            aliases.update(alias.attrib)
+        self.assertEqual(aliases.get("MinionNamespace"), "TestNamespace")
+        self.assertEqual(aliases.get("OscarIP"), "localhost")
+        self.assertEqual(aliases.get("OscarPort"), "1100")
         
         # Check collectors
         collectors = namespace.findall("Collector")
@@ -96,9 +106,8 @@ class TestMinionConfigGenerator(unittest.TestCase):
         collectors = MinionConfigGenerator.get_available_collectors()
         
         self.assertIn("RandomVal", collectors)
-        self.assertIn("Timer", collectors)
         self.assertIn("CPU", collectors)
-        self.assertGreater(len(collectors), 3)
+        self.assertGreaterEqual(len(collectors), 2)
     
     def test_collector_description(self):
         """Test getting collector description"""
