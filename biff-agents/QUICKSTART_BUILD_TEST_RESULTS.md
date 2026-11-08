@@ -132,14 +132,14 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-7.6-bin.zip
 # Download with PowerShell
 powershell -Command "& {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Invoke-WebRequest -Uri 'https://services.gradle.org/distributions/gradle-7.6-bin.zip' 
-        -OutFile '%TEMP%\gradle-7.6-bin.zip' 
+    Invoke-WebRequest -Uri 'https://services.gradle.org/distributions/gradle-7.6-bin.zip'
+        -OutFile '%TEMP%\gradle-7.6-bin.zip'
         -UseBasicParsing
 }"
 
 # Extract to Gradle wrapper location
 $GRADLE_DIST_DIR=%USERPROFILE%\.gradle\wrapper\dists\gradle-7.6-bin
-powershell -Command "Expand-Archive -Path '%TEMP%\gradle-7.6-bin.zip' 
+powershell -Command "Expand-Archive -Path '%TEMP%\gradle-7.6-bin.zip'
     -DestinationPath '%GRADLE_DIST_DIR%' -Force"
 
 # Verify installation
@@ -453,7 +453,7 @@ distributionUrl=https\://internal-mirror.company.com/gradle/gradle-7.6-bin.zip
 
 **Symptom**:
 ```
-. : File ...Microsoft.PowerShell_profile.ps1 cannot be loaded 
+. : File ...Microsoft.PowerShell_profile.ps1 cannot be loaded
 because running scripts is disabled on this system.
 ```
 
@@ -880,9 +880,9 @@ if ($proxy -match 'Proxy Server\(s\)\s+:\s+(.+)') {
 ### Files to Update (Existing)
 
 | File | Section | Change Type | Priority |
-|------|---------|-------------|----------|
+| --- | --- | --- | --- |
 | `README.md` | Building | Add gradle_build.bat info | P0 |
-| `.github/copilot-instructions.md` | Marvin build | Add fallback commands | P0 |
+| `copilot-instructions.md` | Marvin build | Add fallback commands | P0 |
 | `biff-agents/QUICKSTART.md` | Step 3 | Add troubleshooting note | P1 |
 | `.gitignore` | Gradle section | Add local properties | P0 |
 | `Marvin/ReadMe.txt` | Build section | Add network issues note | P1 |
@@ -978,7 +978,7 @@ Alternative: Provide authenticated proxy
 ### Risks Introduced
 
 | Risk | Severity | Mitigation |
-|------|----------|------------|
+| --- | --- | --- |
 | Two build paths to maintain | Medium | Document both equally |
 | Version drift between paths | Low | Both use same Gradle 7.6 |
 | Confusion which to use | Medium | Clear error messages + docs |
@@ -987,7 +987,7 @@ Alternative: Provide authenticated proxy
 ### Risks Mitigated
 
 | Original Risk | Severity | How Mitigated |
-|---------------|----------|---------------|
+| --- | --- | --- |
 | Can't build Marvin at all | **CRITICAL** | Manual installer works |
 | Long troubleshooting time | High | BUILD_TROUBLESHOOTING.md |
 | Developer frustration | High | Clear steps, no guesswork |
@@ -1039,7 +1039,7 @@ Alternative: Provide authenticated proxy
 ### Quick Reference
 
 | Task | Command |
-|------|---------|
+| --- | --- |
 | Install Gradle | `.\install_gradle.bat` |
 | Check Gradle version | `.\gradle_build.bat --version` |
 | Build Marvin | `.\gradle_build.bat build` |

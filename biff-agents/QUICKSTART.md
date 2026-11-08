@@ -11,7 +11,7 @@ By the end of this guide, you'll have:
 - **Marvin** (GUI dashboard) displaying real-time gauges and text widgets
 - A complete XML configuration set you can customize
 
-**Time to Working Dashboard**: < 5 minutes  
+**Time to Working Dashboard**: < 5 minutes
 **User Input Required**: 3 choices (deployment type, collectors, output directory)
 
 ---
@@ -104,7 +104,7 @@ Select collectors to include:
 
 Enter numbers (comma-separated) [1,2,3]:
 ```
-→ Press Enter to accept defaults (RandomVal, Timer, CPU)  
+→ Press Enter to accept defaults (RandomVal, Timer, CPU)
 → Or type: `1,2,3,4` for RandomVal, Timer, CPU, Memory
 
 **3. Output Directory**
@@ -189,14 +189,14 @@ A JavaFX window will open showing:
 
 **Widgets** (3-column layout):
 
-| Row 1 | | |
-|-------|-------|-------|
+| Row 1 |  |  |
+| --- | --- | --- |
 | **Random Value** | **Timer** | **CPU Usage** |
 | Steel gauge 0-100 | Steel gauge 0-10000ms | Radial gauge 0-100% |
 | Updates every 1s | Updates every 2s | Updates every 1s |
 
-| Row 2 (if selected) | | |
-|-------|-------|-------|
+| Row 2 (if selected) |  |  |
+| --- | --- | --- |
 | **Memory** | **Network** | **Disk Usage** |
 | Text display | Text display | Radial gauge 0-100% |
 | "X MB / Y MB" | "bytes sent/recv" | Updates every 2s |
@@ -654,19 +654,19 @@ python Oscar.py -p session.dat
 
 ### Common Questions
 
-**Q: Can I use this in production?**  
+**Q: Can I use this in production?**
 A: Yes! BIFF is used by Intel for production monitoring. Use environment variables for IPs and ports in containerized deployments.
 
-**Q: How many collectors can I run?**  
+**Q: How many collectors can I run?**
 A: 50-100 collectors per Minion is typical. Use multiple Minion instances for more.
 
-**Q: Can Marvin display data from multiple Minions?**  
+**Q: Can Marvin display data from multiple Minions?**
 A: Yes! Use different namespaces and multiple `<MinionSrc>` bindings.
 
-**Q: Does this work with Docker?**  
+**Q: Does this work with Docker?**
 A: Yes! See `Minion/Collectors/Docker_Stats.py` for container monitoring.
 
-**Q: Can I scrape Prometheus endpoints?**  
+**Q: Can I scrape Prometheus endpoints?**
 A: Yes! Use `Minion/Collectors/Prometheus.py`.
 
 ---
@@ -675,10 +675,10 @@ A: Yes! Use `Minion/Collectors/Prometheus.py`.
 
 You've learned how to:
 
-✅ Generate a complete BIFF configuration in 2 minutes  
-✅ Launch all components with a single script  
-✅ Monitor live system metrics in a JavaFX dashboard  
-✅ Customize collectors, widgets, and layouts  
+✅ Generate a complete BIFF configuration in 2 minutes
+✅ Launch all components with a single script
+✅ Monitor live system metrics in a JavaFX dashboard
+✅ Customize collectors, widgets, and layouts
 ✅ Troubleshoot common issues
 
 **Congratulations!** You're now ready to build custom instrumentation dashboards with BIFF.

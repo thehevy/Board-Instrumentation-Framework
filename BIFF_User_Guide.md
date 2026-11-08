@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and limitations 
 ## Revisions
 
 | Version | Description |
-|---------|-------------|
+| --- | --- |
 
 ## Table of Contents
 

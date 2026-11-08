@@ -225,7 +225,7 @@ Validator checks all files exist and are valid XML.
   <Tab ID="X">
     <Grid>...</Grid>
   </Tab>
-  
+
   <Application>
     <Tabs>
       <Tab ID="X"/>

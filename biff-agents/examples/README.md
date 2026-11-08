@@ -30,7 +30,7 @@ examples/
 ## Examples Overview
 
 ### 1. Server Monitoring Dashboard
-**Config:** `01_server_monitoring_config.xml`  
+**Config:** `01_server_monitoring_config.xml`
 **Dashboard:** `dashboards/01_server_monitoring/`
 
 Comprehensive server health monitoring with:
@@ -41,13 +41,13 @@ Comprehensive server health monitoring with:
 - System information (hostname, uptime, temperature)
 - Control buttons (restart service, clear cache)
 
-**Widgets Used:** Gauge, Chart, Text, Button, LED  
+**Widgets Used:** Gauge, Chart, Text, Button, LED
 **Use Case:** Linux server monitoring and administration
 
 ---
 
 ### 2. Application Performance Dashboard
-**Config:** `02_application_performance_config.xml`  
+**Config:** `02_application_performance_config.xml`
 **Dashboard:** `dashboards/02_application_performance/`
 
 Application metrics and performance tracking with:
@@ -58,13 +58,13 @@ Application metrics and performance tracking with:
 - Cache hit rates and memory usage
 - Message queue length and processing rates
 
-**Widgets Used:** Chart, Gauge, Text  
+**Widgets Used:** Chart, Gauge, Text
 **Use Case:** Web application APM (Application Performance Monitoring)
 
 ---
 
 ### 3. IoT Sensors Dashboard
-**Config:** `03_iot_sensors_config.xml`  
+**Config:** `03_iot_sensors_config.xml`
 **Dashboard:** `dashboards/03_iot_sensors/`
 
 IoT device monitoring and control with:
@@ -74,13 +74,13 @@ IoT device monitoring and control with:
 - Power consumption tracking
 - Device control buttons (HVAC, lights)
 
-**Widgets Used:** Gauge, LED, Chart, Button  
+**Widgets Used:** Gauge, LED, Chart, Button
 **Use Case:** Smart home/building automation, environmental monitoring
 
 ---
 
 ### 4. Network Operations Dashboard
-**Config:** `04_network_operations_config.xml`  
+**Config:** `04_network_operations_config.xml`
 **Dashboard:** `dashboards/04_network_operations/`
 
 Network infrastructure monitoring with:
@@ -91,13 +91,13 @@ Network infrastructure monitoring with:
 - DNS query rates and cache performance
 - Gateway ping latency and packet loss
 
-**Widgets Used:** Chart, Gauge, Text, LED  
+**Widgets Used:** Chart, Gauge, Text, LED
 **Use Case:** Network operations center (NOC), ISP monitoring
 
 ---
 
 ### 5. Container & Microservices Dashboard
-**Config:** `05_containers_config.xml`  
+**Config:** `05_containers_config.xml`
 **Dashboard:** `dashboards/05_containers/`
 
 Docker container monitoring and orchestration with:
@@ -106,7 +106,7 @@ Docker container monitoring and orchestration with:
 - Container status indicators
 - Container control buttons (restart, scale up/down)
 
-**Widgets Used:** Gauge, Chart, LED, Button  
+**Widgets Used:** Gauge, Chart, LED, Button
 **Use Case:** Microservices architecture, container orchestration
 
 ---
@@ -182,7 +182,7 @@ Widget positions use a grid system:
 ## Widget Types Reference
 
 | Widget | Description | Best For |
-|--------|-------------|----------|
+| --- | --- | --- |
 | **Gauge** | Circular/radial display with zones | CPU, memory, percentages |
 | **Chart** | Time-series line chart | Trends, throughput, rates |
 | **LED** | Status indicator with conditions | Boolean states, alerts |

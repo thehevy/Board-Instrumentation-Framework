@@ -1,6 +1,6 @@
 # Next Steps - Transition to Phase 1
 
-**Date**: January 29, 2026  
+**Date**: January 29, 2026
 **Current Status**: Phase 0 Complete (85%) → Phase 1 Ready
 
 ---
@@ -328,17 +328,17 @@ touch biff_agents_core/templates/quickstart_templates.py
 ### Technical Decisions
 1. **Build Automation**: Should we build Marvin automatically or provide instructions?
    - Recommendation: Auto-build with progress indicator
-   
+
 2. **Error Handling**: How verbose should error messages be?
    - Recommendation: Verbose by default, `--quiet` flag for CI/CD
-   
+
 3. **Default Values**: What defaults for Quick Start?
    - Recommendation: 3 collectors, 1000ms frequency, localhost routing
 
 ### Process Decisions
 1. **Testing Approach**: Unit tests vs integration tests priority?
    - Recommendation: Unit tests during development, integration tests before release
-   
+
 2. **Documentation**: When to write user docs?
    - Recommendation: After each phase completes
 

@@ -142,13 +142,13 @@ Widgets can be defined inline or in reusable XML files (`Widget/<type>/*.xml`). 
 
 ## Common Development Tasks
 
-**Adding a new widget**: 
+**Adding a new widget**:
 1. Create `src/main/java/kutch/biff/marvin/widget/<Type>Widget.java` extending `BaseWidget`
 2. Create `widget/widgetbuilder/<Type>Builder.java` with `Build(FrameworkNode)` method
 3. Register in `WidgetBuilder.java` type map
 4. Add example XML to `Widget/<Type>/` directory
 
-**Adding a collector**: 
+**Adding a collector**:
 1. Create `Minion/Collectors/<Name>.py` with function printing value to stdout
 2. Document parameters in function docstring
 3. Add example to `Minion/Demonstration/DemoConfig.xml`

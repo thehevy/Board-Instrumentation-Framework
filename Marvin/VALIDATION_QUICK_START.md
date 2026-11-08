@@ -33,13 +33,13 @@ validate_config.bat -v -a Application.xml
 
 ## What It Checks
 
-✅ File encoding (UTF-8 BOM warnings)  
-✅ XML syntax and structure  
-✅ Tab ID references match definitions  
-✅ Alias definitions and cascading  
-✅ DynamicGrid file references  
-✅ External file imports  
-✅ Widget source files exist  
+✅ File encoding (UTF-8 BOM warnings)
+✅ XML syntax and structure
+✅ Tab ID references match definitions
+✅ Alias definitions and cascading
+✅ DynamicGrid file references
+✅ External file imports
+✅ Widget source files exist
 
 ## Exit Codes
 

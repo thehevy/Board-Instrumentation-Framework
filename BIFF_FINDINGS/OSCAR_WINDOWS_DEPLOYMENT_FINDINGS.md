@@ -1,9 +1,9 @@
 # Oscar Windows Deployment - Findings Report
 
-**Date**: February 2, 2026  
-**Component**: Oscar Data Broker  
-**Environment**: Windows Desktop  
-**Reporter**: AI Coding Assistant  
+**Date**: February 2, 2026
+**Component**: Oscar Data Broker
+**Environment**: Windows Desktop
+**Reporter**: AI Coding Assistant
 
 ---
 
@@ -11,9 +11,9 @@
 
 During deployment of Oscar on Windows (10.166.84.131), two critical issues were identified that prevent successful startup using documented commands. Both issues impact first-time users and require documentation updates and potentially tooling improvements.
 
-**Status**: ✅ **Resolved** - Oscar successfully running  
-**Impact**: High - Blocks initial deployment for Windows users without Python  
-**Priority**: P1 - Documentation updates required  
+**Status**: ✅ **Resolved** - Oscar successfully running
+**Impact**: High - Blocks initial deployment for Windows users without Python
+**Priority**: P1 - Documentation updates required
 
 ---
 
@@ -238,11 +238,11 @@ PS> python Oscar.py -i OscarConfig.xml
 
 3. **Add Command Reference Table**
 
-   | Component | Config Argument | Example |
-   |-----------|----------------|---------|
-   | Minion | `-c <file>` | `python Minion.py -c MinionConfig.xml` |
-   | Oscar | `-i <file>` | `python Oscar.py -i OscarConfig.xml` |
-   | Marvin | `<file>` | `java -jar BIFF.Marvin.jar Application.xml` |
+| Component | Config Argument | Example |
+| --- | --- | --- |
+| Minion | `-c <file>` | `python Minion.py -c MinionConfig.xml` |
+| Oscar | `-i <file>` | `python Oscar.py -i OscarConfig.xml` |
+| Marvin | `<file>` | `java -jar BIFF.Marvin.jar Application.xml` |
 
 #### Proposed Code Change (Option B - Add Alias):
 
@@ -362,8 +362,8 @@ Linux Server (10.166.84.131)
 ### Documentation Updates Required
 
 | File | Line/Section | Change Needed |
-|------|-------------|---------------|
-| `.github/copilot-instructions.md` | Line ~53 | Change `-c` to `-i` for Oscar |
+| --- | --- | --- |
+| `copilot-instructions.md` | Line ~53 | Change `-c` to `-i` for Oscar |
 | `README.md` | Quick Start | Update Oscar command example |
 | `biff-agents/QUICKSTART.md` | Oscar section | Verify correct arguments |
 | `Oscar/ReadMe.txt` | All examples | Standardize on `-i` argument |

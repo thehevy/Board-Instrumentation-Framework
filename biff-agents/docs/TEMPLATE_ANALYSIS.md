@@ -1,7 +1,7 @@
 # Minion_Complex_Example Template Analysis
 
-**Source**: Production Intel Vision Demo Configuration  
-**Analysis Date**: February 5, 2026  
+**Source**: Production Intel Vision Demo Configuration
+**Analysis Date**: February 5, 2026
 **Purpose**: Identify patterns for Collector Builder templates
 
 ---
@@ -27,7 +27,7 @@ Analyzed **30+ collector files** and configuration patterns from real Intel prod
 
 ### 3. **File Parser** ✅
 - **Status**: Implemented
-- **Production Examples**: 
+- **Production Examples**:
   - `FileCollector.py` - Generic file reading with lock support
   - `DynamicCollector` with `<File>` tag - Zero-instrumentation pattern
 - **Pattern**: Read file → parse → extract metrics
@@ -234,7 +234,7 @@ def docker_stats_collector(frameworkInterface):
 ## Template Priority Matrix
 
 | Template | Priority | Complexity | Vision Usage | User Impact |
-|----------|----------|------------|--------------|-------------|
+| --- | --- | --- | --- | --- |
 | **DynamicCollector File** | **P0** | Low | 15 instances | Very High |
 | **Plugin Framework Interface** | **P1** | Medium | 40% of collectors | High |
 | **Aggregate/Repeat** | **P1** | Low | 6 instances | Medium |
@@ -251,7 +251,7 @@ def docker_stats_collector(frameworkInterface):
 
 ### Phase 2 Week 5 (Current) - Basic Collectors
 - ✅ Shell Command Wrapper
-- ✅ File Parser  
+- ✅ File Parser
 - ✅ psutil System Metrics
 - ✅ API Poller
 - ✅ Python Plugin
@@ -330,7 +330,7 @@ def docker_stats_collector(frameworkInterface):
 **Categorized by Pattern**:
 
 | Pattern | Count | Files |
-|---------|-------|-------|
+| --- | --- | --- |
 | Plugin Framework | 12 | Docker_Stats, LinuxNetwork, Prometheus, JsonCollector, etc. |
 | DynamicCollector File | 15 | (XML config, not files) |
 | Shell/File Parser | 5 | EthtoolParser, FileCollector, etc. |

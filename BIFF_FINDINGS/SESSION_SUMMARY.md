@@ -11,7 +11,7 @@ Successfully deployed and tested Board Instrumentation Framework (BIFF) in a dis
 A **3-tier instrumentation and visualization framework** for real-time system monitoring and data visualization:
 
 1. **Minion** (Python) - Data collection agents with 30+ pluggable collectors
-2. **Oscar** (Python) - UDP data broker/router and session recorder  
+2. **Oscar** (Python) - UDP data broker/router and session recorder
 3. **Marvin** (JavaFX 10+) - Configurable GUI with 40+ widget types
 
 ### Data Flow
@@ -48,7 +48,7 @@ Minion collectors → UDP → Oscar (port 1100) → UDP → Marvin (ports 52001+
 
 ### Working Configuration
 - **Minion Namespace**: LocalTest
-- **Collectors**: 
+- **Collectors**:
   - `randomval.value` - Random values 0-100 every 1s
   - `cpu.usage` - CPU percentage every 2s
   - `randomval2.value` - Random values 50-200 every 1.5s
@@ -104,7 +104,7 @@ RandomVal.py: Python script, Unicode text, UTF-8 (with BOM) text executable
 sed -i '1s/^\xEF\xBB\xBF//' RandomVal.py CPU.py
 ```
 
-**Files Affected**: 
+**Files Affected**:
 - `Minion/Collectors/RandomVal.py`
 - `Minion/Collectors/CPU.py`
 
@@ -124,7 +124,7 @@ sed -i '1s/^\xEF\xBB\xBF//' RandomVal.py CPU.py
 ### Issue 5: Missing Execute Permissions
 **Problem**: Collectors don't have `+x` permission
 
-**Fix**: 
+**Fix**:
 ```bash
 chmod +x Minion/Collectors/*.py
 ```
@@ -521,6 +521,6 @@ python3 ../Minion.py -i DemoConfig.xml
 
 ---
 
-**Session Summary Document Version**: 1.0  
-**Date**: February 4, 2026  
+**Session Summary Document Version**: 1.0
+**Date**: February 4, 2026
 **Status**: Deployment working, fixes documented, ready for upstream contribution

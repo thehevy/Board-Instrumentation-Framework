@@ -124,7 +124,7 @@ Management Commands:
 ## File Descriptions
 
 | File | Type | Purpose |
-|------|------|---------|
+| --- | --- | --- |
 | `start_oscar.bat` | Batch | Wrapper for `start_oscar.ps1` |
 | `start_oscar.ps1` | PowerShell | Main startup logic |
 | `stop_oscar.bat` | Batch | Wrapper for `stop_oscar.ps1` |

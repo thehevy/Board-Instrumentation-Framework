@@ -1,9 +1,9 @@
 # Oscar Background Startup Scripts - Findings & Integration Report
 
-**Date**: February 2, 2026  
-**Component**: Oscar Data Broker - Windows Management Scripts  
-**Environment**: Windows Desktop  
-**Reporter**: AI Coding Assistant  
+**Date**: February 2, 2026
+**Component**: Oscar Data Broker - Windows Management Scripts
+**Environment**: Windows Desktop
+**Reporter**: AI Coding Assistant
 
 ---
 
@@ -11,9 +11,9 @@
 
 Created automated background startup/stop/status management scripts for Oscar on Windows to address deployment automation gaps. Scripts provide Python auto-detection, process management, error handling, and user-friendly operation via batch file wrappers.
 
-**Status**: ✅ **IMPLEMENTED & TESTED**  
-**Impact**: High - Significantly improves Windows deployment experience  
-**Priority**: P1 - Recommended for immediate integration into main branch  
+**Status**: ✅ **IMPLEMENTED & TESTED**
+**Impact**: High - Significantly improves Windows deployment experience
+**Priority**: P1 - Recommended for immediate integration into main branch
 
 ---
 
@@ -442,7 +442,7 @@ python Oscar.py -i OscarConfig.xml &
 #### 8. **Update biff-agents start_all Scripts**
 **Priority**: P2 (Medium)
 
-**Files**: 
+**Files**:
 - `biff-agents/scripts/start_all.bat`
 - `biff-agents/scripts/start_all.sh`
 
@@ -487,7 +487,7 @@ PowerShell script: Full automation logic
 **Alternatives Considered:**
 
 | Approach | Pros | Cons | Decision |
-|----------|------|------|----------|
+| --- | --- | --- | --- |
 | **Pure Batch** | No exec policy issues | Limited scripting, hard to maintain | ❌ Rejected - Too complex |
 | **Pure PowerShell** | Clean, modern | Execution policy blocks | ❌ Rejected - User friction |
 | **Python script** | Cross-platform | Requires Python to manage Python | ❌ Rejected - Circular dependency |
@@ -540,7 +540,7 @@ foreach ($path in $PythonPaths) {
 ### 2. **Port Already in Use**
 **Scenario**: Port 1100 already bound (Oscar or other service)
 
-**Handling**: 
+**Handling**:
 - Startup detects existing Oscar via process search
 - Offers interactive stop/restart
 - If non-Oscar process, startup fails with clear error
@@ -846,7 +846,7 @@ Oscar/OscarLog.txt       # Log output (gitignored)
 4. Use Task Manager to stop
 5. Check netstat for port status
 ```
-**Time to Start Oscar**: ~2-5 minutes (first time), ~1 minute (experienced)  
+**Time to Start Oscar**: ~2-5 minutes (first time), ~1 minute (experienced)
 **Error Rate**: High (Python PATH issues, wrong arguments)
 
 **After (Automated Scripts):**
@@ -854,8 +854,8 @@ Oscar/OscarLog.txt       # Log output (gitignored)
 # User types:
 .\start_oscar.bat
 ```
-**Time to Start Oscar**: ~5 seconds  
-**Error Rate**: Low (automatic detection and validation)  
+**Time to Start Oscar**: ~5 seconds
+**Error Rate**: Low (automatic detection and validation)
 **User Experience**: ⭐⭐⭐⭐⭐
 
 ---
@@ -864,11 +864,11 @@ Oscar/OscarLog.txt       # Log output (gitignored)
 
 The Oscar background startup scripts provide significant improvements to Windows deployment workflow:
 
-✅ **Automation**: Eliminate manual Python detection and process management  
-✅ **Reliability**: PID tracking ensures clean start/stop operations  
-✅ **Usability**: Simple `.bat` files with clear status messages  
-✅ **Documentation**: Comprehensive README with troubleshooting  
-✅ **Integration Ready**: Compatible with existing BIFF architecture  
+✅ **Automation**: Eliminate manual Python detection and process management
+✅ **Reliability**: PID tracking ensures clean start/stop operations
+✅ **Usability**: Simple `.bat` files with clear status messages
+✅ **Documentation**: Comprehensive README with troubleshooting
+✅ **Integration Ready**: Compatible with existing BIFF architecture
 
 **Recommendation**: Merge to main branch and update all related documentation.
 

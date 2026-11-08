@@ -1,7 +1,7 @@
 # BIFF Agent Specifications - Real-World Production Insights
 
-**Source**: Intel Vision Demo Project (`D:\Intel_Vision_DEMO`)  
-**Date**: 2024 Analysis  
+**Source**: Intel Vision Demo Project (`D:\Intel_Vision_DEMO`)
+**Date**: 2024 Analysis
 **Deployment**: Linux Minion (10.166.85.54) → Windows Oscar/Marvin (localhost)
 
 ---
@@ -13,7 +13,7 @@ Analysis of the Intel Vision Demo (production system monitoring E830 network car
 ### Impact on Agent Capabilities
 
 | Agent | New Capabilities | Priority |
-|-------|------------------|----------|
+| --- | --- | --- |
 | **Collector Builder** | File watchers, template collectors, aggregation, modifiers | 🔴 **Critical** |
 | **GUI Composer** | GridMacro, design systems, dynamic grids, style themes | 🔴 **Critical** |
 | **Oscar Configurator** | Chained Oscar, custom ports, firewall helpers | 🟡 Medium |

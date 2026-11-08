@@ -469,7 +469,7 @@ See LICENSE file in Board-Instrumentation-Framework repository.
 
 ---
 
-**Version**: Phase 2 Week 4 Complete  
-**Test Coverage**: 85% (144 passing tests)  
-**Supported Collectors**: 30+  
+**Version**: Phase 2 Week 4 Complete
+**Test Coverage**: 85% (144 passing tests)
+**Supported Collectors**: 30+
 **CLI Commands**: 11

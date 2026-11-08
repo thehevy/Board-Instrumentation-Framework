@@ -1,9 +1,9 @@
 # Marvin Gradle Build - Network/Proxy Issues Findings Report
 
-**Date**: February 3, 2026  
-**Component**: Marvin GUI Dashboard - Gradle Build System  
-**Environment**: Windows Desktop, Corporate Network  
-**Reporter**: AI Coding Assistant  
+**Date**: February 3, 2026
+**Component**: Marvin GUI Dashboard - Gradle Build System
+**Environment**: Windows Desktop, Corporate Network
+**Reporter**: AI Coding Assistant
 
 ---
 
@@ -11,10 +11,10 @@
 
 During initial Marvin build setup, critical network connectivity issues prevented Gradle Wrapper (`gradlew.bat`) from downloading required dependencies. The root cause was network timeouts when accessing `services.gradle.org`, likely due to corporate firewall or proxy restrictions (Intel corporate proxy: proxy-dmz.intel.com:912). Solutions include manual Gradle installation, direct Gradle execution, proxy configuration, GRADLE_OPTS environment variable, and Enzo dependency fixes.
 
-**Status**: ✅ **FULLY RESOLVED** - Complete build pipeline working (Enzo + Marvin)  
-**Impact**: Critical - Blocks all Marvin builds for new developers  
-**Priority**: P0 - Requires immediate documentation and tooling updates  
-**Build Time**: 15 seconds total (after initial setup)  
+**Status**: ✅ **FULLY RESOLVED** - Complete build pipeline working (Enzo + Marvin)
+**Impact**: Critical - Blocks all Marvin builds for new developers
+**Priority**: P0 - Requires immediate documentation and tooling updates
+**Build Time**: 15 seconds total (after initial setup)
 
 ---
 
@@ -22,7 +22,7 @@ During initial Marvin build setup, critical network connectivity issues prevente
 
 ### Issue: Gradle Wrapper Network Timeout
 
-**Severity**: **CRITICAL**  
+**Severity**: **CRITICAL**
 **Status**: **RESOLVED**
 
 ### Problem Description
@@ -250,7 +250,7 @@ org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m
 **Key Solutions Documented**:
 
 | Problem | Quick Fix |
-|---------|-----------|
+| --- | --- |
 | Connection timeout | Run `install_gradle.bat` |
 | Proxy required | Edit `gradle.properties` |
 | Java not found | Install JDK 11+, set JAVA_HOME |
@@ -402,7 +402,7 @@ call gradle_build.bat %*
         └── gradle-7.6-bin.zip.ok (completion marker)
 ```
 
-**Hash Calculation**: 
+**Hash Calculation**:
 - Based on distribution URL in gradle-wrapper.properties
 - Ensures unique location for different Gradle versions
 - Prevents conflicts between projects
@@ -413,7 +413,7 @@ call gradle_build.bat %*
 3. ❌ `.lck` file left behind (locked by failed process)
 4. ❌ `.part` file present (interrupted download)
 
-**Our Solution**: 
+**Our Solution**:
 ```powershell
 # Extract to base directory first
 Expand-Archive -Path gradle-7.6-bin.zip -Destination gradle-7.6-bin\
@@ -667,7 +667,7 @@ Result: ✅ VERIFIED
 ### Performance Metrics
 
 | Operation | Time | Notes |
-|-----------|------|-------|
+| --- | --- | --- |
 | Download Gradle | 2-5 min | Depends on connection speed |
 | Extract Archive | 30-60 sec | Large number of files |
 | Build Enzo (first time) | 1-2 min | Downloads JavaFX plugins with proxy |
@@ -969,13 +969,13 @@ if ($proxy -match 'Proxy Server\(s\)\s+:\s+(.+)') {
     if ($proxyServer -match '(.+):(\d+)') {
         $proxyHost = $Matches[1]
         $proxyPort = $Matches[2]
-        
+
         # Update gradle.properties
         $content = Get-Content gradle.properties
         $content = $content -replace '#systemProp.http.proxyHost=.*', "systemProp.http.proxyHost=$proxyHost"
         $content = $content -replace '#systemProp.http.proxyPort=.*', "systemProp.http.proxyPort=$proxyPort"
         Set-Content gradle.properties $content
-        
+
         Write-Host "Proxy configured: $proxyHost:$proxyPort"
     }
 }

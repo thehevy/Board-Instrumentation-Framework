@@ -770,8 +770,8 @@ Debugging Agent: ✓ Collector fixed
 [Dashboard resumes showing disk usage]
 ```
 
-**Time Without Agents**: 4-8 hours  
-**Time With Agents**: 30 minutes  
+**Time Without Agents**: 4-8 hours
+**Time With Agents**: 30 minutes
 **Reduction**: 87-93%
 
 ---
@@ -850,8 +850,8 @@ Oscar Config: Deploy in order:
 [Deployment scripts generated for each Oscar]
 ```
 
-**Time Without Agents**: 8-16 hours  
-**Time With Agents**: 45 minutes  
+**Time Without Agents**: 8-16 hours
+**Time With Agents**: 45 minutes
 **Reduction**: 90-94%
 
 ---

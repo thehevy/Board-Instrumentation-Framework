@@ -1,7 +1,7 @@
 # Phase 2 Week 4: Collector Discovery & Management
 
-**Agent**: Collector Builder  
-**Timeline**: Week 4 (Days 1-5)  
+**Agent**: Collector Builder
+**Timeline**: Week 4 (Days 1-5)
 **Status**: 🚧 IN PROGRESS
 
 ---
@@ -281,13 +281,13 @@ biff collector test RandomVal 0 100
 
 ## Risks & Mitigations
 
-**Risk**: Collector files have inconsistent docstrings  
+**Risk**: Collector files have inconsistent docstrings
 **Mitigation**: Create documentation standards, parse best-effort
 
-**Risk**: Some collectors require dependencies (psutil, docker)  
+**Risk**: Some collectors require dependencies (psutil, docker)
 **Mitigation**: Mark dependencies clearly, catch import errors gracefully
 
-**Risk**: Collectors may hang or crash  
+**Risk**: Collectors may hang or crash
 **Mitigation**: Add timeout to test command, catch exceptions
 
 ---

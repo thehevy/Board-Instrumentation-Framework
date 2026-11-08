@@ -1,8 +1,8 @@
 # BIFF Agent Implementation Plan
 
-**Version**: 1.3  
-**Date**: February 5, 2026  
-**Status**: Phase 1 Complete (100%) → Phase 2 Starting + Marvin Enhancements Added  
+**Version**: 1.3
+**Date**: February 5, 2026
+**Status**: Phase 1 Complete (100%) → Phase 2 Starting + Marvin Enhancements Added
 **Current Week**: Week 3 (Phase 1 Complete), transitioning to Week 5 (Phase 2 + Phase 7 parallel)
 
 ---
@@ -37,9 +37,9 @@ This plan outlines the implementation of 5 AI agents that simplify BIFF framewor
 
 **Current Status**: Quick Start Orchestrator complete and production-ready. Reduces setup time from 30-60 minutes to < 5 minutes (85-90% improvement).
 
-**Total Effort**: ~16-20 weeks (4-5 months) + parallel Marvin enhancements  
-**Team Size**: 2-3 developers + 1 QA (agents) + 1-2 Java developers (Marvin)  
-**Risk Level**: Low (Phase 0 & 1 delivered on schedule, specs proven)  
+**Total Effort**: ~16-20 weeks (4-5 months) + parallel Marvin enhancements
+**Team Size**: 2-3 developers + 1 QA (agents) + 1-2 Java developers (Marvin)
+**Risk Level**: Low (Phase 0 & 1 delivered on schedule, specs proven)
 **Completion**: 25% (2 of 6 agent phases complete)
 
 **Parallel Work**: Marvin core improvements running alongside agent development to enhance configuration validation, debugging capabilities, and production tooling.
@@ -50,13 +50,13 @@ This plan outlines the implementation of 5 AI agents that simplify BIFF framewor
 
 ### Phase 0: Foundation (Weeks 1-2) ✅ COMPLETE
 
-**Status**: 100% Complete (All deliverables finished)  
+**Status**: 100% Complete (All deliverables finished)
 **Completion Date**: January 29, 2026
 
 #### Objectives ✅
 
 - ✅ Establish shared library for all agents
-- ✅ Set up development environment  
+- ✅ Set up development environment
 - ✅ Create testing framework
 - ✅ Establish CI/CD pipeline
 
@@ -172,9 +172,9 @@ tests/
 └── test_integration.py        # End-to-end tests
 ```
 
-**Planned Effort**: 1.5 weeks  
-**Actual Effort**: 1.5 weeks  
-**Priority**: P0 (blocker for all other work)  
+**Planned Effort**: 1.5 weeks
+**Actual Effort**: 1.5 weeks
+**Priority**: P0 (blocker for all other work)
 **Status**: ✅ COMPLETE
 
 **Key Achievements**:
@@ -240,9 +240,9 @@ biff                           # Root command
 
 **Implementation**: ✅ Using `argparse` for CLI parsing (stdlib, no dependencies)
 
-**Planned Effort**: 0.5 weeks  
-**Actual Effort**: 0.5 weeks  
-**Priority**: P0  
+**Planned Effort**: 0.5 weeks
+**Actual Effort**: 0.5 weeks
+**Priority**: P0
 **Status**: ✅ COMPLETE
 
 **Delivered Commands**:
@@ -260,8 +260,8 @@ biff                           # Root command
 
 ### Phase 1: Quick Start Orchestrator (Weeks 3-4) ✅ COMPLETE
 
-**Status**: Week 3 Complete (100%) - Production Ready  
-**Completion Date**: January 2026  
+**Status**: Week 3 Complete (100%) - Production Ready
+**Completion Date**: January 2026
 **Dependencies**: ✅ Phase 0 Complete
 
 **Phase 1 Achievements**:
@@ -291,7 +291,7 @@ biff                           # Root command
 
 ##### Week 3: Core Quick Start ✅ COMPLETE (All Days 1-5)
 
-**Status**: 100% Complete - Production Ready  
+**Status**: 100% Complete - Production Ready
 **Completion Date**: January 2026
 
 1. **Environment Detection** (Days 1-2) ✅ COMPLETE
@@ -303,7 +303,7 @@ biff                           # Root command
    - ✅ Fix suggestion generator
    - ✅ CLI integration (`biff quickstart` command)
    - ✅ 13 unit tests (all passing)
-   
+
    **Deliverables**:
    - `biff_agents_core/utils/environment_validator.py` (254 LOC, 62% coverage)
    - `tests/test_environment_validator.py` (13 tests)
@@ -315,7 +315,7 @@ biff                           # Root command
    - ✅ Network connectivity checks (ping Oscar, test firewall)
    - ✅ Enhanced BIFF path detection (find existing installations)
    - ✅ Sample quickstart output demonstration
-   
+
    **Deliverables**:
    - Enhanced environment validator (127 LOC added)
    - Interactive wizard in CLI
@@ -327,7 +327,7 @@ biff                           # Root command
    - ✅ Frequency normalization (ms conversion)
    - ✅ Template system for collectors
    - ✅ 10 unit tests (100% generator coverage)
-   
+
    **Deliverables**:
    - `biff_agents_core/generators/minion_generator.py` (91 LOC)
    - `biff_agents_core/generators/oscar_generator.py` (91 LOC)
@@ -342,13 +342,13 @@ biff                           # Root command
    - ✅ Widget type selection (Gauge/Text/Radial)
    - ✅ 11 unit tests (100% coverage)
    - ✅ Windows encoding fixes (UTF-8 support)
-   
+
    **Deliverables**:
    - `biff_agents_core/generators/marvin_generator.py` (242 LOC)
    - `tests/test_marvin_generator.py` (11 tests)
    - `biff_cli/__main__.py` (Python -m support)
    - Git commits: 165e3ce, b51e9e4
-   
+
    **Widget Templates Created**:
    ```python
    WIDGET_TEMPLATES = {
@@ -370,7 +370,7 @@ biff                           # Root command
    - ✅ QUICKSTART.md (650+ lines, 10 troubleshooting scenarios)
    - ✅ scripts/README.md (280 lines)
    - ✅ Updated main README with quick start section
-   
+
    **Deliverables**:
    - `scripts/start_all.bat` (145 LOC)
    - `scripts/start_all.sh` (155 LOC)
@@ -380,19 +380,19 @@ biff                           # Root command
    - `QUICKSTART.md` (650+ LOC)
    - `quickstart_configs/*.xml` (5 sample configs)
    - Git commits: 961c013, 50fd0c0
-   
+
    **Documentation Coverage**:
-   | Topic | Lines | Content |
-   |-------|-------|---------|
-   | Installation | 80 | Prerequisites, environment checks |
-   | Quick Start | 120 | 5-step process with expected output |
-   | Architecture | 150 | Component roles, data flow diagrams |
-   | Customization | 100 | Adding collectors, widgets, ports |
-   | Troubleshooting | 200 | 10 common scenarios with fixes |
+| Topic | Lines | Content |
+| --- | --- | --- |
+| Installation | 80 | Prerequisites, environment checks |
+| Quick Start | 120 | 5-step process with expected output |
+| Architecture | 150 | Component roles, data flow diagrams |
+| Customization | 100 | Adding collectors, widgets, ports |
+| Troubleshooting | 200 | 10 common scenarios with fixes |
 
 ##### Week 4: Advanced Deployments 🔲 DEFERRED
 
-**Status**: Deferred to Phase 6 (Post-Agent Implementation)  
+**Status**: Deferred to Phase 6 (Post-Agent Implementation)
 **Reason**: Core functionality complete; advanced features can wait
 
 1. **Container Deployment** (Days 1-3) - DEFERRED
@@ -446,7 +446,7 @@ $ cat QUICKSTART.md | grep "^#" | wc -l
 **Phase 1 Summary Statistics**:
 
 | Metric | Value |
-|--------|-------|
+| --- | --- |
 | **Total LOC** | 1,862 |
 | **Files Created** | 21 |
 | **Unit Tests** | 49 (all passing) |
@@ -467,12 +467,12 @@ $ cat QUICKSTART.md | grep "^#" | wc -l
 
 **Production Readiness**: ✅ **COMPLETE** - Ready for public release
 
-**Effort**: 1 week (5 days)  
+**Effort**: 1 week (5 days)
 **Priority**: P0 (highest user impact) - **DELIVERED**
 - [ ] Container deployment works with Docker and K8s
 - [ ] Multi-deployment creates working comparison project
 
-**Effort**: 2 weeks  
+**Effort**: 2 weeks
 **Priority**: P0 (highest user impact)
 
 ---
@@ -560,7 +560,7 @@ $ python3 Minion/Minion.py -i GeneratedConfig.xml
 - [ ] Regex modifiers apply to correct metrics
 - [ ] Generated collectors handle errors gracefully
 
-**Effort**: 3 weeks  
+**Effort**: 3 weeks
 **Priority**: P1 (high user impact)
 
 ---
@@ -645,7 +645,7 @@ $ java -jar Marvin/build/libs/BIFF.Marvin.jar -c GeneratedApp.xml
 - [ ] Remote control buttons trigger Actors successfully
 - [ ] Multi-deployment dashboards show all environments
 
-**Effort**: 3 weeks  
+**Effort**: 3 weeks
 **Priority**: P1 (high user impact)
 
 ---
@@ -728,7 +728,7 @@ $ biff debug validate BrokenConfig.xml
 - [ ] Connection testing reports firewall issues
 - [ ] Error messages include actionable fixes
 
-**Effort**: 3 weeks  
+**Effort**: 3 weeks
 **Priority**: P2 (quality of life)
 
 ---
@@ -792,7 +792,7 @@ $ python3 Oscar/Oscar.py -c GeneratedConfig.xml
 - [ ] Namespace filtering works
 - [ ] Integration with other agents seamless
 
-**Effort**: 2 weeks  
+**Effort**: 2 weeks
 **Priority**: P2
 
 ---
@@ -846,7 +846,7 @@ $ python3 Oscar/Oscar.py -c GeneratedConfig.xml
    - Release notes
    - Announcement blog post
 
-**Effort**: 3 weeks  
+**Effort**: 3 weeks
 **Priority**: P0
 
 ---
@@ -980,8 +980,8 @@ Testing:
 
 #### Risk 1: XML Parsing Edge Cases
 
-**Probability**: Medium  
-**Impact**: High  
+**Probability**: Medium
+**Impact**: High
 **Mitigation**:
 
 - Use production configs from Intel demos as test fixtures
@@ -990,8 +990,8 @@ Testing:
 
 #### Risk 2: Java/Gradle Build Issues
 
-**Probability**: Medium  
-**Impact**: Medium  
+**Probability**: Medium
+**Impact**: Medium
 **Mitigation**:
 
 - Test on Windows, Linux, macOS
@@ -1000,8 +1000,8 @@ Testing:
 
 #### Risk 3: UDP Network Complexity
 
-**Probability**: Low  
-**Impact**: High  
+**Probability**: Low
+**Impact**: High
 **Mitigation**:
 
 - Thorough network testing
@@ -1012,8 +1012,8 @@ Testing:
 
 #### Risk 4: User Experience Complexity
 
-**Probability**: Medium  
-**Impact**: Medium  
+**Probability**: Medium
+**Impact**: Medium
 **Mitigation**:
 
 - User testing in Weeks 16-18
@@ -1022,8 +1022,8 @@ Testing:
 
 #### Risk 5: Pattern Coverage Incomplete
 
-**Probability**: Low  
-**Impact**: Medium  
+**Probability**: Low
+**Impact**: Medium
 **Mitigation**:
 
 - 21 patterns validated from production
@@ -1094,8 +1094,8 @@ Documentation:
   - pytest configured with coverage reporting
 - ⏳ CI/CD pipeline configured (GitHub Actions - Week 2 remaining)
 
-**Demo**: ✅ Run `biff --help` and see all commands  
-**Validation**: ✅ `biff validate` works on production configs  
+**Demo**: ✅ Run `biff --help` and see all commands
+**Validation**: ✅ `biff validate` works on production configs
 **Testing**: ✅ `pytest tests/ -v` - 15/15 passing
 
 ---
@@ -1269,8 +1269,8 @@ class BIFFXMLParser:
 
 ### Phase 7: Marvin Core Enhancements (PARALLEL TRACK)
 
-**Timeline**: Weeks 5-18 (runs parallel to Phases 2-6)  
-**Status**: Not Started  
+**Timeline**: Weeks 5-18 (runs parallel to Phases 2-6)
+**Status**: Not Started
 **Team**: 1-2 Java developers (separate from agent team)
 
 **Rationale**: These enhancements improve the core Marvin application (Java/JavaFX) rather than creating new agents. They can run in parallel with agent development since they use different technology stacks and teams.
@@ -1536,12 +1536,12 @@ These enhancements are valuable but lower priority or require significant effort
 
 #### Phase 7 Summary
 
-**Total Duration**: 14 weeks (runs parallel to agent development)  
-**Total LOC**: ~4,300 (2,700 implementation + 1,600 tests)  
-**Total Tests**: ~200 unit tests  
+**Total Duration**: 14 weeks (runs parallel to agent development)
+**Total LOC**: ~4,300 (2,700 implementation + 1,600 tests)
+**Total Tests**: ~200 unit tests
 **Priority Breakdown**:
 - P0 (Critical): 3 enhancements, 3 weeks
-- P1 (High): 3 enhancements, 4 weeks  
+- P1 (High): 3 enhancements, 4 weeks
 - P2 (Medium): 2 enhancements, 4 weeks
 - P3 (Quality): 2 enhancements, 3 weeks
 - Deferred: 5 enhancements (future)
@@ -1562,7 +1562,7 @@ These enhancements are valuable but lower priority or require significant effort
 - Can defer P2/P3 if timeline pressure
 - No dependencies on agent development
 
-**Current Status**: 
+**Current Status**:
 - ✅ Pre-Flight Validator (Python version) already implemented
 - ✅ validate_config.py fully functional with tab ID mapping, alias tracking, DynamicGrid analysis
 - 🔄 Java integration pending
@@ -1624,7 +1624,7 @@ These enhancements are valuable but lower priority or require significant effort
 ## Appendix A: Effort Breakdown
 
 | Phase | Component | Effort (Weeks) | Dependencies |
-|-------|-----------|----------------|--------------|
+| --- | --- | --- | --- |
 | 0 | Shared Library | 1.5 | None |
 | 0 | CLI Framework | 0.5 | None |
 | 1 | Quick Start Core | 1.0 | Phase 0 |
@@ -1643,7 +1643,7 @@ These enhancements are valuable but lower priority or require significant effort
 | 6 | Integration Testing | 1.0 | All phases |
 | 6 | Documentation | 1.0 | All phases |
 | 6 | User Testing | 1.0 | Phase 6 |
-| **Total** | | **18 weeks** | |
+| **Total** |  | **18 weeks** |  |
 
 ---
 
@@ -1721,7 +1721,7 @@ Kubernetes (optional, for K8s deployments)
 
 ---
 
-**Document Version**: 1.1  
-**Last Updated**: January 29, 2026  
-**Previous Review**: End of Phase 0 (Week 2) ✅ COMPLETE  
+**Document Version**: 1.1
+**Last Updated**: January 29, 2026
+**Previous Review**: End of Phase 0 (Week 2) ✅ COMPLETE
 **Next Review**: End of Phase 1 (Week 4)

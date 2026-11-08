@@ -1,24 +1,24 @@
 # Python 3.12+ Compatibility Fixes
 
-**Date**: February 2, 2026  
+**Date**: February 2, 2026
 **Status**: ✅ FIXED
 
 ## Issues Fixed
 
 ### 1. ✅ Removed Deprecated `imp` Module
-**File**: `Minion/Helpers/DynamicPython.py` (Line 30)  
-**Issue**: `import imp` - removed in Python 3.12  
+**File**: `Minion/Helpers/DynamicPython.py` (Line 30)
+**Issue**: `import imp` - removed in Python 3.12
 **Fix**: Removed unused import (module was never used)
 
 ### 2. ✅ Fixed Invalid Escape Sequence
-**File**: `Minion/Minion.py` (Line 57)  
-**Issue**: `cursors=('/-\|')` - invalid escape sequence  
+**File**: `Minion/Minion.py` (Line 57)
+**Issue**: `cursors=('/-\|')` - invalid escape sequence
 **Fix**: Changed to `cursors=(r'/-\|')` (raw string)
 
 ### 3. ✅ Added Shebangs to Collector Scripts
-**Files**: 
+**Files**:
 - `Minion/Collectors/RandomVal.py`
-- `Minion/Collectors/CPU.py`  
+- `Minion/Collectors/CPU.py`
 - `Minion/Collectors/Timer.py`
 
 **Added**: `#!/usr/bin/env python3` for standalone execution
@@ -66,7 +66,7 @@
 ## Known Issues
 
 ### Timer.py State Management Problem
-**Severity**: MEDIUM  
+**Severity**: MEDIUM
 **Status**: ⚠️ DOCUMENTED
 
 **Issue**: Timer collector requires complex state initialization that fails with simple configuration.
@@ -80,7 +80,7 @@ Timer {default} does not exist
 
 **Workaround**: Use simpler collectors (RandomVal, CPU) for basic testing. Timer requires production-level configuration understanding.
 
-**Recommendation**: 
+**Recommendation**:
 - Document Timer.py usage patterns with examples
 - Consider creating a simpler counter/sequence collector
 - Improve Timer error messages to guide proper action sequences

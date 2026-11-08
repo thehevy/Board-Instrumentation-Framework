@@ -318,7 +318,7 @@ Pattern: P(.*)
 ## Pattern Coverage Summary
 
 | Category | Patterns | Agent Coverage |
-|----------|----------|----------------|
+| --- | --- | --- |
 | **Data Collection** | ExternalFile, DynamicCollector, Plugin, Operators | Collector Builder ✓ |
 | **Visualization** | GridMacro, DynamicGrid, StyleOverride, Multi-tabs | GUI Composer ✓ |
 | **Configuration** | Aliases, Modifiers (including regex), Environment vars | All Agents ✓ |

@@ -4,10 +4,10 @@
 
 Week 4 delivered a **comprehensive collector discovery and template generation system** for BIFF Minion collectors. The system enables developers to quickly find, understand, configure, and deploy collectors through both CLI and Python APIs.
 
-**Duration**: 5 days  
-**Total Tests**: 144 passing (95 new, 49 existing)  
-**Code Coverage**: 85% on collector_discovery.py  
-**Lines of Code**: ~3,800 added  
+**Duration**: 5 days
+**Total Tests**: 144 passing (95 new, 49 existing)
+**Code Coverage**: 85% on collector_discovery.py
+**Lines of Code**: ~3,800 added
 **Git Commits**: 11
 
 ---
@@ -273,21 +273,21 @@ config = discovery.generate_namespace_config(
     - Filter → Check Deps → Customize
     - Namespace multi-collector generation
     - Regex → Batch templates
-  
+
   - **CLI Integration** (2 tests)
     - Template to file workflow
     - Namespace to file workflow
-  
+
   - **Error Handling** (3 tests)
     - Invalid collector in namespace (shows error comment)
     - No search results → fallback to broader search
     - Template validation error recovery
-  
+
   - **Performance Benchmarks** (3 tests)
     - List all collectors: <2 seconds ✓
     - Full-text search: <1 second ✓
     - Batch template generation (10): <2 seconds ✓
-  
+
   - **Data Integrity** (3 tests)
     - Metadata consistency across methods
     - Customization preserves validity
@@ -319,7 +319,7 @@ config = discovery.generate_namespace_config(
 
 #### Performance Results
 | Operation | Target | Actual | Status |
-|-----------|--------|--------|--------|
+| --- | --- | --- | --- |
 | List all collectors | <2s | 0.5-1.5s | ✓ Pass |
 | Full-text search | <1s | 0.2-0.8s | ✓ Pass |
 | Batch 10 templates | <2s | 0.5-1.5s | ✓ Pass |
@@ -411,7 +411,7 @@ config = discovery.generate_namespace_config(
 All benchmarks run on typical development machine with 30+ collectors:
 
 | Operation | Time | Notes |
-|-----------|------|-------|
+| --- | --- | --- |
 | Initial discovery | 0.5-1.0s | Parse all collector files |
 | List all collectors | 0.5-1.5s | With full metadata |
 | Get single collector | 0.1-0.3s | Parse single file |

@@ -278,7 +278,7 @@ Proceed with this configuration? [Y/n]: y
 
 ### Metrics
 
-- **LOC Added**: 
+- **LOC Added**:
   - environment_validator.py: +138 LOC (254 → 392 total)
   - setup_wizard.py: +127 LOC (new file)
   - main.py: +32 LOC (integration)

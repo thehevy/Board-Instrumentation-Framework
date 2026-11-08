@@ -4,10 +4,10 @@ This directory contains intelligent startup scripts for all BIFF components that
 
 ## Features
 
-✅ **Automatic Instance Detection**: Identifies running instances by configuration file  
-✅ **Smart Cleanup**: Stops existing instances with the same config before starting new ones  
-✅ **Multi-Instance Support**: Multiple instances can run concurrently with different configs  
-✅ **Cross-Platform**: Both PowerShell and Batch scripts provided  
+✅ **Automatic Instance Detection**: Identifies running instances by configuration file
+✅ **Smart Cleanup**: Stops existing instances with the same config before starting new ones
+✅ **Multi-Instance Support**: Multiple instances can run concurrently with different configs
+✅ **Cross-Platform**: Both PowerShell and Batch scripts provided
 
 ## Quick Start
 
@@ -214,7 +214,7 @@ Get-Content OscarLog.txt -Wait -Tail 20
 
 The quickstart orchestrator generates configurations in `biff-agents/biff-quickstart-test/`:
 - `OscarConfig.xml` - Oscar broker configuration
-- `MinionConfig.xml` - Minion collector configuration  
+- `MinionConfig.xml` - Minion collector configuration
 - `ApplicationConfig.xml` - Marvin GUI configuration
 
 The wrapper scripts in `biff-agents/` automatically reference these:

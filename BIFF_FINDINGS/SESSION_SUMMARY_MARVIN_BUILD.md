@@ -1,8 +1,8 @@
 # Session Summary: Marvin Gradle Build Resolution
 
-**Date**: February 3-4, 2026  
-**Session Focus**: Resolving Marvin (JavaFX) build system failures in corporate network environment  
-**Outcome**: ✅ **COMPLETE SUCCESS** - Full BIFF Marvin build pipeline operational  
+**Date**: February 3-4, 2026
+**Session Focus**: Resolving Marvin (JavaFX) build system failures in corporate network environment
+**Outcome**: ✅ **COMPLETE SUCCESS** - Full BIFF Marvin build pipeline operational
 **Key Achievement**: Gradle 7.6 + Enzo + Marvin building successfully in 15 seconds
 
 ---
@@ -11,7 +11,7 @@
 
 ### Starting State
 - **BIFF Framework**: 3-tier instrumentation system (Minion/Oscar/Marvin)
-- **Previous Sessions**: 
+- **Previous Sessions**:
   - Enhanced copilot-instructions.md with Python 3.12+ compatibility
   - Deployed Oscar data broker on Windows (port 1100, running)
   - Created Oscar background management scripts (start/stop/status)
@@ -179,7 +179,7 @@ BUILD SUCCESSFUL in 12s
 ### Performance Metrics
 
 | Operation | Time | Status |
-|-----------|------|--------|
+| --- | --- | --- |
 | Install Gradle (one-time) | 3-5 min | ✅ Complete |
 | Build Enzo (first time) | 1-2 min | ✅ Complete |
 | Build Enzo (incremental) | 1 sec | ✅ Verified |
@@ -411,7 +411,7 @@ netsh winhttp show proxy
 
 ### Enzo Dependency Management
 
-**Architecture**: 
+**Architecture**:
 - Enzo is a JavaFX gauge library (custom build required)
 - Located in `Dependencies/Enzo/` subdirectory
 - Has own Gradle wrapper and build config
@@ -426,11 +426,11 @@ netsh winhttp show proxy
 
 ### PowerShell vs. Batch Script Usage
 
-**Pattern Adopted**: 
+**Pattern Adopted**:
 - PowerShell for logic (install_gradle.bat uses inline PowerShell)
 - Batch for simple wrappers (gradle_build.bat, start_oscar.bat)
 
-**Rationale**: 
+**Rationale**:
 - PowerShell has better HTTP support (Invoke-WebRequest)
 - Batch easier for simple PATH manipulation and command execution
 - Hybrid approach gets benefits of both
@@ -576,7 +576,7 @@ git add SESSION_SUMMARY_MARVIN_BUILD.md
 
 **When You See**: "Connection timed out" or "Network timeout"
 **Think**: Corporate proxy/firewall restriction
-**Solution Approach**: 
+**Solution Approach**:
 1. Check proxy settings (`netsh winhttp show proxy`)
 2. Try alternative download method (PowerShell vs. Java)
 3. Set GRADLE_OPTS with proxy parameters

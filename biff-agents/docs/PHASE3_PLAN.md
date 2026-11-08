@@ -1,8 +1,8 @@
 # Phase 3: Marvin GUI Composer - Complete Plan
 
-**Start Date**: February 9, 2026  
-**Duration**: 2-3 weeks (Weeks 8-10)  
-**Goal**: Automate Marvin dashboard configuration with interactive wizards  
+**Start Date**: February 9, 2026
+**Duration**: 2-3 weeks (Weeks 8-10)
+**Goal**: Automate Marvin dashboard configuration with interactive wizards
 **Status**: 🎯 PLANNING
 
 ---
@@ -523,26 +523,26 @@ When user creates gauge for CPU:
 
 ### Risk 1: Marvin XML Complexity
 
-**Risk**: 40+ widget types with different schemas  
-**Mitigation**: Start with 10 most common, expand iteratively  
+**Risk**: 40+ widget types with different schemas
+**Mitigation**: Start with 10 most common, expand iteratively
 **Status**: 🟢 Manageable
 
 ### Risk 2: Grid Layout Algorithm
 
-**Risk**: Auto-layout might not match user expectations  
-**Mitigation**: Provide both auto and manual modes  
+**Risk**: Auto-layout might not match user expectations
+**Mitigation**: Provide both auto and manual modes
 **Status**: 🟡 Moderate
 
 ### Risk 3: Data Source Discovery
 
-**Risk**: MinionConfig.xml might not have all info  
-**Mitigation**: Allow manual override + smart defaults  
+**Risk**: MinionConfig.xml might not have all info
+**Mitigation**: Allow manual override + smart defaults
 **Status**: 🟢 Low
 
 ### Risk 4: Validation Complexity
 
-**Risk**: Hard to validate without running Marvin  
-**Mitigation**: XML schema validation + basic checks  
+**Risk**: Hard to validate without running Marvin
+**Mitigation**: XML schema validation + basic checks
 **Status**: 🟡 Moderate
 
 ---
@@ -630,10 +630,10 @@ biff-marvin dashboard create --template cpu_monitoring --source MinionConfig.xml
 
 ### Week 8 Plan
 
-**Day 1**: Foundation + Text/LED builders  
-**Day 2**: Gauge builders (8 variants)  
-**Day 3**: Chart builders  
-**Day 4**: Integration testing  
+**Day 1**: Foundation + Text/LED builders
+**Day 2**: Gauge builders (8 variants)
+**Day 3**: Chart builders
+**Day 4**: Integration testing
 **Day 5**: Documentation + polish
 
 ---
@@ -656,9 +656,9 @@ biff-marvin dashboard create --template cpu_monitoring --source MinionConfig.xml
 
 ## Status: 🎯 READY TO START
 
-**Phase**: 3  
-**Week**: 8  
-**Day**: 1  
+**Phase**: 3
+**Week**: 8
+**Day**: 1
 **Next**: Create base widget builder and discover data sources
 
 Let's build the Marvin GUI Composer! 🚀

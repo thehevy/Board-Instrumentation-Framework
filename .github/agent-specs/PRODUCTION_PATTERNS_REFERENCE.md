@@ -1,6 +1,6 @@
 # BIFF Production Patterns - Complete Reference
 
-**Last Updated**: January 2026  
+**Last Updated**: January 2026
 **Sources**: 4 real-world Intel deployments (2022-2023)
 
 ---
@@ -18,7 +18,7 @@
 
 ### Pattern 1: ExternalFile Templates
 
-**Source**: Intel Vision Demo 2023  
+**Source**: Intel Vision Demo 2023
 **Use Case**: Reusable collector configurations with parameters
 
 ```xml
@@ -51,7 +51,7 @@
 
 ### Pattern 2: Multi-Level Aliases
 
-**Source**: Intel Vision Demo 2023  
+**Source**: Intel Vision Demo 2023
 **Use Case**: Design system with colors, fonts, calculations
 
 ```xml
@@ -93,7 +93,7 @@
 
 ### Pattern 3: Modifier Normalization
 
-**Source**: Intel Vision Demo 2023  
+**Source**: Intel Vision Demo 2023
 **Use Case**: Unit conversions (bytes→MB, ms→sec)
 
 ```xml
@@ -119,7 +119,7 @@
 
 ### Pattern 4: Environment Variables
 
-**Source**: SPR/IPU Demo 2022  
+**Source**: SPR/IPU Demo 2022
 **Use Case**: Docker/Kubernetes deployments, CI/CD pipelines
 
 ```xml
@@ -152,7 +152,7 @@ python3 Minion.py -i MinionConfig.xml
 
 ### Pattern 5: Regex Modifiers
 
-**Source**: SPR/IPU Demo 2022  
+**Source**: SPR/IPU Demo 2022
 **Use Case**: Bulk transformations for pattern-matching metrics
 
 ```xml
@@ -189,7 +189,7 @@ python3 Minion.py -i MinionConfig.xml
 
 ### Pattern 6: DynamicCollector File Watchers
 
-**Source**: Intel Vision Demo 2023  
+**Source**: Intel Vision Demo 2023
 **Use Case**: Zero-instrumentation monitoring (read existing files)
 
 ```xml
@@ -227,7 +227,7 @@ python3 Minion.py -i MinionConfig.xml
 
 ### Pattern 7: Aggregate Collectors with Operators
 
-**Source**: Intel Vision Demo 2023  
+**Source**: Intel Vision Demo 2023
 **Use Case**: Sum metrics across multiple sources
 
 ```xml
@@ -261,7 +261,7 @@ python3 Minion.py -i MinionConfig.xml
 
 ### Pattern 8: Plugin Entry Points
 
-**Source**: Intel Vision Demo 2023, SPR/IPU Demo 2022  
+**Source**: Intel Vision Demo 2023, SPR/IPU Demo 2022
 **Use Case**: Multiple collectors from single Python script
 
 ```python
@@ -314,7 +314,7 @@ def get_core_count():
 
 ### Pattern 9: Actor Pattern
 
-**Source**: SPR/IPU Demo 2022  
+**Source**: SPR/IPU Demo 2022
 **Use Case**: Remote command execution from Marvin GUI
 
 ```xml
@@ -372,7 +372,7 @@ def get_core_count():
 
 ### Pattern 10: CPU Affinity
 
-**Source**: SPR/IPU Demo 2022  
+**Source**: SPR/IPU Demo 2022
 **Use Case**: Performance isolation in benchmarking
 
 ```bash
@@ -400,7 +400,7 @@ nohup taskset -c $lastCore python3 Minion.py -i $1 >/dev/null 2>&1 &
 
 ### Pattern 11: GridMacro for Reusable Widget Templates
 
-**Source**: Intel Vision Demo 2023  
+**Source**: Intel Vision Demo 2023
 **Use Case**: Repeated widget layouts with variations
 
 ```xml
@@ -445,7 +445,7 @@ nohup taskset -c $lastCore python3 Minion.py -i $1 >/dev/null 2>&1 &
 
 ### Pattern 12: DynamicGrid
 
-**Source**: Intel Vision Demo 2023, Intel Vision 2022  
+**Source**: Intel Vision Demo 2023, Intel Vision 2022
 **Use Case**: Auto-adjust widget count based on data
 
 ```xml
@@ -478,7 +478,7 @@ nohup taskset -c $lastCore python3 Minion.py -i $1 >/dev/null 2>&1 &
 
 ### Pattern 13: StyleOverride Themes
 
-**Source**: Intel Vision Demo 2023  
+**Source**: Intel Vision Demo 2023
 **Use Case**: Consistent branding and dark/light modes
 
 ```xml
@@ -514,7 +514,7 @@ nohup taskset -c $lastCore python3 Minion.py -i $1 >/dev/null 2>&1 &
 
 ### Pattern 14: Multi-Deployment Comparison
 
-**Source**: SPR/IPU Demo 2022, Intel Vision 2022  
+**Source**: SPR/IPU Demo 2022, Intel Vision 2022
 **Use Case**: A/B testing, multi-region monitoring
 
 ```xml
@@ -558,7 +558,7 @@ nohup taskset -c $lastCore python3 Minion.py -i $1 >/dev/null 2>&1 &
 
 ### Pattern 15: MarvinAutoConnect
 
-**Source**: Intel Vision 2022  
+**Source**: Intel Vision 2022
 **Use Case**: Zero-configuration Oscar discovery
 
 ```xml
@@ -581,7 +581,7 @@ nohup taskset -c $lastCore python3 Minion.py -i $1 >/dev/null 2>&1 &
 
 ### Pattern 16: Container Deployment
 
-**Source**: SPR/IPU Demo 2022  
+**Source**: SPR/IPU Demo 2022
 **Use Case**: Docker, Kubernetes, cloud deployments
 
 **Dockerfile**:
@@ -639,7 +639,7 @@ spec:
 
 ### Pattern 17: Infrastructure Automation
 
-**Source**: SPR/IPU Demo 2022  
+**Source**: SPR/IPU Demo 2022
 **Use Case**: Ansible/Terraform integration
 
 **Ansible Playbook**:
@@ -675,7 +675,7 @@ spec:
 
 ### Pattern 18: Launch Scripts with Affinity
 
-**Source**: SPR/IPU Demo 2022  
+**Source**: SPR/IPU Demo 2022
 **Use Case**: Production deployment with process management
 
 ```bash
@@ -719,7 +719,7 @@ echo "PID: $(pgrep -f Minion.py)"
 
 ### Pattern 19: Multi-Namespace Architecture
 
-**Source**: All deployments  
+**Source**: All deployments
 **Use Case**: Logical separation of metrics
 
 ```
@@ -747,7 +747,7 @@ Marvin dashboard shows tabs:
 
 ### Pattern 20: Prometheus Integration
 
-**Source**: Production collectors  
+**Source**: Production collectors
 **Use Case**: Pull data from existing Prometheus endpoints
 
 ```xml
@@ -771,7 +771,7 @@ Marvin dashboard shows tabs:
 
 ### Pattern 21: Tab Parameters
 
-**Source**: Intel Vision 2022  
+**Source**: Intel Vision 2022
 **Use Case**: Reusable tab definitions with variations
 
 ```xml
@@ -802,7 +802,7 @@ Marvin dashboard shows tabs:
 ### By Use Case
 
 | Use Case | Recommended Patterns |
-|----------|---------------------|
+| --- | --- |
 | **Container Deployment** | Pattern 4 (Environment Variables), Pattern 16 (Container Configs) |
 | **High-Scale Monitoring** | Pattern 5 (Regex Modifiers), Pattern 12 (DynamicGrid) |
 | **Zero-Instrumentation** | Pattern 6 (File Watchers) |
@@ -814,7 +814,7 @@ Marvin dashboard shows tabs:
 ### By Complexity
 
 | Level | Patterns |
-|-------|----------|
+| --- | --- |
 | **Beginner** | 1, 3, 6, 15, 19 |
 | **Intermediate** | 2, 7, 8, 11, 13, 21 |
 | **Advanced** | 4, 5, 9, 10, 12, 14, 16, 17, 18, 20 |

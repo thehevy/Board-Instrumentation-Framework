@@ -1,8 +1,8 @@
 # Intel Vision 2022 - Marvin-Only Deployment Pattern
 
-**Source**: `D:\Intel Vision 2022`  
-**Date**: 2022 Deployment  
-**Deployment Type**: Marvin + Oscar ONLY (No Minion folder)  
+**Source**: `D:\Intel Vision 2022`
+**Date**: 2022 Deployment
+**Deployment Type**: Marvin + Oscar ONLY (No Minion folder)
 **Use Case**: IPU Demo with Kubernetes comparison displays
 
 ---
@@ -1131,7 +1131,7 @@ class GUIComposer:
 ### New Patterns Discovered
 
 | Pattern | Impact | Agent Priority |
-|---------|--------|----------------|
+| --- | --- | --- |
 | **MarvinAutoConnect** (pull model) | 🔴 **Critical** - Enables operator workstation deployments | Oscar Configurator, Quick Start |
 | **Multi-Oscar Connections** | 🔴 **Critical** - Multi-site monitoring from single Marvin | Quick Start, GUI Composer |
 | **Advanced Task System** | 🟡 Medium - Interactive demos and automation | GUI Composer |
@@ -1142,7 +1142,7 @@ class GUIComposer:
 ### Architecture Patterns Comparison
 
 | Pattern | Intel Vision Demo 2023 | Intel Vision 2022 |
-|---------|----------------------|------------------|
+| --- | --- | --- |
 | **Deployment** | Linux Minion → Windows Oscar/Marvin | Remote Minions → Operator Workstation (Marvin only) |
 | **Oscar Role** | Router/recorder | Data collector + MarvinAutoConnect |
 | **Data Flow** | Push (Oscar → Marvin) | Pull (Marvin ← Oscar) |
@@ -1222,10 +1222,10 @@ $ biff gui create-layout
 
 **Intel Vision 2022** demonstrates BIFF's **enterprise presentation capabilities**:
 
-✅ **Operator workstation deployments** (Marvin-only systems)  
-✅ **Multi-source dashboards** (3 Oscars → 1 Marvin)  
-✅ **Interactive demonstrations** (task-driven workflows)  
-✅ **Professional UI design** (spacer-based layouts)  
+✅ **Operator workstation deployments** (Marvin-only systems)
+✅ **Multi-source dashboards** (3 Oscars → 1 Marvin)
+✅ **Interactive demonstrations** (task-driven workflows)
+✅ **Professional UI design** (spacer-based layouts)
 ✅ **Animated presentations** (DynamicGrid transitions)
 
 Combined with **Intel Vision Demo 2023** findings, we now have comprehensive coverage of:
